@@ -4,11 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>실시간 스트리밍 곡 확인기</title>
-
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" href="icon-512.png" />
-
     <meta name="theme-color" content="#2a9d8f" />
 
     <!-- Pretendard Web Font -->
@@ -30,7 +28,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-      /* 현재 재생 트랙 배경 애니메이션 */
       @keyframes bgShift {
         0%,
         100% {
@@ -45,9 +42,23 @@
       }
     </style>
   </head>
+
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4"
   >
+    <!-- ✅ 로딩 스크린 -->
+    <div
+      id="loading-screen"
+      class="fixed inset-0 z-50 bg-white flex flex-col justify-center items-center"
+    >
+      <img
+        src="icon-192.png"
+        alt="스밍체크 로고"
+        class="w-16 h-16 mb-4 animate-bounce"
+      />
+      <p class="text-gray-700 font-medium text-lg">잠깐 기다리면 보여주겠지~</p>
+    </div>
+
     <!-- 헤더 -->
     <header class="w-full max-w-md mt-2 mb-2 flex justify-center">
       <div class="inline-block">
@@ -116,8 +127,8 @@
       </p>
     </footer>
 
+    <!-- 스크립트 -->
     <script>
-      /* ---------------- 상수 ---------------- */
       const SHEET_URL =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?gid=0&single=true&output=csv";
 
@@ -137,7 +148,6 @@
 
       let schedule = [];
 
-      /* ---------------- 유틸 ---------------- */
       const toSec = (mmss) => {
         const [m, s] = mmss.split(":").map(Number);
         return m * 60 + s;
@@ -148,7 +158,6 @@
         return `${m}분 ${s.toString().padStart(2, "0")}초`;
       };
 
-      /* ---------------- 초기 로딩 ---------------- */
       async function loadSchedule() {
         const res = await fetch(SHEET_URL);
         const text = await res.text();
@@ -171,39 +180,38 @@
         renderPlaylist();
         tick();
         setInterval(tick, 1000);
+
+        // ✅ 로딩 화면 제거
+        document.getElementById("loading-screen").style.display = "none";
       }
 
-      /* ---------------- 렌더 함수 ---------------- */
       function renderPlaylist() {
         const ul = document.getElementById("playlist");
         ul.innerHTML = schedule
           .map(
             (item, i) => `
-          <li data-index="${i}" class="flex flex-col p-3 rounded-lg shadow w-full opacity-50 transition-all bg-white">
-            <div class="flex items-center">
-              <div class="w-12 h-12 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
-                <img src="${item.cover}" alt="${
+            <li data-index="${i}" class="flex flex-col p-3 rounded-lg shadow w-full opacity-50 transition-all bg-white">
+              <div class="flex items-center">
+                <div class="w-12 h-12 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
+                  <img src="${item.cover}" alt="${
               item.title
             }" class="w-full h-full object-cover" />
+                </div>
+                <div class="ml-4 flex-1">
+                  <p class="text-sm font-medium">${i + 1}. ${item.title}</p>
+                  <p class="text-xs text-gray-500">${formatKoreanTime(
+                    item.start
+                  )} ~ ${formatKoreanTime(item.end)}</p>
+                </div>
               </div>
-              <div class="ml-4 flex-1">
-                <p class="text-sm font-medium">${i + 1}. ${item.title}</p>
-                <p class="text-xs text-gray-500">${formatKoreanTime(
-                  item.start
-                )} ~ ${formatKoreanTime(item.end)}</p>
+              <div class="w-full h-1 bg-gray-200 rounded overflow-hidden mt-2">
+                <div id="p-${i}" class="h-full bg-blue-400 transition-all" style="width:0%"></div>
               </div>
-            </div>
-            <!-- 진행 바 -->
-            <div class="w-full h-1 bg-gray-200 rounded overflow-hidden mt-2">
-              <div id="p-${i}" class="h-full bg-blue-400 transition-all" style="width:0%"></div>
-            </div>
-          </li>
-        `
+            </li>`
           )
           .join("");
       }
 
-      /* ---------------- 메인 Tick ---------------- */
       function tick() {
         const diffSec = Math.max(
           0,
@@ -217,7 +225,6 @@
         updateProgress(secInLoop);
       }
 
-      /* ----- 현재 재생 항목 강조 ----- */
       function updateHighlight(secInLoop) {
         const idx = schedule.findIndex(
           (item) => secInLoop >= item.startSec && secInLoop < item.endSec
@@ -235,7 +242,6 @@
         });
       }
 
-      /* ----- 진행 바 갱신 ----- */
       function updateProgress(secInLoop) {
         schedule.forEach((item, i) => {
           const bar = document.getElementById(`p-${i}`);
@@ -251,7 +257,6 @@
         });
       }
 
-      /* ----- 누적 카운트 계산 ----- */
       function updateCounts(cycles, secInLoop) {
         const counts = {
           kakurenbo: cycles * PER_CYCLE.kakurenbo,
@@ -273,7 +278,6 @@
         document.getElementById("count-chroma").textContent = counts.chroma;
       }
 
-      /* ---------------- 시작 ---------------- */
       loadSchedule();
     </script>
   </body>
