@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>실시간 스트리밍 곡 확인기</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+  <div id="app" class="max-w-sm w-full p-4 space-y-4">
+    <div id="prev" class="p-3 bg-white shadow rounded">이전곡: –</div>
+    <div id="current" class="p-6 bg-blue-50 text-center font-medium text-lg shadow-lg rounded">
+      현재 재생 중: –
+    </div>
+    <div id="next" class="p-3 bg-white shadow rounded">다음곡: –</div>
+  </div>
+
+  <script>
+    // 1) 시트 JSON URL
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1tGslp_8ahx8E5Y8kvIFq3DAcciLgtSyTvlTBROOrsKg/gviz/tq?tqx=out:json&sheet=Sheet1';
+
+    let schedule = [];
+
+    // mm:ss → 초 변환
+    const toSec = s => {
+      const [m,sec] = s.split(':').map(Number);
+      return m*60 + sec;
+    };
+
+    // 데이터 불러오기
+    async function loadSchedule() {
+      const res = await fetch(SHEET_URL);
+      const text = await res.text();
+      // JSONP 헤더 제거
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\)/)[1]);
+      schedule = json.table.rows.map(r => ({
+        title: r.c[0].v,
+        start: r.c[1].v,
+        end:   r.c[2].v,
+        startSec: toSec(r.c[1].v),
+        endSec:   toSec(r.c[2].v)
+      }));
+      updateUI();
+    }
+
+    // UI 갱신
+    function updateUI() {
+      const now = new Date();
+      const offset = now.getMinutes()*60 + now.getSeconds();  // 매 정각 리셋
+      const idx = schedule.findIndex(item => offset >= item.startSec && offset < item.endSec);
+      const prev = schedule[idx-1];
+      const curr = schedule[idx];
+      const next = schedule[idx+1];
+
+      document.getElementById('prev').textContent    = `이전곡: ${prev?.title || '-'}`;
+      if (curr) {
+        document.getElementById('current').innerHTML = `&lt;${curr.start}~${curr.end}&gt;<br>${curr.title} 현재 재생 중`;
+      }
+      document.getElementById('next').textContent    = `다음곡: ${next?.title || '-'}`;
+    }
+
+    // 최초 로드 + 1분마다 갱신
+    loadSchedule();
+    setInterval(updateUI, 60*1000);
+  </script>
+</body>
+</html>
