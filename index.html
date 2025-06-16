@@ -2,137 +2,185 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>실시간 스트리밍 곡 확인기</title>
+
   <!-- Pretendard Web Font -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+
+  <!-- Tailwind 사전 설정 -->
   <script>
-    tailwind.config = {
+    window.tailwindConfig = {
       theme: {
         fontFamily: {
           sans: ['Pretendard', 'ui-sans-serif', 'system-ui'],
         },
-      }
-    }
+      },
+    };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes bgShift {
+      0%,100% { background-color: #dbeafe; }
+      50%     { background-color: #bfdbfe; }
+    }
+    .playing { animation: bgShift 2.5s ease-in-out infinite; }
+  </style>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen flex flex-col items-center justify-start p-4">
-
-  <main class="w-full max-w-md space-y-8 flex flex-col items-center justify-center flex-grow">
-
-    <!-- 제목·버전 표시 -->
-    <div class="w-full flex justify-center mb-2">
-      <div class="inline-block">
-        <h1 class="text-3xl font-extrabold tracking-tight whitespace-nowrap text-center">
-          「かくれんぼ」 스트리밍 리스트
-        </h1>
-        <span class="block text-sm text-gray-500 text-right mt-1">
-          25.06.16 ver.
-        </span>
-      </div>
+<body class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4">
+  <!-- 헤더 -->
+  <header class="w-full max-w-md mt-2 mb-2 flex justify-center">
+    <div class="inline-block">
+      <h1 class="text-3xl font-extrabold tracking-tight whitespace-nowrap">「かくれんぼ」 스트리밍 리스트</h1>
+      <span class="block text-sm text-gray-500 mt-1 text-right">25.06.16 ver.</span>
     </div>
+  </header>
 
-    <!-- 이전 재생곡 -->
-    <section id="prev-section" class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 w-full">
-      <div id="prev-cover" class="w-16 h-16 bg-gray-200 rounded overflow-hidden"></div>
-      <div>
-        <h2 class="text-sm text-gray-500">이전 재생곡</h2>
-        <p id="prev-title" class="mt-1 text-base font-medium">–</p>
-      </div>
-    </section>
-
-    <!-- 현재 재생곡 -->
-    <section id="current-section" class="bg-blue-50 rounded-lg shadow-lg p-6 text-center w-full">
-      <div id="current-cover" class="mx-auto w-28 h-28 bg-gray-200 rounded overflow-hidden"></div>
-      <h2 class="mt-4 text-sm text-gray-500">현재 재생곡</h2>
-      <p id="current-title" class="mt-2 font-semibold text-xl">–</p>
-      <p id="current-time" class="mt-1 text-sm text-gray-600">–</p>
-    </section>
-
-    <!-- 다음 재생곡 -->
-    <section id="next-section" class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 w-full">
-      <div id="next-cover" class="w-16 h-16 bg-gray-200 rounded overflow-hidden"></div>
-      <div>
-        <h2 class="text-sm text-gray-500">다음 재생곡</h2>
-        <p id="next-title" class="mt-1 text-base font-medium">–</p>
-      </div>
-    </section>
-
+  <!-- 재생목록 -->
+  <main class="w-full max-w-md space-y-2 overflow-auto">
+    <ul id="playlist" class="space-y-2"></ul>
   </main>
 
-  <footer class="w-full max-w-md text-center text-xs text-gray-500 mt-8 mb-4">
-    플레이브 음원총공팀의 스트리밍 리스트에 따라 운영되는 페이지입니다.
+  <!-- 대시보드 -->
+  <section id="dashboard" class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow flex flex-col items-center space-y-3">
+    <h2 class="text-sm text-gray-600 font-semibold">16일 자정부터 스밍이 끊기지 않았다면!</h2>
+    <div class="grid grid-cols-3 gap-4 w-full text-center">
+      <div>
+        <p class="text-[11px] text-gray-500 mb-1">かくれんぼ</p>
+        <p class="text-2xl font-bold"><span id="count-kakurenbo">0</span>회</p>
+      </div>
+      <div>
+        <p class="text-[11px] text-gray-500 mb-1">Rizz - JP</p>
+        <p class="text-2xl font-bold"><span id="count-rizz">0</span>회</p>
+      </div>
+      <div>
+        <p class="text-[11px] text-gray-500 mb-1">Chroma Drift - JP</p>
+        <p class="text-2xl font-bold"><span id="count-chroma">0</span>회</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 푸터 -->
+  <footer class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2">
+    <p>플레이브 음원총공팀의 스트리밍 리스트에 따라 운영되는 페이지입니다.</p>
+    <p>
+      문의 및 건의사항은 X(트위터)
+      <strong>
+        <a href="https://x.com/plave_pretty?s=21&t=KweQO4B2QEKZ954vZ1zJ5" target="_blank" rel="noopener" class="text-blue-600 hover:underline">@plave_pretty</a>
+      </strong>
+      로 보내주세요.
+    </p>
   </footer>
 
   <script>
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?output=csv';
+    /* ---------------- 상수 ---------------- */
+    const SHEET_URL =
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?gid=0&single=true&output=csv';
+
+    const START_AT_MS = new Date('2025-06-16T00:00:00+09:00').getTime();
+
+    const TARGETS = {
+      kakurenbo: 'かくれんぼ',
+      rizz: 'Rizz - japanese Ver.',
+      chroma: 'Chroma Drift - japanese Ver.'
+    };
+
+    const PER_CYCLE = { kakurenbo: 4, rizz: 3, chroma: 1 };
+
     let schedule = [];
 
-    function toSec(s) {
-      const [m, sec] = s.split(':').map(Number);
-      return m * 60 + sec;
-    }
+    /* ---------------- 유틸 ---------------- */
+    const toSec = (mmss) => {
+      const [m, s] = mmss.split(':').map(Number);
+      return m * 60 + s;
+    };
 
-    function getKST() {
-      const now = new Date();
-      return new Date(now.getTime() + 9 * 3600 * 1000);
-    }
-
-    function formatKoreanTime(str) {
+    const formatKoreanTime = (str) => {
       const [m, s] = str.split(':').map(Number);
       return `${m}분 ${s.toString().padStart(2, '0')}초`;
-    }
+    };
 
+    /* ---------------- 초기 로딩 ---------------- */
     async function loadSchedule() {
       const res  = await fetch(SHEET_URL);
       const text = await res.text();
       const rows = text.trim().split('\n').slice(1);
 
-      schedule = rows.map(line => {
-        const [title, start, end, cover] = line.split(',').map(s => s.trim());
-        return {
-          title,
-          start,
-          end,
-          cover,
-          startSec: toSec(start),
-          endSec:   toSec(end),
-        };
+      schedule = rows.map((line) => {
+        const [title, start, end, cover] = line.split(',').map((s) => s.trim());
+        return { title, start, end, cover, startSec: toSec(start), endSec: toSec(end) };
       });
-      updateUI();
+
+      renderPlaylist();
+      tick();
+      setInterval(tick, 1000);
     }
 
-    function updateUI() {
-      const now = getKST();
-      const offset = now.getMinutes() * 60 + now.getSeconds();
-      const idx = schedule.findIndex(item => offset >= item.startSec && offset < item.endSec);
-
-      const prev = schedule[idx - 1] || {};
-      const curr = schedule[idx]     || {};
-      const next = schedule[idx + 1] || {};
-
-      document.getElementById('prev-cover').innerHTML = prev.cover
-        ? `<img src="${prev.cover}" alt="${prev.title}" class="w-full h-full object-cover">`
-        : '';
-      document.getElementById('prev-title').textContent = prev.title || '-';
-
-      document.getElementById('current-cover').innerHTML = curr.cover
-        ? `<img src="${curr.cover}" alt="${curr.title}" class="w-full h-full object-cover rounded">`
-        : '';
-      document.getElementById('current-title').textContent = curr.title || '-';
-      document.getElementById('current-time').textContent = (curr.start && curr.end)
-        ? `${formatKoreanTime(curr.start)} ~ ${formatKoreanTime(curr.end)}`
-        : '-';
-
-      document.getElementById('next-cover').innerHTML = next.cover
-        ? `<img src="${next.cover}" alt="${next.title}" class="w-full h-full object-cover">`
-        : '';
-      document.getElementById('next-title').textContent = next.title || '-';
+    /* ---------------- 렌더 함수 ---------------- */
+    function renderPlaylist() {
+      const ul = document.getElementById('playlist');
+      ul.innerHTML = schedule.map((item, i) => `
+        <li data-index="${i}" class="flex items-center p-3 rounded-lg shadow w-full opacity-50 transition-all">
+          <div class="w-12 h-12 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
+            <img src="${item.cover}" alt="${item.title}" class="w-full h-full object-cover" />
+          </div>
+          <div class="ml-4 flex-1">
+            <p class="text-sm font-medium">${i + 1}. ${item.title}</p>
+            <p class="text-xs text-gray-500">${formatKoreanTime(item.start)} ~ ${formatKoreanTime(item.end)}</p>
+          </div>
+        </li>
+      `).join('');
     }
 
+    /* ---------------- 메인 Tick ---------------- */
+    function tick() {
+      const diffSec   = Math.floor((Date.now() - START_AT_MS) / 1000);
+      const cycles    = Math.floor(diffSec / 3600);
+      const secInLoop = diffSec % 3600;
+
+      updateHighlight(secInLoop);
+      updateCounts(cycles, secInLoop);
+    }
+
+    /* ----- 현재 재생 항목 강조 ----- */
+    function updateHighlight(secInLoop) {
+      const idx = schedule.findIndex((item) => secInLoop >= item.startSec && secInLoop < item.endSec);
+
+      document.querySelectorAll('#playlist li').forEach((li) => {
+        const i = Number(li.dataset.index);
+        if (i === idx) {
+          li.classList.remove('opacity-50');
+          li.classList.add('opacity-100', 'playing');
+        } else {
+          li.classList.add('opacity-50');
+          li.classList.remove('opacity-100', 'playing');
+        }
+      });
+    }
+
+    /* ----- 누적 카운트 계산 ----- */
+    function updateCounts(cycles, secInLoop) {
+      const counts = {
+        kakurenbo: cycles * PER_CYCLE.kakurenbo,
+        rizz: cycles * PER_CYCLE.rizz,
+        chroma: cycles * PER_CYCLE.chroma,
+      };
+
+      schedule.forEach((item) => {
+        if (item.startSec <= secInLoop) {
+          if (item.title === TARGETS.kakurenbo) counts.kakurenbo += 1;
+          else if (item.title === TARGETS.rizz)  counts.rizz += 1;
+          else if (item.title === TARGETS.chroma) counts.chroma += 1;
+        }
+      });
+
+      document.getElementById('count-kakurenbo').textContent = counts.kakurenbo;
+      document.getElementById('count-rizz').textContent      = counts.rizz;
+      document.getElementById('count-chroma').textContent    = counts.chroma;
+    }
+
+    /* ---------------- 시작 ---------------- */
     loadSchedule();
-    setInterval(updateUI, 1000);
   </script>
 </body>
 </html>
