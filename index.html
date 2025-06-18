@@ -14,6 +14,11 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
     />
+    <!-- Gowun Dodum Font (귀여운 폰트) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Tailwind 사전 설정 -->
     <script>
@@ -49,16 +54,30 @@
     <!-- ✅ 로딩 스크린 -->
     <div
       id="loading-screen"
-      class="fixed inset-0 z-50 bg-white flex flex-col justify-center items-center"
+      class="fixed inset-0 z-50 bg-black bg-center bg-cover flex flex-col justify-center items-center"
+      style="background-image: url('loading-background.webp')"
     >
-      <img
-        src="icon-192.png"
-        alt="스밍체크 로고"
-        class="w-16 h-16 mb-4 animate-bounce"
-      />
-      <p class="text-gray-700 font-medium text-lg">잠깐 기다리면 보여주겠지~</p>
+      <!-- 생일 축하 메시지 -->
+      <div
+        class="absolute top-1/4 text-white text-3xl font-bold animate-bounce text-center leading-relaxed"
+        style="font-family: 'Gowun Dodum', sans-serif"
+      >
+        플리~ 두 번째<br />
+        생일축하합니다!!
+      </div>
+
+      <!--
+<img
+  src="icon-192.png"
+  alt="스밍체크 로고"
+  class="w-16 h-16 mb-4 mt-48 animate-bounce"
+/>
+-->
+
+      <!-- <p class="text-gray-700 font-medium text-lg">잠깐 기다리면 보여주겠지~</p> -->
     </div>
 
+    <!-- 이하 기존 콘텐츠 동일 -->
     <!-- 헤더 -->
     <header class="w-full max-w-md mt-2 mb-2 flex justify-center">
       <div class="inline-block">
