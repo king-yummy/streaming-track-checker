@@ -159,6 +159,12 @@
         return `${m}분 ${s.toString().padStart(2, "0")}초`;
       };
 
+      const formatTimeMMSS = (sec) => {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${m}:${s.toString().padStart(2, "0")}`;
+      };
+
       async function loadSchedule() {
         const res = await fetch(SHEET_URL);
         const text = await res.text();
@@ -182,7 +188,6 @@
         tick();
         setInterval(tick, 1000);
 
-        // ✅ 로딩 화면 제거
         document.getElementById("loading-screen").style.display = "none";
       }
 
@@ -191,24 +196,28 @@
         ul.innerHTML = schedule
           .map(
             (item, i) => `
-            <li data-index="${i}" class="flex flex-col p-3 rounded-lg shadow w-full opacity-50 transition-all bg-white">
-              <div class="flex items-center">
-                <div class="w-12 h-12 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
-                  <img src="${item.cover}" alt="${
+      <li data-index="${i}" class="flex flex-col p-2 rounded-lg shadow w-full opacity-50 transition-all bg-white text-[13px]">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
+            <img src="${item.cover}" alt="${
               item.title
             }" class="w-full h-full object-cover" />
-                </div>
-                <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium">${i + 1}. ${item.title}</p>
-                  <p class="text-xs text-gray-500">${formatKoreanTime(
-                    item.start
-                  )} ~ ${formatKoreanTime(item.end)}</p>
-                </div>
-              </div>
-              <div class="w-full h-1 bg-gray-200 rounded overflow-hidden mt-2">
-                <div id="p-${i}" class="h-full bg-blue-400 transition-all" style="width:0%"></div>
-              </div>
-            </li>`
+          </div>
+          <div class="flex-1">
+            <p class="font-medium truncate">${i + 1}. ${item.title}</p>
+            <p class="text-xs text-gray-500">
+              ${formatKoreanTime(item.start)} ~ ${formatKoreanTime(item.end)}
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1 text-[11px] px-1 mt-1">
+          <span id="start-${i}" class="w-[40px] text-left text-gray-400">+0:00</span>
+          <div class="flex-1 h-1 bg-gray-200 rounded overflow-hidden">
+            <div id="p-${i}" class="h-full bg-blue-400 transition-all" style="width:0%"></div>
+          </div>
+          <span id="end-${i}" class="w-[40px] text-right text-gray-400">-0:00</span>
+        </div>
+      </li>`
           )
           .join("");
       }
@@ -233,12 +242,20 @@
 
         document.querySelectorAll("#playlist li").forEach((li) => {
           const i = Number(li.dataset.index);
-          if (i === idx) {
-            li.classList.remove("opacity-50");
-            li.classList.add("opacity-100", "playing");
-          } else {
-            li.classList.add("opacity-50");
-            li.classList.remove("opacity-100", "playing");
+          const isActive = i === idx;
+
+          li.classList.toggle("opacity-50", !isActive);
+          li.classList.toggle("opacity-100", isActive);
+          li.classList.toggle("playing", isActive);
+
+          const startEl = document.getElementById(`start-${i}`);
+          const endEl = document.getElementById(`end-${i}`);
+
+          if (startEl && endEl) {
+            startEl.classList.remove("text-blue-600", "text-gray-400");
+            endEl.classList.remove("text-blue-600", "text-gray-400");
+            startEl.classList.add(isActive ? "text-blue-600" : "text-gray-400");
+            endEl.classList.add(isActive ? "text-blue-600" : "text-gray-400");
           }
         });
       }
@@ -246,14 +263,24 @@
       function updateProgress(secInLoop) {
         schedule.forEach((item, i) => {
           const bar = document.getElementById(`p-${i}`);
-          if (!bar) return;
+          const startEl = document.getElementById(`start-${i}`);
+          const endEl = document.getElementById(`end-${i}`);
+
+          if (!bar || !startEl || !endEl) return;
+
+          const total = item.endSec - item.startSec;
+          const passed = secInLoop - item.startSec;
+          const remain = item.endSec - secInLoop;
+
           if (secInLoop >= item.startSec && secInLoop < item.endSec) {
-            const pct =
-              ((secInLoop - item.startSec) / (item.endSec - item.startSec)) *
-              100;
+            const pct = (passed / total) * 100;
             bar.style.width = `${pct}%`;
+            startEl.textContent = `+${formatTimeMMSS(passed)}`;
+            endEl.textContent = `-${formatTimeMMSS(remain)}`;
           } else {
             bar.style.width = "0%";
+            startEl.textContent = `+0:00`;
+            endEl.textContent = `-0:00`;
           }
         });
       }
@@ -281,5 +308,12 @@
 
       loadSchedule();
     </script>
+
+    <style>
+      html,
+      body {
+        background-color: white;
+      }
+    </style>
   </body>
 </html>
