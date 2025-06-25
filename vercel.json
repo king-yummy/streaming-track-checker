@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://www.plli-checker.app/$1",
+      "permanent": true
+    }
+  ]
+}
