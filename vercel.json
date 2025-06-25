@@ -2,6 +2,12 @@
   "redirects": [
     {
       "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "streaming-track-checker.vercel.app"
+        }
+      ],
       "destination": "https://www.plli-checker.app/$1",
       "permanent": true
     }
