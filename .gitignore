@@ -1,0 +1,11 @@
+# Node.js 관련 폴더
+node_modules
+
+# Firebase 서비스 계정 키 (절대 노출 금지!)
+plli-service-account.json
+
+# 서버가 생성하는 토큰 목록 파일
+tokens.json
+
+# 운영체제 관련 파일
+.DS_Store
