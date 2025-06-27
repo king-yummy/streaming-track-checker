@@ -11,11 +11,5 @@
       "destination": "https://www.plli-checker.app/$1",
       "permanent": true
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server.js"
-    }
   ]
 }
