@@ -85,9 +85,6 @@ cron.schedule("* * * * *", () => {
     });
 });
 
-// --- 서버 실행 ---
-app.listen(PORT, () => {
-  console.log(
-    `서버가 ${PORT} 포트에서 실행 중입니다. 다음 정각에 테스트 알림이 발송됩니다.`
-  );
-});
+// --- 서버 실행 (Vercel 환경에 맞게 수정) ---
+// Vercel이 알아서 서버를 실행하므로, app 객체만 넘겨줍니다.
+module.exports = app;
