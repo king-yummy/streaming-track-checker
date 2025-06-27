@@ -377,7 +377,7 @@
           }
           lastSentToken = token;
           lastSentOptIn = alarmOptIn;
-          fetch("http://localhost:3001/api/save-token", {
+          fetch("/api/save-token", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token, alarmOptIn }),
