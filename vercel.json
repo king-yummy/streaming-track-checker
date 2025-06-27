@@ -11,5 +11,11 @@
       "destination": "https://www.plli-checker.app/$1",
       "permanent": true
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "* * * * *"
+    }
   ]
 }
