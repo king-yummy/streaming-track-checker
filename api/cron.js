@@ -37,8 +37,8 @@ export default function handler(req, res) {
 
   // ✅ [테스트용 코드!] 아래 줄이 현재 시간을 무조건 '7시'로 만듭니다.
   // 실제 운영 시에는 이 줄을 지우고 아래 줄의 주석을 풀어주세요.
-  const kstHour = 7;
-  // const kstHour = kstTime.getUTCHours(); // <-- 실제 운영용 코드
+  // const kstHour = 7;
+  const kstHour = kstTime.getUTCHours(); // <-- 실제 운영용 코드
 
   // 알림을 보낼 시간대 (오전 7시, 10시, 오후 1시, 4시, 7시, 10시, 새벽 1시)
   const targetHours = [7, 10, 13, 16, 19, 22, 1];
