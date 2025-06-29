@@ -55,14 +55,12 @@
       class="fixed inset-0 z-50 bg-white flex flex-col justify-center items-center"
     >
       <img
-        src="icon-192.png"
-        alt="스밍체크 로고"
-        class="w-16 h-16 mb-4 animate-bounce"
+        src="bg.png"
+        alt="로딩 이미지"
+        class="w-full h-full object-contain"
       />
-      <p class="text-gray-700 font-medium text-lg">잠깐 기다리면 보여주겠지~</p>
     </div>
 
-    <!-- 헤더 -->
     <header class="w-full max-w-md mt-2 mb-2 text-center">
       <h1
         class="text-3xl tracking-wide"
@@ -70,23 +68,6 @@
       >
         <span class="font-bold">「かくれんぼ」</span> 스트리밍 리스트
       </h1>
-      <div
-        class="flex justify-between items-center mt-2 text-sm text-gray-700 px-1"
-      >
-        <div class="flex items-center gap-2">
-          <span>스밍체크 알림</span>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="alarm-toggle" class="sr-only peer" />
-            <div
-              class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-500 transition-all"
-            ></div>
-            <div
-              class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow peer-checked:translate-x-full transition-all"
-            ></div>
-          </label>
-        </div>
-        <span class="text-xs text-gray-500">25.06.16 ver.</span>
-      </div>
     </header>
 
     <main class="w-full max-w-md space-y-2 overflow-auto">
@@ -142,7 +123,6 @@
       </p>
     </footer>
 
-    <!-- 스크립트 -->
     <script>
       const SHEET_URL =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?gid=0&single=true&output=csv";
@@ -179,7 +159,12 @@
         return `${m}:${s.toString().padStart(2, "0")}`;
       };
 
+      // We'll store the time when loading starts
+      let loadingStartTime = Date.now();
+      const MIN_LOADING_TIME = 1500;
+
       async function loadSchedule() {
+        // Start fetching data
         const res = await fetch(SHEET_URL);
         const text = await res.text();
         const rows = text.trim().split("\n").slice(1);
@@ -202,7 +187,15 @@
         tick();
         setInterval(tick, 1000);
 
-        document.getElementById("loading-screen").style.display = "none";
+        // Calculate how much time has passed since loading started
+        const timeElapsed = Date.now() - loadingStartTime;
+        // Calculate remaining time needed for 2 seconds
+        const remainingTime = Math.max(0, MIN_LOADING_TIME - timeElapsed);
+
+        // Hide loading screen after the minimum time has passed
+        setTimeout(() => {
+          document.getElementById("loading-screen").style.display = "none";
+        }, remainingTime);
       }
 
       function renderPlaylist() {
@@ -333,117 +326,5 @@
         background-color: white;
       }
     </style>
-
-    <!-- Firebase 모듈 기반 스크립트 -->
-    <script type="module">
-      // ✅ [수정] import 구문은 스크립트의 가장 최상단에 위치해야 합니다.
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-      import {
-        getMessaging,
-        getToken,
-        onMessage,
-      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-
-      // 무한 루프 방지를 위한 깃발(플래그)
-      if (window.firebaseHasBeenInitialized) {
-        // 이미 초기화되었다면 아무것도 하지 않음
-      } else {
-        // 처음 실행되는 경우, 깃발을 세웁니다.
-        window.firebaseHasBeenInitialized = true;
-
-        // ✅ [수정] import를 제외한 나머지 모든 로직은 이 else 블록 안에 위치합니다.
-        const firebaseConfig = {
-          apiKey: "AIzaSyDam42H9W_iouj0rkMZDDzSWsrmx8BlVkQ",
-          authDomain: "plli-checker.firebaseapp.com",
-          projectId: "plli-checker",
-          storageBucket: "plli-checker.firebasestorage.app",
-          messagingSenderId: "517953309352",
-          appId: "1:517953309352:web:a5c5a3919ff5bd8822d09d",
-          measurementId: "G-GYGLSJRN79",
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const messaging = getMessaging(app);
-
-        let currentToken = null;
-        let lastSentToken = null;
-        let lastSentOptIn = null;
-
-        function saveFCMTokenToServer(token, alarmOptIn) {
-          if (token === lastSentToken && alarmOptIn === lastSentOptIn) {
-            return;
-          }
-          lastSentToken = token;
-          lastSentOptIn = alarmOptIn;
-          fetch("/api/save-token", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token, alarmOptIn }),
-          }).then((res) => console.log("서버 응답 상태:", res.status));
-        }
-
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker
-            .register("/firebase-messaging-sw.js")
-            .then((registration) => navigator.serviceWorker.ready)
-            .then((readyRegistration) => {
-              console.log("✅ 서비스 워커 준비 완료!");
-              // ✅ [수정] 준비된 서비스 워커 등록 정보를 함수에 인자로 전달
-              requestPermissionAndToken(readyRegistration);
-            })
-            .catch((error) =>
-              console.error("❌ 서비스 워커 처리 중 오류:", error)
-            );
-        }
-
-        // ✅ [수정] 함수가 registration 객체를 인자로 받도록 변경
-        function requestPermissionAndToken(registration) {
-          Notification.requestPermission().then((permission) => {
-            if (permission !== "granted") {
-              console.warn("🔕 알림 권한이 거부되었습니다.");
-              return;
-            }
-            console.log("알림 권한 허용됨. 토큰 요청 중...");
-            // ✅ [수정] getToken에 serviceWorkerRegistration을 명시적으로 전달
-            getToken(messaging, {
-              vapidKey:
-                "BHKOgIoE52ImNaT3yKv_w1yJVSPL2WfUZHCp2VKUF0DvWiOVi2cNFQ-qS2XzjRt2HliwcK-U-BFrDXbxBfpI7MA",
-              serviceWorkerRegistration: registration,
-            })
-              .then((token) => {
-                if (!token) {
-                  console.log("토큰 발급 불가. 설정 확인 필요.");
-                  return;
-                }
-                currentToken = token;
-                const alarmOptIn =
-                  localStorage.getItem("alarmOptIn") === "true";
-                saveFCMTokenToServer(token, alarmOptIn);
-                console.log("📲 FCM Token:", token);
-              })
-              .catch((err) => console.error("❌ 토큰 가져오기 실패:", err));
-          });
-        }
-
-        onMessage(messaging, (payload) => {
-          console.log("📥 포그라운드 메시지:", payload);
-          alert(payload.notification?.title || "알림이 도착했습니다");
-        });
-
-        const toggle = document.getElementById("alarm-toggle");
-        if (toggle) {
-          toggle.checked = localStorage.getItem("alarmOptIn") === "true";
-          toggle.addEventListener("change", (e) => {
-            const isOn = e.target.checked;
-            localStorage.setItem("alarmOptIn", isOn ? "true" : "false");
-            if (currentToken) {
-              saveFCMTokenToServer(currentToken, isOn);
-            }
-          });
-        }
-      }
-    </script>
   </body>
 </html>

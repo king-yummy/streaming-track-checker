@@ -54,6 +54,7 @@ app.post("/api/save-token", (req, res) => {
 });
 
 // --- 스케줄러: 정각마다 푸시 알림 발송 ---
+/*
 cron.schedule("* * * * *", () => {
   // "매시간 0분" (정각)
   const allTokens = readTokens();
@@ -84,6 +85,7 @@ cron.schedule("* * * * *", () => {
       console.error("[정각 테스트] 알림 발송 중 오류 발생:", error);
     });
 });
+*/
 
 // --- 서버 실행 (Vercel 환경에 맞게 수정) ---
 // Vercel이 알아서 서버를 실행하므로, app 객체만 넘겨줍니다.
