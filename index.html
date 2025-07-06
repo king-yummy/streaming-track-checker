@@ -42,14 +42,14 @@
         animation: bgShift 2.5s ease-in-out infinite;
       }
       .tab-button.active {
-        border-color: #3b82f6;
+        border-color: #3b82f6; /* blue-500 */
         color: #3b82f6;
         font-weight: 600;
       }
     </style>
   </head>
   <body
-    class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4"
+    class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
   >
     <div
       id="loading-screen"
@@ -118,9 +118,18 @@
     <footer
       class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2"
     >
-      <p>플레이브 음원총공팀의 스트리밍 리스트에 따라 운영되는 페이지입니다.</p>
       <p>
-        문의 및 건의사항은 X(트위터)
+        <a
+          href="https://x.com/plave_stream?s=21&t=KweQO4B2QEKZ954vZ1zJ5g"
+          target="_blank"
+          rel="noopener"
+          class="text-blue-600 hover:underline"
+          >플레이브 음원총공팀</a
+        >
+        의 스밍 가이드에 따라 운영되는 페이지입니다.
+      </p>
+      <p>
+        앱 관련 문의 및 건의사항은 X(트위터)
         <strong
           ><a
             href="https://x.com/plave_pretty?s=21&t=KweQO4B2QEKZ954vZ1zJ5"
@@ -417,6 +426,31 @@
       </div>
     </div>
 
+    <div id="install-banner" class="hidden fixed bottom-4 inset-x-4 z-50">
+      <div
+        class="max-w-md mx-auto w-full bg-white rounded-full shadow-lg p-3 flex items-center space-x-4"
+      >
+        <div class="flex-grow pl-3">
+          <p class="font-bold text-sm">모바일&PC에서 앱으로 더 편하게!</p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button
+            id="install-dismiss-week"
+            class="text-xs text-gray-500 hover:underline whitespace-nowrap"
+          >
+            일주일간 안 보기
+          </button>
+          <button
+            id="install-button"
+            style="background-color: #dbeafe; color: #000"
+            class="text-sm font-bold py-2 px-4 rounded-full whitespace-nowrap hover:bg-sky-200"
+          >
+            설치
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       const SHEET_URL =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?gid=0&single=true&output=csv";
@@ -682,6 +716,54 @@
               activeContent.classList.remove("hidden");
             }
           });
+        });
+
+        // PWA 설치 버튼 로직 (일주일간 보지 않기 기능 추가)
+        let deferredPrompt;
+        const installBanner = document.getElementById("install-banner");
+        const installButton = document.getElementById("install-button");
+        const dismissButton = document.getElementById("install-dismiss-week");
+
+        window.addEventListener("beforeinstallprompt", (e) => {
+          // 일주일 안보기 설정 확인
+          const hideUntil = localStorage.getItem("hideInstallBannerUntil");
+          if (hideUntil && new Date().getTime() < parseInt(hideUntil, 10)) {
+            return; // 기간이 남았으면 배너 표시 안 함
+          }
+
+          // 이미 앱이 설치되어 있으면 배너 표시 안 함
+          if (window.matchMedia("(display-mode: standalone)").matches) {
+            return;
+          }
+
+          e.preventDefault();
+          deferredPrompt = e;
+          installBanner.classList.remove("hidden");
+        });
+
+        if (installButton) {
+          installButton.addEventListener("click", async () => {
+            if (!deferredPrompt) return;
+            installBanner.classList.add("hidden");
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            deferredPrompt = null;
+          });
+        }
+
+        if (dismissButton) {
+          dismissButton.addEventListener("click", () => {
+            const expiry = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
+            localStorage.setItem("hideInstallBannerUntil", expiry);
+            installBanner.classList.add("hidden");
+          });
+        }
+
+        window.addEventListener("appinstalled", () => {
+          if (installBanner) installBanner.classList.add("hidden");
+          deferredPrompt = null;
+          console.log("PWA was installed");
         });
       });
 
