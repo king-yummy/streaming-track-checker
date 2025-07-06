@@ -57,15 +57,19 @@
       <img src="bg.png" alt="로딩 이미지" class="w-full h-full object-cover" />
     </div>
 
-    <header class="w-full max-w-md mt-2 mb-2 text-center">
-      <h1
-        class="text-3xl tracking-wide"
-        style="font-family: 'Jua', sans-serif; font-weight: 400"
-      >
-        <span class="font-bold">「かくれんぼ」</span> 스트리밍 리스트
-      </h1>
+    <header class="w-full max-w-md mt-2 mb-2 flex justify-center">
+      <div class="inline-block">
+        <h1
+          class="text-3xl tracking-wide"
+          style="font-family: 'Jua', sans-serif; font-weight: 400"
+        >
+          <span class="font-bold">「Dash」</span> 스트리밍 리스트
+        </h1>
+        <span class="block text-sm text-gray-500 mt-1 text-right"
+          >25.07.07 ver.</span
+        >
+      </div>
     </header>
-
     <main class="w-full max-w-md space-y-2 overflow-auto">
       <ul id="playlist" class="space-y-2"></ul>
     </main>
@@ -131,13 +135,85 @@
         chroma: "Chroma Drift - japanese Ver.",
       };
 
-      const PER_CYCLE = {
-        kakurenbo: 4,
-        rizz: 3,
-        chroma: 1,
+      let schedule = [];
+
+      // =============== ▼ 새로운 계산 로직 적용 ▼ ===============
+
+      // 1단계: 새로운 기준값 및 횟수 규칙 정의
+      const CUTOVER_AT_MS = new Date("2025-07-06T23:00:00+09:00").getTime(); // 변경 기준 시점
+      const PER_CYCLE_OLD = { kakurenbo: 4, rizz: 3, chroma: 1 }; // 기존 주기당 횟수
+      const PER_CYCLE_NEW = { kakurenbo: 2, rizz: 1, chroma: 1 }; // 신규 주기당 횟수
+
+      // 2단계: 기준 시점까지의 기초 누적 횟수 사전 계산
+      const OLD_SYSTEM_DURATION_SEC = Math.floor(
+        (CUTOVER_AT_MS - START_AT_MS) / 1000
+      );
+      const OLD_SYSTEM_CYCLES = Math.floor(OLD_SYSTEM_DURATION_SEC / 3600);
+      const BASE_COUNTS = {
+        kakurenbo: OLD_SYSTEM_CYCLES * PER_CYCLE_OLD.kakurenbo,
+        rizz: OLD_SYSTEM_CYCLES * PER_CYCLE_OLD.rizz,
+        chroma: OLD_SYSTEM_CYCLES * PER_CYCLE_OLD.chroma,
       };
 
-      let schedule = [];
+      /**
+       * 3단계: 실시간 계산 로직 분기 처리
+       * 현재 시간에 따라 계산법을 다르게 적용합니다.
+       */
+      function updateCounts(cycles, secInLoop) {
+        const now = Date.now();
+        let counts = {};
+
+        // Case 1: 현재 시간이 7월 6일 23시 이전일 경우
+        if (now < CUTOVER_AT_MS) {
+          // 기존 로직과 동일하게, PER_CYCLE_OLD 규칙을 적용
+          counts = {
+            kakurenbo: cycles * PER_CYCLE_OLD.kakurenbo,
+            rizz: cycles * PER_CYCLE_OLD.rizz,
+            chroma: cycles * PER_CYCLE_OLD.chroma,
+          };
+
+          // 현재 진행 중인 사이클 내 횟수 추가
+          schedule.forEach((item) => {
+            if (item.startSec <= secInLoop) {
+              if (item.title === TARGETS.kakurenbo) counts.kakurenbo += 1;
+              else if (item.title === TARGETS.rizz) counts.rizz += 1;
+              else if (item.title === TARGETS.chroma) counts.chroma += 1;
+            }
+          });
+        }
+        // Case 2: 현재 시간이 7월 6일 23시 이후일 경우
+        else {
+          // ① 기초 횟수 불러오기
+          counts = { ...BASE_COUNTS };
+
+          // ② 신규 누적 시간 계산
+          const diffSecNew = Math.floor((now - CUTOVER_AT_MS) / 1000);
+          // ③ 신규 사이클 횟수 계산
+          const cyclesNew = Math.floor(diffSecNew / 3600);
+          const secInLoopNew = diffSecNew % 3600;
+
+          // ④ 신규 누적 횟수 계산 (신규 사이클 횟수 * PER_CYCLE_NEW)
+          counts.kakurenbo += cyclesNew * PER_CYCLE_NEW.kakurenbo;
+          counts.rizz += cyclesNew * PER_CYCLE_NEW.rizz;
+          counts.chroma += cyclesNew * PER_CYCLE_NEW.chroma;
+
+          // ⑤ 현재 진행 중인 사이클 내 횟수 추가
+          schedule.forEach((item) => {
+            if (item.startSec <= secInLoopNew) {
+              if (item.title === TARGETS.kakurenbo) counts.kakurenbo += 1;
+              else if (item.title === TARGETS.rizz) counts.rizz += 1;
+              else if (item.title === TARGETS.chroma) counts.chroma += 1;
+            }
+          });
+        }
+
+        // ⑥ 최종 합산 결과를 화면에 표시
+        document.getElementById("count-kakurenbo").textContent =
+          counts.kakurenbo;
+        document.getElementById("count-rizz").textContent = counts.rizz;
+        document.getElementById("count-chroma").textContent = counts.chroma;
+      }
+      // =============== ▲ 새로운 계산 로직 끝 ▲ ===============
 
       const toSec = (mmss) => {
         const [m, s] = mmss.split(":").map(Number);
@@ -290,27 +366,6 @@
             endEl.textContent = `-0:00`;
           }
         });
-      }
-
-      function updateCounts(cycles, secInLoop) {
-        const counts = {
-          kakurenbo: cycles * PER_CYCLE.kakurenbo,
-          rizz: cycles * PER_CYCLE.rizz,
-          chroma: cycles * PER_CYCLE.chroma,
-        };
-
-        schedule.forEach((item) => {
-          if (item.startSec <= secInLoop) {
-            if (item.title === TARGETS.kakurenbo) counts.kakurenbo += 1;
-            else if (item.title === TARGETS.rizz) counts.rizz += 1;
-            else if (item.title === TARGETS.chroma) counts.chroma += 1;
-          }
-        });
-
-        document.getElementById("count-kakurenbo").textContent =
-          counts.kakurenbo;
-        document.getElementById("count-rizz").textContent = counts.rizz;
-        document.getElementById("count-chroma").textContent = counts.chroma;
       }
 
       loadSchedule();
