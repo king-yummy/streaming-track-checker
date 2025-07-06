@@ -9,3 +9,5 @@ tokens.json
 
 # 운영체제 관련 파일
 .DS_Store
+.vercel
+.env*.local
