@@ -127,7 +127,7 @@
           <span class="font-bold">「Dash Mode」</span> 스밍 리스트
         </h1>
         <span class="block text-sm text-gray-500 mt-1 text-right"
-          >25.07.07 ver.</span
+          >25.07.08 ver.</span
         >
       </div>
     </header>
@@ -169,7 +169,7 @@
           class="hidden absolute bottom-full mb-5 right-0 w-48 bg-gray-800 text-white text-xs rounded-md p-2 z-10 info-tooltip"
         >
           플리들은 오늘도 스밍체크 중🔥 화력 버튼을 누르고 서로 응원해보아요!
-          목표는 3500!
+          목표는 5000!
         </div>
       </div>
 
@@ -217,14 +217,26 @@
             ></div>
           </div>
           <div
-            id="achievement-marker"
+            id="achievement-marker-1000"
             class="absolute z-10"
-            style="left: 28.57%; bottom: -8px; transform: translateX(-50%)"
+            style="left: 20%; bottom: -8px; transform: translateX(-50%)"
           >
             <div class="flex flex-col items-center">
               <span class="text-base">💙</span>
               <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                >1000회 달성</span
+                >1000회</span
+              >
+            </div>
+          </div>
+          <div
+            id="achievement-marker-3500"
+            class="absolute z-10"
+            style="left: 70%; bottom: -8px; transform: translateX(-50%)"
+          >
+            <div class="flex flex-col items-center">
+              <span class="text-base">💜</span>
+              <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                >3500회</span
               >
             </div>
           </div>
@@ -858,7 +870,7 @@
         }
 
         // --- 화력 게이지 기능 (업그레이드) ---
-        const GAUGE_GOAL = 3500;
+        const GAUGE_GOAL = 5000;
         const gaugeFill = document.getElementById("gauge-fill");
         const gaugeCount = document.getElementById("gauge-count");
         const gaugeCountWrapper = document.getElementById(
@@ -885,10 +897,9 @@
             gaugeFill.style.width = `${percentage}%`;
           }
 
-          // 횟수(숫자)의 텍스트와 위치를 모두 업데이트
           if (gaugeCount) {
             gaugeCount.textContent = safeCount.toLocaleString();
-            gaugeCount.style.left = `${percentage}%`;
+            gaugeCount.style.left = `${labelPosition}%`;
           }
         };
         const fetchInitialCount = async () => {
