@@ -169,7 +169,7 @@
           class="hidden absolute bottom-full mb-5 right-0 w-48 bg-gray-800 text-white text-xs rounded-md p-2 z-10 info-tooltip"
         >
           플리들은 오늘도 스밍체크 중🔥 화력 버튼을 누르고 서로 응원해보아요!
-          목표는 5000!
+          목표는 7500!
         </div>
       </div>
 
@@ -219,7 +219,7 @@
           <div
             id="achievement-marker-1000"
             class="absolute z-10"
-            style="left: 20%; bottom: -8px; transform: translateX(-50%)"
+            style="left: 13.3%; bottom: -8px; transform: translateX(-50%)"
           >
             <div class="flex flex-col items-center">
               <span class="text-base">💙</span>
@@ -231,12 +231,24 @@
           <div
             id="achievement-marker-3500"
             class="absolute z-10"
-            style="left: 70%; bottom: -8px; transform: translateX(-50%)"
+            style="left: 46.7%; bottom: -8px; transform: translateX(-50%)"
           >
             <div class="flex flex-col items-center">
               <span class="text-base">💜</span>
               <span class="text-[9px] text-gray-500 whitespace-nowrap"
                 >3500회</span
+              >
+            </div>
+          </div>
+          <div
+            id="achievement-marker-5000"
+            class="absolute z-10"
+            style="left: 66.7%; bottom: -8px; transform: translateX(-50%)"
+          >
+            <div class="flex flex-col items-center">
+              <span class="text-base">💗</span>
+              <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                >5000회</span
               >
             </div>
           </div>
@@ -731,28 +743,28 @@
         ul.innerHTML = schedule
           .map(
             (item, i) => `
-      <li data-index="${i}" class="flex flex-col p-2 rounded-lg shadow w-full opacity-50 transition-all bg-white text-[13px]">
-        <div class="flex items-center gap-2">
-          <div class="w-10 h-10 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
-            <img src="${item.cover}" alt="${
+    <li data-index="${i}" class="flex flex-col p-2 rounded-lg shadow w-full opacity-50 transition-all bg-white text-[13px]">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
+          <img src="${item.cover}" alt="${
               item.title
             }" class="w-full h-full object-cover" />
-          </div>
-          <div class="flex-1">
-            <p class="font-medium truncate">${i + 1}. ${item.title}</p>
-            <p class="text-xs text-gray-500">${formatKoreanTime(
-              item.start
-            )} ~ ${formatKoreanTime(item.end)}</p>
-          </div>
         </div>
-        <div class="flex items-center gap-1 text-[11px] px-1 mt-1">
-          <span id="start-${i}" class="w-[40px] text-left text-gray-400">+0:00</span>
-          <div class="flex-1 h-1 bg-gray-200 rounded overflow-hidden">
-            <div id="p-${i}" class="h-full bg-blue-400 transition-all" style="width:0%"></div>
-          </div>
-          <span id="end-${i}" class="w-[40px] text-right text-gray-400">-0:00</span>
+        <div class="flex-1">
+          <p class="font-medium truncate">${i + 1}. ${item.title}</p>
+          <p class="text-xs text-gray-500">${formatKoreanTime(
+            item.start
+          )} ~ ${formatKoreanTime(item.end)}</p>
         </div>
-      </li>`
+      </div>
+      <div class="flex items-center gap-1 text-[11px] px-1 mt-1">
+        <span id="start-${i}" class="w-[40px] text-left text-gray-400">+0:00</span>
+        <div class="flex-1 h-1 bg-gray-200 rounded overflow-hidden">
+          <div id="p-${i}" class="h-full bg-blue-400 transition-all" style="width:0%"></div>
+        </div>
+        <span id="end-${i}" class="w-[40px] text-right text-gray-400">-0:00</span>
+      </div>
+    </li>`
           )
           .join("");
       }
@@ -870,7 +882,7 @@
         }
 
         // --- 화력 게이지 기능 (업그레이드) ---
-        const GAUGE_GOAL = 5000;
+        const GAUGE_GOAL = 7500;
         const gaugeFill = document.getElementById("gauge-fill");
         const gaugeCount = document.getElementById("gauge-count");
         const gaugeCountWrapper = document.getElementById(
