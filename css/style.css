@@ -1,0 +1,87 @@
+@keyframes bgShift {
+        0%,
+        100% {
+          background-color: #dbeafe;
+        }
+        50% {
+          background-color: #bfdbfe;
+        }
+      }
+      .playing {
+        animation: bgShift 2.5s ease-in-out infinite;
+      }
+      .tab-button.active {
+        border-color: #3b82f6;
+        color: #3b82f6;
+        font-weight: 600;
+      }
+      /* --- 화력 게이지 애니메이션 (업그레이드) --- */
+      .animated-fire {
+        background: linear-gradient(-45deg, #ffc94a, #ff7c36, #ff4a4a, #ff6347);
+        background-size: 200% 200%;
+        animation: fire-gradient 3s ease-in-out infinite;
+        box-shadow: 0 0 8px #ffdd57, 0 0 15px #ff7c36;
+      }
+      @keyframes fire-gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      /* --- 쿨타임 원형 타이머 --- */
+      #cooldown-circle {
+        transform: rotate(-90deg);
+        transform-origin: center;
+        transition: stroke-dashoffset 1.5s linear;
+      }
+      /* --- 도움말 말풍선 --- */
+      .info-tooltip {
+        /* 기존 스타일 유지 (혹은 필요한 경우 변경) */
+        position: absolute;
+        bottom: 100%; /* 부모 요소 위로 올림 */
+        margin-bottom: 5px; /* 부모 요소와의 간격 */
+        right: 0; /* 오른쪽 정렬 */
+        width: 48; /* 너비 */
+        background-color: #1f2937; /* gray-800 */
+        color: white;
+        font-size: 0.75rem; /* text-xs */
+        border-radius: 0.375rem; /* rounded-md */
+        padding: 0.5rem; /* p-2 */
+        z-index: 10;
+
+        /* 말꼬리 생성을 위해 relative로 설정 */
+        position: relative;
+      }
+
+      .info-tooltip::after {
+        content: "";
+        position: absolute;
+        bottom: -10px; /* 말풍선 본체 아래로 10px 내려오게 (꼬리 높이만큼) */
+        right: 15px; /* 오른쪽에서 15px 안쪽으로 들어오게 (원하는 위치로 조정) */
+        width: 0;
+        height: 0;
+        /* border를 이용해 삼각형 꼬리 만들기 */
+        border-left: 10px solid transparent; /* 왼쪽 투명 테두리 */
+        border-right: 10px solid transparent; /* 오른쪽 투명 테두리 */
+        border-top: 10px solid #1f2937; /* 윗쪽 테두리를 gray-800 색상으로 채워서 삼각형 만듦 */
+      }
+
+      /* 숨김 처리 */
+      .hidden {
+        display: none;
+      }
+
+      .loading-gif {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw; /* 화면 너비의 80% */
+        height: 80vh; /* 화면 높이의 80% */
+        object-fit: contain; /* 이미지가 잘리지 않고 중앙에 위치하도록 */
+      }
