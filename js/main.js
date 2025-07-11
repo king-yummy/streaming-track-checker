@@ -116,6 +116,7 @@ const SHEET_URL =
 
         setTimeout(() => {
           document.getElementById("loading-screen").style.display = "none";
+          document.getElementById("main-content").classList.remove("invisible");
         }, remainingTime);
       }
 

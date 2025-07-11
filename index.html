@@ -38,211 +38,218 @@
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
   >
-    <div id="loading-screen" class="fixed inset-0 z-[80] bg-cover bg-center">
+    <div id="loading-screen" class="fixed inset-0 z-[80] bg-cover bg-center bg-white">
       <img id="loading-gif" class="loading-gif" alt="loading..." />
     </div>
 
-    <header class="w-full max-w-md mt-2 mb-2 flex justify-center">
-      <div class="inline-block">
-        <h1
-          class="text-3xl tracking-wide"
-          style="font-family: 'Jua', sans-serif; font-weight: 400"
-        >
-          <span class="font-bold">「Dash Mode」</span> 스밍 리스트
-        </h1>
-        <span class="block text-sm text-gray-500 mt-1 text-right"
-          >25.07.08 ver.</span
-        >
-      </div>
-    </header>
-
-    <div class="w-full max-w-md mt-2">
-      <button
-        id="guide-button"
-        class="w-full flex justify-between items-center p-3 rounded-lg bg-white shadow hover:bg-gray-50 transition text-left"
-      >
-        <div>
-          <p class="font-semibold text-gray-800">
-            🔊 원클릭 스밍 & 설정 가이드
-          </p>
+    <div id="main-content" class="invisible w-full flex flex-col items-center">
+      <header class="w-full max-w-md mt-2 mb-2 flex justify-center">
+        <div class="inline-block">
+          <h1
+            class="text-3xl tracking-wide"
+            style="font-family: 'Jua', sans-serif; font-weight: 400"
+          >
+            <span class="font-bold">「Dash Mode」</span> 스밍 리스트
+          </h1>
+          <span class="block text-sm text-gray-500 mt-1 text-right"
+            >25.07.08 ver.</span
+          >
         </div>
-        <span class="text-lg text-blue-500 font-bold">&gt;</span>
-      </button>
-    </div>
+      </header>
 
-    <main class="w-full max-w-md space-y-2 overflow-auto mt-4">
-      <ul id="playlist" class="space-y-2"></ul>
-    </main>
-
-    <section
-      id="fire-gauge-section"
-      class="w-full max-w-md mt-4 mb-2 p-3 bg-white rounded-2xl shadow flex flex-col items-center space-y-2"
-    >
-      <div class="relative flex items-center justify-center w-full">
-        <h2 class="font-bold text-lg">🔥 PLLI 화력 게이지 🔥</h2>
-
+      <div class="w-full max-w-md mt-2">
         <button
-          id="info-button"
-          class="absolute right-0 text-gray-400 border border-gray-400 rounded-full w-5 h-5 flex items-center justify-center text-xs font-mono"
+          id="guide-button"
+          class="w-full flex justify-between items-center p-3 rounded-lg bg-white shadow hover:bg-gray-50 transition text-left"
         >
-          i
+          <div>
+            <p class="font-semibold text-gray-800">
+              🔊 원클릭 스밍 & 설정 가이드
+            </p>
+          </div>
+          <span class="text-lg text-blue-500 font-bold">&gt;</span>
         </button>
-
-        <div
-          id="info-tooltip"
-          class="hidden absolute bottom-full mb-5 right-0 w-48 bg-gray-800 text-white text-xs rounded-md p-2 z-10 info-tooltip"
-        >
-          플리들은 오늘도 스밍체크 중🔥 화력 버튼을 누르고 서로 응원해보아요!
-          목표는 7500!
-        </div>
       </div>
 
-      <div class="w-full flex items-center space-x-3">
-        <div id="gauge-button-wrapper" class="relative flex-shrink-0 w-14 h-14">
-          <svg class="absolute -inset-1 w-16 h-16" viewBox="0 0 36 36">
-            <circle
-              class="text-gray-200"
-              stroke-width="3"
-              stroke="currentColor"
-              fill="transparent"
-              r="16"
-              cx="18"
-              cy="18"
-            />
-            <circle
-              id="cooldown-circle"
-              class="text-sky-400"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke="currentColor"
-              fill="transparent"
-              r="16"
-              cx="18"
-              cy="18"
-            />
-          </svg>
+      <main class="w-full max-w-md space-y-2 overflow-auto mt-4">
+        <ul id="playlist" class="space-y-2"></ul>
+      </main>
+
+      <section
+        id="fire-gauge-section"
+        class="w-full max-w-md mt-4 mb-2 p-3 bg-white rounded-2xl shadow flex flex-col items-center space-y-2"
+      >
+        <div class="relative flex items-center justify-center w-full">
+          <h2 class="font-bold text-lg">🔥 PLLI 화력 게이지 🔥</h2>
+
           <button
-            id="gauge-button"
-            class="relative text-3xl w-full h-full flex items-center justify-center transform transition-transform duration-100 active:scale-125"
+            id="info-button"
+            class="absolute right-0 text-gray-400 border border-gray-400 rounded-full w-5 h-5 flex items-center justify-center text-xs font-mono"
           >
-            🔥
+            i
           </button>
+
+          <div
+            id="info-tooltip"
+            class="hidden absolute bottom-full mb-5 right-0 w-48 bg-gray-800 text-white text-xs rounded-md p-2 z-10 info-tooltip"
+          >
+            플리들은 오늘도 스밍체크 중🔥 화력 버튼을 누르고 서로 응원해보아요!
+            목표는 7500!
+          </div>
         </div>
 
-        <div
-          id="progress-container"
-          class="relative w-full h-8 flex items-center"
-        >
-          <div class="w-full bg-gray-200 rounded-full h-5">
+        <div class="w-full flex items-center space-x-3">
+          <div
+            id="gauge-button-wrapper"
+            class="relative flex-shrink-0 w-14 h-14"
+          >
+            <svg class="absolute -inset-1 w-16 h-16" viewBox="0 0 36 36">
+              <circle
+                class="text-gray-200"
+                stroke-width="3"
+                stroke="currentColor"
+                fill="transparent"
+                r="16"
+                cx="18"
+                cy="18"
+              />
+              <circle
+                id="cooldown-circle"
+                class="text-sky-400"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke="currentColor"
+                fill="transparent"
+                r="16"
+                cx="18"
+                cy="18"
+              />
+            </svg>
+            <button
+              id="gauge-button"
+              class="relative text-3xl w-full h-full flex items-center justify-center transform transition-transform duration-100 active:scale-125"
+            >
+              🔥
+            </button>
+          </div>
+
+          <div
+            id="progress-container"
+            class="relative w-full h-8 flex items-center"
+          >
+            <div class="w-full bg-gray-200 rounded-full h-5">
+              <div
+                id="gauge-fill"
+                class="h-5 rounded-full animated-fire transition-all duration-500"
+                style="width: 0%"
+              ></div>
+            </div>
             <div
-              id="gauge-fill"
-              class="h-5 rounded-full animated-fire transition-all duration-500"
-              style="width: 0%"
-            ></div>
-          </div>
-          <div
-            id="achievement-marker-1000"
-            class="absolute z-10"
-            style="left: 13.3%; bottom: -8px; transform: translateX(-50%)"
-          >
-            <div class="flex flex-col items-center">
-              <span class="text-base">💙</span>
-              <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                >1000회</span
-              >
+              id="achievement-marker-1000"
+              class="absolute z-10"
+              style="left: 13.3%; bottom: -8px; transform: translateX(-50%)"
+            >
+              <div class="flex flex-col items-center">
+                <span class="text-base">💙</span>
+                <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                  >1000회</span
+                >
+              </div>
             </div>
-          </div>
-          <div
-            id="achievement-marker-3500"
-            class="absolute z-10"
-            style="left: 46.7%; bottom: -8px; transform: translateX(-50%)"
-          >
-            <div class="flex flex-col items-center">
-              <span class="text-base">💜</span>
-              <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                >3500회</span
-              >
+            <div
+              id="achievement-marker-3500"
+              class="absolute z-10"
+              style="left: 46.7%; bottom: -8px; transform: translateX(-50%)"
+            >
+              <div class="flex flex-col items-center">
+                <span class="text-base">💜</span>
+                <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                  >3500회</span
+                >
+              </div>
             </div>
-          </div>
-          <div
-            id="achievement-marker-5000"
-            class="absolute z-10"
-            style="left: 66.7%; bottom: -8px; transform: translateX(-50%)"
-          >
-            <div class="flex flex-col items-center">
-              <span class="text-base">💗</span>
-              <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                >5000회</span
-              >
+            <div
+              id="achievement-marker-5000"
+              class="absolute z-10"
+              style="left: 66.7%; bottom: -8px; transform: translateX(-50%)"
+            >
+              <div class="flex flex-col items-center">
+                <span class="text-base">💗</span>
+                <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                  >5000회</span
+                >
+              </div>
             </div>
+            <span
+              id="gauge-count"
+              class="absolute bottom-full text-xs font-semibold text-gray-800 transform -translate-x-1/2"
+              style="left: 0%"
+              >0</span
+            >
           </div>
-          <span
-            id="gauge-count"
-            class="absolute bottom-full text-xs font-semibold text-gray-800 transform -translate-x-1/2"
-            style="left: 0%"
-            >0</span
-          >
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section
-      id="dashboard"
-      class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow flex flex-col items-center space-y-3"
-    >
-      <h2 class="text-sm text-gray-600 font-semibold">
-        16일 자정부터 스밍이 끊기지 않았다면!
-      </h2>
-      <div class="grid grid-cols-3 gap-4 w-full text-center">
-        <div>
-          <p class="text-[11px] text-gray-500 mb-1">かくれんぼ</p>
-          <p class="text-2xl font-bold">
-            <span id="count-kakurenbo">0</span>회
-          </p>
+      <section
+        id="dashboard"
+        class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow flex flex-col items-center space-y-3"
+      >
+        <h2 class="text-sm text-gray-600 font-semibold">
+          16일 자정부터 스밍이 끊기지 않았다면!
+        </h2>
+        <div class="grid grid-cols-3 gap-4 w-full text-center">
+          <div>
+            <p class="text-[11px] text-gray-500 mb-1">かくれんぼ</p>
+            <p class="text-2xl font-bold">
+              <span id="count-kakurenbo">0</span>회
+            </p>
+          </div>
+          <div>
+            <p class="text-[11px] text-gray-500 mb-1">Rizz - JP</p>
+            <p class="text-2xl font-bold"><span id="count-rizz">0</span>회</p>
+          </div>
+          <div>
+            <p class="text-[11px] text-gray-500 mb-1">Chroma Drift - JP</p>
+            <p class="text-2xl font-bold">
+              <span id="count-chroma">0</span>회
+            </p>
+          </div>
         </div>
-        <div>
-          <p class="text-[11px] text-gray-500 mb-1">Rizz - JP</p>
-          <p class="text-2xl font-bold"><span id="count-rizz">0</span>회</p>
-        </div>
-        <div>
-          <p class="text-[11px] text-gray-500 mb-1">Chroma Drift - JP</p>
-          <p class="text-2xl font-bold"><span id="count-chroma">0</span>회</p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <footer
-      class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2"
-    >
-      <p>
-        <a
-          href="https://x.com/plave_stream?s=21&t=KweQO4B2QEKZ954vZ1zJ5g"
-          target="_blank"
-          rel="noopener"
-          class="text-blue-600 hover:underline"
-          >플레이브 음원총공팀</a
-        >
-        의 스밍 가이드에 따라 운영되는 페이지입니다.
-      </p>
-      <p>
-        앱 관련 문의 및 건의사항은 X(트위터)
-        <strong
-          ><a
-            href="https://x.com/plave_pretty?s=21&t=KweQO4B2QEKZ954vZ1zJ5"
+      <footer
+        class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2"
+      >
+        <p>
+          <a
+            href="https://x.com/plave_stream?s=21&t=KweQO4B2QEKZ954vZ1zJ5g"
             target="_blank"
             rel="noopener"
             class="text-blue-600 hover:underline"
-            >@plave_pretty</a
-          ></strong
-        >
-        로 보내주세요.
-      </p>
-      <p class="text-[10px] text-gray-400 mt-2">
-        이 페이지는 플레이브 팬덤 <strong>PLLI</strong>만을 위해
-        제작하였습니다.<br />
-        타 팬덤에서의 무단 복제·재가공·사용 발견 시 빠르게 대응합니다. 🕵️‍♀️
-      </p>
-    </footer>
+            >플레이브 음원총공팀</a
+          >
+          의 스밍 가이드에 따라 운영되는 페이지입니다.
+        </p>
+        <p>
+          앱 관련 문의 및 건의사항은 X(트위터)
+          <strong
+            ><a
+              href="https://x.com/plave_pretty?s=21&t=KweQO4B2QEKZ954vZ1zJ5"
+              target="_blank"
+              rel="noopener"
+              class="text-blue-600 hover:underline"
+              >@plave_pretty</a
+            ></strong
+          >
+          로 보내주세요.
+        </p>
+        <p class="text-[10px] text-gray-400 mt-2">
+          이 페이지는 플레이브 팬덤 <strong>PLLI</strong>만을 위해
+          제작하였습니다.<br />
+          타 팬덤에서의 무단 복제·재가공·사용 발견 시 빠르게 대응합니다. 🕵️‍♀️
+        </p>
+      </footer>
+    </div>
 
     <div
       id="guide-modal-overlay"
