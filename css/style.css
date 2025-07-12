@@ -1,87 +1,230 @@
 @keyframes bgShift {
-        0%,
-        100% {
-          background-color: #dbeafe;
-        }
-        50% {
-          background-color: #bfdbfe;
-        }
-      }
-      .playing {
-        animation: bgShift 2.5s ease-in-out infinite;
-      }
-      .tab-button.active {
-        border-color: #3b82f6;
-        color: #3b82f6;
-        font-weight: 600;
-      }
-      /* --- 화력 게이지 애니메이션 (업그레이드) --- */
-      .animated-fire {
-        background: linear-gradient(-45deg, #ffc94a, #ff7c36, #ff4a4a, #ff6347);
-        background-size: 200% 200%;
-        animation: fire-gradient 3s ease-in-out infinite;
-        box-shadow: 0 0 8px #ffdd57, 0 0 15px #ff7c36;
-      }
-      @keyframes fire-gradient {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-      /* --- 쿨타임 원형 타이머 --- */
-      #cooldown-circle {
-        transform: rotate(-90deg);
-        transform-origin: center;
-        transition: stroke-dashoffset 1.5s linear;
-      }
-      /* --- 도움말 말풍선 --- */
-      .info-tooltip {
-        /* 기존 스타일 유지 (혹은 필요한 경우 변경) */
-        position: absolute;
-        bottom: 100%; /* 부모 요소 위로 올림 */
-        margin-bottom: 5px; /* 부모 요소와의 간격 */
-        right: 0; /* 오른쪽 정렬 */
-        width: 48; /* 너비 */
-        background-color: #1f2937; /* gray-800 */
-        color: white;
-        font-size: 0.75rem; /* text-xs */
-        border-radius: 0.375rem; /* rounded-md */
-        padding: 0.5rem; /* p-2 */
-        z-index: 10;
+  0%,
+  100% {
+    background-color: #dbeafe;
+  }
+  50% {
+    background-color: #bfdbfe;
+  }
+}
+.playing {
+  animation: bgShift 2.5s ease-in-out infinite;
+}
+.tab-button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  font-weight: 600;
+}
+/* --- 화력 게이지 애니메이션 (업그레이드) --- */
+.animated-fire {
+  background: linear-gradient(-45deg, #ffc94a, #ff7c36, #ff4a4a, #ff6347);
+  background-size: 200% 200%;
+  animation: fire-gradient 3s ease-in-out infinite;
+  box-shadow: 0 0 8px #ffdd57, 0 0 15px #ff7c36;
+}
+@keyframes fire-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+/* --- 쿨타임 원형 타이머 --- */
+#cooldown-circle {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 1.5s linear;
+}
+/* --- 도움말 말풍선 --- */
+.info-tooltip {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 5px;
+  right: 0;
+  width: 48;
+  background-color: #1f2937;
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  z-index: 10;
+  position: relative;
+}
+.info-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  right: 15px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #1f2937;
+}
 
-        /* 말꼬리 생성을 위해 relative로 설정 */
-        position: relative;
-      }
+/* 숨김 처리 */
+.hidden {
+  display: none;
+}
 
-      .info-tooltip::after {
-        content: "";
-        position: absolute;
-        bottom: -10px; /* 말풍선 본체 아래로 10px 내려오게 (꼬리 높이만큼) */
-        right: 15px; /* 오른쪽에서 15px 안쪽으로 들어오게 (원하는 위치로 조정) */
-        width: 0;
-        height: 0;
-        /* border를 이용해 삼각형 꼬리 만들기 */
-        border-left: 10px solid transparent; /* 왼쪽 투명 테두리 */
-        border-right: 10px solid transparent; /* 오른쪽 투명 테두리 */
-        border-top: 10px solid #1f2937; /* 윗쪽 테두리를 gray-800 색상으로 채워서 삼각형 만듦 */
-      }
+.loading-gif {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 80vh;
+  object-fit: contain;
+}
 
-      /* 숨김 처리 */
-      .hidden {
-        display: none;
-      }
+/* ==========[ 투두리스트 관련 스타일 ]========== */
 
-      .loading-gif {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80vw; /* 화면 너비의 80% */
-        height: 80vh; /* 화면 높이의 80% */
-        object-fit: contain; /* 이미지가 잘리지 않고 중앙에 위치하도록 */
-      }
+/* 아코디언 내용 (수정) */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  /* visibility 속성 추가로 렌더링되지 않게 하여 내용 삐져나옴 방지 */
+  visibility: hidden;
+  transition: max-height 0.3s ease-out, visibility 0s 0.3s;
+}
+.accordion-header:has(+ .accordion-content[style*="max-height"])
+  + .accordion-content {
+  visibility: visible;
+  transition: max-height 0.3s ease-out, visibility 0s;
+}
+
+/* 필수 항목 강조 (빨간색) */
+.is-essential {
+  color: #ef4444; /* red-500 */
+  font-weight: 600;
+}
+
+/* 완료된 항목 스타일 (신규) */
+.item-done {
+  text-decoration: line-through;
+  color: #9ca3af; /* gray-400 */
+}
+
+/* 바로가기, 보상, 팁 버튼 컨테이너 */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 8px */
+}
+
+/* 바로가기 버튼 */
+.link-button {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #3b82f6; /* blue-500 */
+  padding: 0.125rem 0.5rem; /* py-0.5 px-2 */
+  border-radius: 9999px; /* rounded-full */
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.link-button:hover {
+  background-color: #e5e7eb; /* gray-200 */
+}
+
+/* 보상/팁 버튼 */
+.reward-button,
+.tip-button {
+  background-color: transparent;
+  border: 1px solid #9ca3af; /* gray-400 */
+  color: #6b7280; /* gray-500 */
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reward-button:hover,
+.tip-button:hover {
+  background-color: #f3f4f6; /* gray-100 */
+  border-color: #6b7280; /* gray-500 */
+}
+
+/* 상세 정보 모달 (팁/보상) 캐러셀 (수정) */
+.carousel-items {
+  overflow: hidden;
+  position: relative;
+}
+.carousel-item {
+  display: none;
+  text-align: center;
+}
+.carousel-item.active {
+  display: block;
+}
+.carousel-item img {
+  max-width: 100%;
+  max-height: 300px;
+  margin: 0 auto 0.75rem;
+  object-fit: contain;
+}
+.carousel-item p {
+  white-space: pre-wrap;
+  word-break: keep-all;
+  font-size: 0.875rem;
+}
+.carousel-navigation {
+  position: absolute;
+  top: 40%;
+  left: -10px;
+  right: -10px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+}
+.carousel-navigation button {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 9999px;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.carousel-dots {
+  text-align: center;
+  margin-top: 0.75rem;
+}
+.carousel-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d1d5db; /* gray-300 */
+  margin: 0 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.carousel-dot.active {
+  background-color: #3b82f6; /* blue-500 */
+  transform: scale(1.25);
+}
+
+/* ==========[ 하단 탭 네비게이션 ]========== */
+#bottom-nav {
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+#bottom-nav button {
+  transition: background-color 0.2s;
+}
+
+#bottom-nav button:active {
+  background-color: #f3f4f6;
+}

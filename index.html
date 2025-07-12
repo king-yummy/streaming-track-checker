@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PLLI 스밍체크</title>
+    <title>PLLI 스밍/투표 체크</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" href="icon-512.png" />
@@ -28,17 +28,20 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="preload" href="images/bamby1.gif" as="image">
-    <link rel="preload" href="images/bamby2.gif" as="image">
-    <link rel="preload" href="images/bamby3.gif" as="image">
-    <link rel="preload" href="images/bamby4.gif" as="image">
-    <link rel="preload" href="images/bamby5.gif" as="image">
-    <link rel="preload" href="images/bamby6.gif" as="image">
+    <link rel="preload" href="images/bamby1.gif" as="image" />
+    <link rel="preload" href="images/bamby2.gif" as="image" />
+    <link rel="preload" href="images/bamby3.gif" as="image" />
+    <link rel="preload" href="images/bamby4.gif" as="image" />
+    <link rel="preload" href="images/bamby5.gif" as="image" />
+    <link rel="preload" href="images/bamby6.gif" as="image" />
   </head>
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
   >
-    <div id="loading-screen" class="fixed inset-0 z-[80] bg-cover bg-center bg-white">
+    <div
+      id="loading-screen"
+      class="fixed inset-0 z-[80] bg-cover bg-center bg-white"
+    >
       <img id="loading-gif" class="loading-gif" alt="loading..." />
     </div>
 
@@ -210,9 +213,7 @@
           </div>
           <div>
             <p class="text-[11px] text-gray-500 mb-1">Chroma Drift - JP</p>
-            <p class="text-2xl font-bold">
-              <span id="count-chroma">0</span>회
-            </p>
+            <p class="text-2xl font-bold"><span id="count-chroma">0</span>회</p>
           </div>
         </div>
       </section>
@@ -522,27 +523,72 @@
       </div>
     </div>
 
-    <div id="install-banner" class="hidden fixed bottom-4 inset-x-4 z-50">
-      <div
-        class="max-w-md mx-auto w-full bg-white rounded-2xl shadow-lg p-3 flex items-center justify-between space-x-4"
-      >
-        <div class="flex-grow pl-3">
-          <p class="font-bold text-sm">모바일&PC에서 앱으로 더 편하게!</p>
+    <nav
+      id="bottom-nav"
+      class="fixed bottom-0 inset-x-0 z-50 pointer-events-none"
+    >
+      <div class="max-w-md mx-auto p-2">
+        <div class="bg-white rounded-2xl shadow-t-heavy pointer-events-auto">
+          <button
+            id="open-todolist-button"
+            class="w-full flex items-center justify-center py-4 text-blue-600"
+          >
+            <span class="text-xl" style="font-family: 'Jua', sans-serif"
+              >🗳️ PLLI To-Do List</span
+            >
+          </button>
         </div>
-        <div class="flex items-center space-x-3">
+      </div>
+    </nav>
+
+    <div
+      id="todolist-overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-[90] hidden"
+    ></div>
+    <div id="todolist-panel" class="fixed inset-x-0 bottom-0 z-[100] hidden">
+      <div
+        class="w-full max-w-lg mx-auto bg-white rounded-t-2xl shadow-xl p-6 transform transition-all max-h-[80vh] flex flex-col"
+      >
+        <div class="flex-shrink-0 flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">🗳️ 오늘의 투표 & 할일</h2>
           <button
-            id="install-dismiss-week"
-            class="text-xs text-gray-500 hover:underline whitespace-nowrap"
+            id="close-todolist-button"
+            class="text-gray-400 hover:text-gray-700 text-2xl"
           >
-            일주일간 안 보기
+            &times;
           </button>
-          <button
-            id="install-button"
-            style="background-color: #dbeafe; color: #000"
-            class="text-sm font-bold py-2 px-4 rounded-full whitespace-nowrap hover:bg-sky-200"
-          >
-            설치
-          </button>
+        </div>
+        <div
+          id="todolist-container"
+          class="flex-grow overflow-y-auto space-y-2"
+        ></div>
+      </div>
+    </div>
+
+    <div
+      id="details-modal-overlay"
+      class="fixed inset-0 bg-black bg-opacity-60 z-[110] hidden"
+    ></div>
+    <div
+      id="details-modal-panel"
+      class="fixed inset-0 z-[120] p-4 flex items-center justify-center hidden"
+    >
+      <div
+        class="w-full max-w-sm bg-white rounded-2xl shadow-xl transform transition-all"
+      >
+        <div class="p-5">
+          <div class="flex justify-between items-center mb-3">
+            <h3 id="details-modal-title" class="text-lg font-bold">
+              상세 정보
+            </h3>
+            <button
+              id="close-details-modal-button"
+              class="text-gray-400 hover:text-gray-700 text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+          <div id="details-modal-content" class="text-center"></div>
         </div>
       </div>
     </div>
