@@ -36,6 +36,22 @@ const MIN_LOADING_TIME = 2300;
 // ===============        투두리스트 관련 로직 (신규)       ===============
 // =================================================================
 
+// --- 자정 투두리스트 초기화 로직 (신규 추가) ---
+function resetTodoListAtMidnight() {
+  const today = new Date().toLocaleDateString();
+  const lastResetDate = localStorage.getItem('lastResetDate');
+
+  if (lastResetDate !== today) {
+    console.log('자정이 지나 투두리스트를 초기화합니다.');
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('checklist_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    localStorage.setItem('lastResetDate', today);
+  }
+}
+
 // --- 텍스트 포매팅 (신규) ---
 // **text** -> <strong>text</strong> 변환
 const formatBold = (text) => {
@@ -686,6 +702,7 @@ function setRandomLoadingGif() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  resetTodoListAtMidnight(); // 자정 초기화 함수 호출
   setRandomLoadingGif();
 
   async function loadAllData() {
