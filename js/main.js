@@ -39,16 +39,16 @@ const MIN_LOADING_TIME = 2300;
 // --- 자정 투두리스트 초기화 로직 (신규 추가) ---
 function resetTodoListAtMidnight() {
   const today = new Date().toLocaleDateString();
-  const lastResetDate = localStorage.getItem('lastResetDate');
+  const lastResetDate = localStorage.getItem("lastResetDate");
 
   if (lastResetDate !== today) {
-    console.log('자정이 지나 투두리스트를 초기화합니다.');
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('checklist_')) {
+    console.log("자정이 지나 투두리스트를 초기화합니다.");
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("checklist_")) {
         localStorage.removeItem(key);
       }
     });
-    localStorage.setItem('lastResetDate', today);
+    localStorage.setItem("lastResetDate", today);
   }
 }
 
@@ -108,8 +108,15 @@ function renderTodoList(data) {
   const visibleItems = data.filter((item) => {
     if (!item.ID || !item.GroupID) return false;
     if (!item.StartDate && !item.EndDate) return true;
-    const startDate = item.StartDate ? new Date(item.StartDate) : null;
+
+    // 타임존 문제 수정한 날짜 비교 로직
+    const startDateParts = item.StartDate ? item.StartDate.split("-") : null;
+    const startDate = startDateParts
+      ? new Date(startDateParts[0], startDateParts[1] - 1, startDateParts[2])
+      : null;
+
     const endDate = item.EndDate ? new Date(item.EndDate) : null;
+
     if (startDate && today < startDate) return false;
     if (endDate) {
       endDate.setHours(23, 59, 59, 999);
@@ -118,12 +125,8 @@ function renderTodoList(data) {
     return true;
   });
 
-  // 1. '달성 완료' 항목과 나머지 항목 분리
-  const celebrationItems = visibleItems.filter(item => item.ID.includes('_celebrate'));
-  const regularItems = visibleItems.filter(item => !item.ID.includes('_celebrate'));
-
-  // 2. 나머지 항목은 기존 로직대로 그룹핑
-  const rawGrouped = regularItems.reduce((acc, item) => {
+  // [수정된 부분 1] 삭제했던 그룹핑 로직을 되살리고, 모든 아이템(visibleItems)을 그룹핑합니다.
+  const rawGrouped = visibleItems.reduce((acc, item) => {
     (acc[item.GroupID] = acc[item.GroupID] || []).push(item);
     return acc;
   }, {});
@@ -139,6 +142,8 @@ function renderTodoList(data) {
       const collectSubItems = collectHeader
         ? items.filter((item) => item.ParentID === collectHeader.ID)
         : [];
+
+      // [수정된 부분 2] voteTasks에 celebrate 항목이 포함되도록 수정합니다.
       const voteTasks = items.filter(
         (item) => !item.ParentID && !item.ID.includes("_collect")
       );
@@ -154,28 +159,17 @@ function renderTodoList(data) {
     })
     .filter((group) => group.title);
 
-  let html = "";
+  let html = ""; // 여기서부터 UI를 그리기 시작합니다.
 
-  // 3. '달성 완료' 섹션 렌더링
-  if (celebrationItems.length > 0) {
-    html += `
-      <div class="mb-6">
-        <h3 class="font-bold text-xl mb-3 text-center text-blue-600">🎉 달성 완료! 🎉</h3>
-        <ul class="space-y-2">
-          ${celebrationItems.map(item => generateCelebrationItem(item)).join("")}
-        </ul>
-      </div>
-      <hr class="my-4 border-gray-300">
-    `;
-  }
-  
   // 4. 기존 그룹(투표, 수집) 렌더링
   for (const group of structuredGroups) {
     const allSubItems = [...group.collectSubItems, ...group.voteTasks];
     const isAllChecked =
       allSubItems.length > 0 &&
       allSubItems.every(
-        (item) => localStorage.getItem(`checklist_${item.ID}`) === "true"
+        (item) =>
+          item.ID.includes("_celebrate") || // celebrate 항목은 항상 체크된 것으로 간주
+          localStorage.getItem(`checklist_${item.ID}`) === "true"
       );
 
     html += `
@@ -247,8 +241,8 @@ function renderTodoList(data) {
 
 // '달성 완료' 항목 UI 생성 함수 (신규)
 function generateCelebrationItem(item) {
-    const title = item.Title;
-    return `
+  const title = item.Title;
+  return `
         <li class="celebration-item flex justify-between items-center p-3 rounded-lg shadow-sm">
             <div class="flex items-center flex-grow min-w-0">
                 <span class="font-bold text-black">
@@ -265,53 +259,52 @@ function generateCelebrationItem(item) {
 }
 
 function generateChecklistItem(item, isSubItem) {
-  // '달성 완료' 항목일 경우
-  if (item.ID.includes("_celebrate")) {
-    const title = item.Title;
-    return `
-        <li class="celebration-item flex justify-between items-center p-3 rounded-lg shadow-sm">
-            <div class="flex items-center flex-grow min-w-0">
-                <span class="font-bold text-black">
-                    ${formatBold(title.replace(/\n/g, "<br>")) || ""}
-                </span>
-            </div>
-            <div class="action-buttons flex-shrink-0 ml-2">
-                ${generateRewardButton(item)}
-                ${generateTipButton(item)}
-                ${generateAppLinkButton(item)}
-            </div>
-        </li>
-    `;
-  }
-
-  // 일반 체크리스트 항목일 경우
   const isEssential = item.IsEssential === "TRUE";
   const savedState = localStorage.getItem(`checklist_${item.ID}`) === "true";
   const title = item.Title;
 
+  // '달성 완료' 항목일 경우 (체크박스 없음)
+  if (item.ID.includes("_celebrate")) {
+    return `
+      <li class="celebration-item flex justify-between items-center p-3 rounded-lg shadow-sm">
+        <div class="flex items-center flex-grow min-w-0">
+          <span class="font-bold text-black">
+              ${formatBold(title.replace(/\n/g, "<br>")) || ""}
+          </span>
+        </div>
+        <div class="action-buttons flex-shrink-0 ml-2">
+          ${generateRewardButton(item)}
+          ${generateTipButton(item)}
+          ${generateAppLinkButton(item)}
+        </div>
+      </li>
+    `;
+  }
+
+  // 일반 체크리스트 항목일 경우 (체크박스 있음)
   return `
-        <li class="flex justify-between items-center ${
-          isSubItem ? "text-sm" : "p-3 bg-white rounded-lg shadow-sm"
-        }">
-            <div class="flex items-center flex-grow min-w-0">
-                <input type="checkbox" id="check_${item.ID}" data-id="${
+      <li class="flex justify-between items-center ${
+        isSubItem ? "text-sm" : "p-3 bg-white rounded-lg shadow-sm"
+      }">
+          <div class="flex items-center flex-grow min-w-0">
+              <input type="checkbox" id="check_${item.ID}" data-id="${
     item.ID
   }" class="item-check mr-3 h-5 w-5 flex-shrink-0" ${
     savedState ? "checked" : ""
   }>
-                <label for="check_${item.ID}" class="flex-grow cursor-pointer ${
+              <label for="check_${item.ID}" class="flex-grow cursor-pointer ${
     savedState ? "item-done" : ""
   } ${isEssential && !isSubItem ? "is-essential" : ""}">
-                    ${formatBold(title.replace(/\n/g, "<br>")) || ""}
-                </label>
-            </div>
-            <div class="action-buttons flex-shrink-0 ml-2">
-                ${generateRewardButton(item)}
-                ${generateTipButton(item)}
-                ${generateAppLinkButton(item)}
-            </div>
-        </li>
-    `;
+                  ${formatBold(title.replace(/\n/g, "<br>")) || ""}
+              </label>
+          </div>
+          <div class="action-buttons flex-shrink-0 ml-2">
+              ${generateRewardButton(item)}
+              ${generateTipButton(item)}
+              ${generateAppLinkButton(item)}
+          </div>
+      </li>
+  `;
 }
 
 const generateAppLinkButton = (item) =>
@@ -841,8 +834,7 @@ document.addEventListener("DOMContentLoaded", () => {
     openTodolistButton.addEventListener("click", openTodolist);
   if (closeTodolistButton)
     closeTodolistButton.addEventListener("click", closeTodolist);
-  if (todolistOverlay)
-    todolistOverlay.addEventListener("click", closeTodolist);
+  if (todolistOverlay) todolistOverlay.addEventListener("click", closeTodolist);
 
   const closeDetailsModalButton = document.getElementById(
     "close-details-modal-button"
