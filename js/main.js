@@ -75,7 +75,7 @@ async function loadTodoListData() {
       .map((h) => h.trim());
 
     const data = rows.map((row) => {
-      const values = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      const values = row.split(/,(?=(?:(?:[^\"]*"){2})*[^\"]*$)/);
       const obj = {};
       headers.forEach((header, i) => {
         let value = (values[i] || "").trim();
@@ -118,7 +118,12 @@ function renderTodoList(data) {
     return true;
   });
 
-  const rawGrouped = visibleItems.reduce((acc, item) => {
+  // 1. '달성 완료' 항목과 나머지 항목 분리
+  const celebrationItems = visibleItems.filter(item => item.ID.includes('_celebrate'));
+  const regularItems = visibleItems.filter(item => !item.ID.includes('_celebrate'));
+
+  // 2. 나머지 항목은 기존 로직대로 그룹핑
+  const rawGrouped = regularItems.reduce((acc, item) => {
     (acc[item.GroupID] = acc[item.GroupID] || []).push(item);
     return acc;
   }, {});
@@ -135,7 +140,7 @@ function renderTodoList(data) {
         ? items.filter((item) => item.ParentID === collectHeader.ID)
         : [];
       const voteTasks = items.filter(
-        (item) => !item.ParentID && (!item.ID || !item.ID.includes("_collect"))
+        (item) => !item.ParentID && !item.ID.includes("_collect")
       );
 
       return {
@@ -150,6 +155,21 @@ function renderTodoList(data) {
     .filter((group) => group.title);
 
   let html = "";
+
+  // 3. '달성 완료' 섹션 렌더링
+  if (celebrationItems.length > 0) {
+    html += `
+      <div class="mb-6">
+        <h3 class="font-bold text-xl mb-3 text-center text-blue-600">🎉 달성 완료! 🎉</h3>
+        <ul class="space-y-2">
+          ${celebrationItems.map(item => generateCelebrationItem(item)).join("")}
+        </ul>
+      </div>
+      <hr class="my-4 border-gray-300">
+    `;
+  }
+  
+  // 4. 기존 그룹(투표, 수집) 렌더링
   for (const group of structuredGroups) {
     const allSubItems = [...group.collectSubItems, ...group.voteTasks];
     const isAllChecked =
@@ -225,10 +245,48 @@ function renderTodoList(data) {
   addTodoEventListeners();
 }
 
+// '달성 완료' 항목 UI 생성 함수 (신규)
+function generateCelebrationItem(item) {
+    const title = item.Title;
+    return `
+        <li class="celebration-item flex justify-between items-center p-3 rounded-lg shadow-sm">
+            <div class="flex items-center flex-grow min-w-0">
+                <span class="font-bold text-black">
+                    ${formatBold(title.replace(/\n/g, "<br>")) || ""}
+                </span>
+            </div>
+            <div class="action-buttons flex-shrink-0 ml-2">
+                ${generateRewardButton(item)}
+                ${generateTipButton(item)}
+                ${generateAppLinkButton(item)}
+            </div>
+        </li>
+    `;
+}
+
 function generateChecklistItem(item, isSubItem) {
+  // '달성 완료' 항목일 경우
+  if (item.ID.includes("_celebrate")) {
+    const title = item.Title;
+    return `
+        <li class="celebration-item flex justify-between items-center p-3 rounded-lg shadow-sm">
+            <div class="flex items-center flex-grow min-w-0">
+                <span class="font-bold text-black">
+                    ${formatBold(title.replace(/\n/g, "<br>")) || ""}
+                </span>
+            </div>
+            <div class="action-buttons flex-shrink-0 ml-2">
+                ${generateRewardButton(item)}
+                ${generateTipButton(item)}
+                ${generateAppLinkButton(item)}
+            </div>
+        </li>
+    `;
+  }
+
+  // 일반 체크리스트 항목일 경우
   const isEssential = item.IsEssential === "TRUE";
   const savedState = localStorage.getItem(`checklist_${item.ID}`) === "true";
-
   const title = item.Title;
 
   return `
@@ -244,7 +302,7 @@ function generateChecklistItem(item, isSubItem) {
                 <label for="check_${item.ID}" class="flex-grow cursor-pointer ${
     savedState ? "item-done" : ""
   } ${isEssential && !isSubItem ? "is-essential" : ""}">
-                    ${formatBold(title) || ""}
+                    ${formatBold(title.replace(/\n/g, "<br>")) || ""}
                 </label>
             </div>
             <div class="action-buttons flex-shrink-0 ml-2">
@@ -258,7 +316,7 @@ function generateChecklistItem(item, isSubItem) {
 
 const generateAppLinkButton = (item) =>
   item.AppLink
-    ? `<a href="${item.AppLink}" target="_blank" class="link-button">바로가기</a>`
+    ? `<a href="${item.AppLink}" target="_blank" class="link-button">&#128279;</a>`
     : "";
 const generateRewardButton = (item) =>
   item.RewardImage1
@@ -488,7 +546,7 @@ async function cacheTodoData() {
       .split(",")
       .map((h) => h.trim());
     allTodoData = rows.map((row) => {
-      const values = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      const values = row.split(/,(?=(?:(?:[^\"]*"){2})*[^\"]*$)/);
       const obj = {};
       headers.forEach((header, i) => {
         let value = (values[i] || "").trim();
@@ -783,7 +841,8 @@ document.addEventListener("DOMContentLoaded", () => {
     openTodolistButton.addEventListener("click", openTodolist);
   if (closeTodolistButton)
     closeTodolistButton.addEventListener("click", closeTodolist);
-  if (todolistOverlay) todolistOverlay.addEventListener("click", closeTodolist);
+  if (todolistOverlay)
+    todolistOverlay.addEventListener("click", closeTodolist);
 
   const closeDetailsModalButton = document.getElementById(
     "close-details-modal-button"

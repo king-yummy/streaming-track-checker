@@ -115,24 +115,10 @@
   gap: 0.5rem; /* 8px */
 }
 
-/* 바로가기 버튼 */
-.link-button {
-  background-color: #f3f4f6; /* gray-100 */
-  color: #3b82f6; /* blue-500 */
-  padding: 0.125rem 0.5rem; /* py-0.5 px-2 */
-  border-radius: 9999px; /* rounded-full */
-  font-size: 0.75rem; /* text-xs */
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s;
-}
-.link-button:hover {
-  background-color: #e5e7eb; /* gray-200 */
-}
-
-/* 보상/팁 버튼 */
+/* 보상/팁/링크 버튼 */
 .reward-button,
-.tip-button {
+.tip-button,
+.link-button {
   background-color: transparent;
   border: 1px solid #9ca3af; /* gray-400 */
   color: #6b7280; /* gray-500 */
@@ -146,12 +132,25 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
+  text-decoration: none; /* 링크 밑줄 제거 */
 }
 
 .reward-button:hover,
-.tip-button:hover {
+.tip-button:hover,
+.link-button:hover {
   background-color: #f3f4f6; /* gray-100 */
   border-color: #6b7280; /* gray-500 */
+}
+
+/* 링크 버튼만 파란색 아이콘으로 */
+.link-button {
+    color: #3b82f6; /* blue-500 */
+}
+
+/* 달성 완료 아이템 스타일 */
+.celebration-item {
+    background-color: #dbeafe; /* blue-100 */
+    color: #000000; /* black */
 }
 
 /* 상세 정보 모달 (팁/보상) 캐러셀 (수정) */
