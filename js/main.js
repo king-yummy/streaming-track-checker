@@ -845,7 +845,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (detailsModalOverlay)
     detailsModalOverlay.addEventListener("click", closeDetailsModal);
 
-  const GAUGE_GOAL = 7500;
+  const GAUGE_GOAL = 10000;
   const gaugeFill = document.getElementById("gauge-fill");
   const gaugeCount = document.getElementById("gauge-count");
   const gaugeButton = document.getElementById("gauge-button");
