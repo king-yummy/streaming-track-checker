@@ -754,7 +754,6 @@ function setRandomLoadingGif() {
 
 document.addEventListener("DOMContentLoaded", () => {
   resetTodoListAtMidnight(); // 자정 초기화 함수 호출
-  setRandomLoadingGif();
 
   async function loadAllData() {
     await Promise.all([

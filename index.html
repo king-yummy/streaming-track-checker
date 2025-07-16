@@ -41,21 +41,12 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="preload" href="images/bamby1.gif" as="image" />
-    <link rel="preload" href="images/bamby2.gif" as="image" />
-    <link rel="preload" href="images/bamby3.gif" as="image" />
-    <link rel="preload" href="images/bamby4.gif" as="image" />
-    <link rel="preload" href="images/bamby5.gif" as="image" />
-    <link rel="preload" href="images/bamby6.gif" as="image" />
   </head>
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
   >
-    <div
-      id="loading-screen"
-      class="fixed inset-0 z-[80] bg-cover bg-center bg-white"
-    >
-      <img id="loading-gif" class="loading-gif" alt="loading..." />
+    <div id="loading-screen">
+      <img src="bg.png" alt="로딩 이미지" class="w-full h-full object-cover" />
     </div>
 
     <div id="main-content" class="invisible w-full flex flex-col items-center">

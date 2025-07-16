@@ -71,14 +71,23 @@
   display: none;
 }
 
-.loading-gif {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80vw;
-  height: 80vh;
-  object-fit: contain;
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#loading-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ==========[ 투두리스트 관련 스타일 ]========== */
@@ -91,9 +100,10 @@
   visibility: hidden;
   transition: max-height 0.3s ease-out, visibility 0s 0.3s;
 }
-.accordion-header:has(+ .accordion-content[style*="max-height"]) + .accordion-content {
-    visibility: visible;
-    transition: max-height 0.3s ease-out, visibility 0s;
+.accordion-header:has(+ .accordion-content[style*="max-height"])
+  + .accordion-content {
+  visibility: visible;
+  transition: max-height 0.3s ease-out, visibility 0s;
 }
 
 /* 필수 항목 강조 (빨간색) */
@@ -104,8 +114,8 @@
 
 /* 완료된 항목 스타일 (신규) */
 .item-done {
-    text-decoration: line-through;
-    color: #9ca3af; /* gray-400 */
+  text-decoration: line-through;
+  color: #9ca3af; /* gray-400 */
 }
 
 /* 바로가기, 보상, 팁 버튼 컨테이너 */
@@ -144,79 +154,78 @@
 
 /* 링크 버튼만 파란색 아이콘으로 */
 .link-button {
-    color: #3b82f6; /* blue-500 */
+  color: #3b82f6; /* blue-500 */
 }
 
 /* 달성 완료 아이템 스타일 */
 .celebration-item {
-    background-color: #dbeafe; /* blue-100 */
-    color: #000000; /* black */
+  background-color: #dbeafe; /* blue-100 */
+  color: #000000; /* black */
 }
 
 /* 상세 정보 모달 (팁/보상) 캐러셀 (수정) */
 .carousel-items {
-    overflow: hidden;
-    position: relative;
+  overflow: hidden;
+  position: relative;
 }
 .carousel-item {
-    display: none;
-    text-align: center;
+  display: none;
+  text-align: center;
 }
 .carousel-item.active {
-    display: block;
+  display: block;
 }
 .carousel-item img {
-    max-width: 100%;
-    max-height: 300px;
-    margin: 0 auto 0.75rem;
-    object-fit: contain;
+  max-width: 100%;
+  max-height: 300px;
+  margin: 0 auto 0.75rem;
+  object-fit: contain;
 }
 .carousel-item p {
-    white-space: pre-wrap;
-    word-break: keep-all;
-    font-size: 0.875rem;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  font-size: 0.875rem;
 }
 .carousel-navigation {
-    position: absolute;
-    top: 40%;
-    left: -10px;
-    right: -10px;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
+  position: absolute;
+  top: 40%;
+  left: -10px;
+  right: -10px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
 }
 .carousel-navigation button {
-    background-color: rgba(255,255,255,0.7);
-    border: none;
-    border-radius: 9999px;
-    width: 2rem;
-    height: 2rem;
-    font-size: 1.25rem;
-    cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 9999px;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.25rem;
+  cursor: pointer;
 }
 .carousel-dots {
-    text-align: center;
-    margin-top: 0.75rem;
+  text-align: center;
+  margin-top: 0.75rem;
 }
 .carousel-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #d1d5db; /* gray-300 */
-    margin: 0 4px;
-    cursor: pointer;
-    transition: all 0.2s;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d1d5db; /* gray-300 */
+  margin: 0 4px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 .carousel-dot.active {
-    background-color: #3b82f6; /* blue-500 */
-    transform: scale(1.25);
+  background-color: #3b82f6; /* blue-500 */
+  transform: scale(1.25);
 }
-
 
 /* ==========[ 하단 탭 네비게이션 (UI 최종 수정) ]========== */
 #bottom-nav {
-  box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
   background-color: #dbeafe; /* 배경색 적용 */
   color: #000000; /* 텍스트 검정색 */
   border-top-left-radius: 24px; /* 상단 좌측 둥글게 */
@@ -224,9 +233,9 @@
 }
 
 #bottom-nav button {
-    transition: background-color 0.2s;
+  transition: background-color 0.2s;
 }
 
 #bottom-nav button:active {
-    background-color: #bfdbfe; /* 조금 더 진한 파란색으로 눌림 효과 */
+  background-color: #bfdbfe; /* 조금 더 진한 파란색으로 눌림 효과 */
 }
