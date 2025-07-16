@@ -178,7 +178,9 @@ function renderTodoList(data) {
                     <div class="flex items-center flex-grow min-w-0">
                         <input type="checkbox" data-group-id="${
                           group.id
-                        }" class="group-check mr-3 h-5 w-5 flex-shrink-0" ${
+                        }" data-group-title="${
+      group.title
+    }" class="group-check mr-3 h-5 w-5 flex-shrink-0" ${
       isAllChecked ? "checked" : ""
     }>
                         <span class="font-bold flex items-center flex-grow ${
@@ -346,10 +348,24 @@ function addTodoEventListeners() {
       localStorage.setItem(`checklist_${id}`, isChecked);
       e.target.nextElementSibling.classList.toggle("item-done", isChecked);
 
-      // [수정] 부모 그룹 체크박스 및 제목 스타일 업데이트
+      // GA 이벤트: complete_todo_item
+      if (isChecked) {
+        const itemData = findItemDataById(id);
+        const group = e.target.closest(".accordion-item");
+        const groupTitle =
+          group.querySelector(".group-check").dataset.groupTitle;
+        if (itemData) {
+          gtag("event", "complete_todo_item", {
+            item_id: itemData.ID,
+            item_title: itemData.Title,
+            group_title: groupTitle,
+          });
+        }
+      }
+
       const groupItem = e.target.closest(".accordion-item");
       const groupCheck = groupItem.querySelector(".group-check");
-      const groupTitleSpan = groupCheck.nextElementSibling; // 제목 span
+      const groupTitleSpan = groupCheck.nextElementSibling;
       const allItemChecks = groupItem.querySelectorAll(".item-check");
       const isAllChecked = Array.from(allItemChecks).every((c) => c.checked);
 
@@ -364,8 +380,15 @@ function addTodoEventListeners() {
       const isChecked = e.target.checked;
       const groupItem = e.target.closest(".accordion-item");
 
-      // [수정] 그룹 제목 스타일 업데이트
       e.target.nextElementSibling.classList.toggle("item-done", isChecked);
+
+      // GA 이벤트: complete_todo_group
+      if (isChecked) {
+        gtag("event", "complete_todo_group", {
+          group_id: e.target.dataset.groupId,
+          group_title: e.target.dataset.groupTitle,
+        });
+      }
 
       groupItem.querySelectorAll(".item-check").forEach((itemCheckbox) => {
         if (itemCheckbox.checked !== isChecked) {
@@ -376,13 +399,21 @@ function addTodoEventListeners() {
     });
   });
 
+  // 팁/보상 버튼
   document.querySelectorAll(".tip-button, .reward-button").forEach((button) => {
     button.addEventListener("click", (e) => {
       e.stopPropagation();
       const id = e.currentTarget.dataset.id;
       const isTip = e.currentTarget.classList.contains("tip-button");
       const data = findItemDataById(id);
-      if (data) openDetailsModal(data, isTip);
+      if (data) {
+        // GA 이벤트: view_task_details
+        gtag("event", "view_task_details", {
+          detail_type: isTip ? "tip" : "reward",
+          item_id: id,
+        });
+        openDetailsModal(data, isTip);
+      }
     });
   });
 }
@@ -782,6 +813,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabContents = document.querySelectorAll(".tab-content");
 
   const openGuideModal = () => {
+    // GA 이벤트: view_streaming_guide
+    gtag("event", "view_streaming_guide");
     guideModalOverlay.classList.remove("hidden");
     guideModalPanel.classList.remove("hidden");
     guideModalPanel.classList.add("flex");
@@ -800,6 +833,24 @@ document.addEventListener("DOMContentLoaded", () => {
     closeGuideButtonMain.addEventListener("click", closeGuideModal);
   if (guideModalOverlay)
     guideModalOverlay.addEventListener("click", closeGuideModal);
+
+  // GA 이벤트: click_playlist_link
+  document.querySelectorAll(".playlist-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      gtag("event", "click_playlist_link", {
+        platform: link.dataset.platform,
+        device: link.dataset.device,
+      });
+    });
+  });
+
+  // GA 이벤트: click_music_wave
+  const musicWaveLink = document.getElementById("music-wave-link");
+  if (musicWaveLink) {
+    musicWaveLink.addEventListener("click", () => {
+      gtag("event", "click_music_wave");
+    });
+  }
 
   if (tabButtons) {
     tabButtons.forEach((button) => {
@@ -821,6 +872,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeTodolistButton = document.getElementById("close-todolist-button");
 
   const openTodolist = () => {
+    // GA 이벤트: open_todo_list
+    gtag("event", "open_todo_list");
     todolistOverlay.classList.remove("hidden");
     todolistPanel.classList.remove("hidden");
   };
@@ -884,6 +937,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (gaugeButton) {
     gaugeButton.addEventListener("click", async () => {
       if (isGaugeCoolingDown) return;
+
+      // GA 이벤트: click_fire_gauge
+      gtag("event", "click_fire_gauge");
+
       isGaugeCoolingDown = true;
       gaugeButton.style.cursor = "not-allowed";
 
@@ -917,6 +974,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (infoButton) {
     infoButton.addEventListener("click", (e) => {
       e.stopPropagation();
+      // GA 이벤트: view_fire_gauge_info
+      gtag("event", "view_fire_gauge_info");
       infoTooltip.classList.toggle("hidden");
     });
   }
