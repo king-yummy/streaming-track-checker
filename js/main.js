@@ -32,6 +32,27 @@ const BASE_COUNTS = {
 let loadingStartTime = Date.now();
 const MIN_LOADING_TIME = 2300;
 
+
+// =================================================================
+// ===============        사용자 ID 관련 로직 (신규)        ===============
+// =================================================================
+
+// 사용자 고유 ID를 생성하고 관리하는 함수
+function getUserID() {
+  let userID = localStorage.getItem("plli_user_id");
+  if (!userID) {
+    // 간단한 고유 ID 생성 (UUID v4)
+    userID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+      var r = (Math.random() * 16) | 0,
+        v = c == "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+    localStorage.setItem("plli_user_id", userID);
+  }
+  return userID;
+}
+
+
 // =================================================================
 // ===============        투두리스트 관련 로직 (신규)       ===============
 // =================================================================
@@ -323,6 +344,8 @@ const generateTipButton = (item) =>
     : "";
 
 function addTodoEventListeners() {
+  const userID = getUserID(); // 사용자 ID 가져오기
+
   // 아코디언 토글
   document.querySelectorAll(".accordion-header").forEach((header) => {
     header.addEventListener("click", (e) => {
@@ -352,13 +375,13 @@ function addTodoEventListeners() {
       if (isChecked) {
         const itemData = findItemDataById(id);
         const group = e.target.closest(".accordion-item");
-        const groupTitle =
-          group.querySelector(".group-check").dataset.groupTitle;
+        const groupTitle = group.querySelector(".group-check").dataset.groupTitle;
         if (itemData) {
           gtag("event", "complete_todo_item", {
             item_id: itemData.ID,
             item_title: itemData.Title,
             group_title: groupTitle,
+            user_id: userID
           });
         }
       }
@@ -387,6 +410,7 @@ function addTodoEventListeners() {
         gtag("event", "complete_todo_group", {
           group_id: e.target.dataset.groupId,
           group_title: e.target.dataset.groupTitle,
+          user_id: userID
         });
       }
 
@@ -411,6 +435,7 @@ function addTodoEventListeners() {
         gtag("event", "view_task_details", {
           detail_type: isTip ? "tip" : "reward",
           item_id: id,
+          user_id: userID
         });
         openDetailsModal(data, isTip);
       }
@@ -784,6 +809,7 @@ function setRandomLoadingGif() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const userID = getUserID(); // 페이지 로드 시 사용자 ID 설정
   resetTodoListAtMidnight(); // 자정 초기화 함수 호출
 
   async function loadAllData() {
@@ -814,7 +840,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const openGuideModal = () => {
     // GA 이벤트: view_streaming_guide
-    gtag("event", "view_streaming_guide");
+    gtag("event", "view_streaming_guide", { user_id: userID });
     guideModalOverlay.classList.remove("hidden");
     guideModalPanel.classList.remove("hidden");
     guideModalPanel.classList.add("flex");
@@ -840,6 +866,7 @@ document.addEventListener("DOMContentLoaded", () => {
       gtag("event", "click_playlist_link", {
         platform: link.dataset.platform,
         device: link.dataset.device,
+        user_id: userID
       });
     });
   });
@@ -848,9 +875,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicWaveLink = document.getElementById("music-wave-link");
   if (musicWaveLink) {
     musicWaveLink.addEventListener("click", () => {
-      gtag("event", "click_music_wave");
+      gtag("event", "click_music_wave", { user_id: userID });
     });
   }
+
 
   if (tabButtons) {
     tabButtons.forEach((button) => {
@@ -873,7 +901,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const openTodolist = () => {
     // GA 이벤트: open_todo_list
-    gtag("event", "open_todo_list");
+    gtag("event", "open_todo_list", { user_id: userID });
     todolistOverlay.classList.remove("hidden");
     todolistPanel.classList.remove("hidden");
   };
@@ -939,7 +967,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isGaugeCoolingDown) return;
 
       // GA 이벤트: click_fire_gauge
-      gtag("event", "click_fire_gauge");
+      gtag("event", "click_fire_gauge", {
+        user_id: userID
+      });
 
       isGaugeCoolingDown = true;
       gaugeButton.style.cursor = "not-allowed";
@@ -975,7 +1005,7 @@ document.addEventListener("DOMContentLoaded", () => {
     infoButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // GA 이벤트: view_fire_gauge_info
-      gtag("event", "view_fire_gauge_info");
+      gtag("event", "view_fire_gauge_info", { user_id: userID });
       infoTooltip.classList.toggle("hidden");
     });
   }
