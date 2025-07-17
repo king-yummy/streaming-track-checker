@@ -827,7 +827,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadAllData();
-
+/*
   const guideModalOverlay = document.getElementById("guide-modal-overlay");
   const guideModalPanel = document.getElementById("guide-modal-panel");
   const openGuideButton = document.getElementById("guide-button");
@@ -1021,4 +1021,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   fetchInitialCount();
+  */
 });

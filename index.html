@@ -84,127 +84,84 @@
 
       <section
         id="fire-gauge-section"
-        class="w-full max-w-md mt-4 mb-2 p-3 bg-white rounded-2xl shadow flex flex-col items-center space-y-2"
+        class="w-full max-w-md mt-4 mb-2 p-3 bg-blue-100 rounded-2xl shadow flex flex-col items-center"
       >
-        <div class="relative flex items-center justify-center w-full">
-          <h2 class="font-bold text-lg">🔥 PLLI 화력 게이지 🔥</h2>
-
-          <button
-            id="info-button"
-            class="absolute right-0 text-gray-400 border border-gray-400 rounded-full w-5 h-5 flex items-center justify-center text-xs font-mono"
-          >
-            i
-          </button>
-
-          <div
-            id="info-tooltip"
-            class="hidden absolute bottom-full mb-5 right-0 w-48 bg-gray-800 text-white text-xs rounded-md p-2 z-10 info-tooltip"
-          >
-            플리들은 오늘도 스밍체크 중🔥 화력 버튼을 누르고 서로 응원해보아요!
-            목표는 10000!
-          </div>
+        <div class="relative flex items-center justify-center w-full pb-6">
+          <h2 class="font-bold text-base text-center leading-tight">
+            목표 달성 완료🎉 축하 이벤트 준비 중🎉<br />
+          </h2>
         </div>
 
-        <div class="w-full flex items-center space-x-3">
-          <div
-            id="gauge-button-wrapper"
-            class="relative flex-shrink-0 w-14 h-14"
-          >
-            <svg class="absolute -inset-1 w-16 h-16" viewBox="0 0 36 36">
-              <circle
-                class="text-gray-200"
-                stroke-width="3"
-                stroke="currentColor"
-                fill="transparent"
-                r="16"
-                cx="18"
-                cy="18"
-              />
-              <circle
-                id="cooldown-circle"
-                class="text-sky-400"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke="currentColor"
-                fill="transparent"
-                r="16"
-                cx="18"
-                cy="18"
-              />
-            </svg>
-            <button
-              id="gauge-button"
-              class="relative text-3xl w-full h-full flex items-center justify-center transform transition-transform duration-100 active:scale-125"
-            >
-              🔥
-            </button>
+        <div
+          id="progress-container"
+          class="relative w-11/12 mx-auto h-8 flex items-center"
+        >
+          <div class="w-full bg-gray-200 rounded-full h-5">
+            <div
+              id="gauge-fill"
+              class="h-5 rounded-full animated-fire transition-all duration-500"
+              style="width: 100%"
+            ></div>
           </div>
-
           <div
-            id="progress-container"
-            class="relative w-full h-8 flex items-center"
+            id="achievement-marker-1000"
+            class="absolute z-10"
+            style="left: 10%; bottom: -8px; transform: translateX(-50%)"
           >
-            <div class="w-full bg-gray-200 rounded-full h-5">
-              <div
-                id="gauge-fill"
-                class="h-5 rounded-full animated-fire transition-all duration-500"
-                style="width: 0%"
-              ></div>
+            <div class="flex flex-col items-center">
+              <span class="text-base">💙</span>
+              <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                >1000회</span
+              >
             </div>
-            <div
-              id="achievement-marker-1000"
-              class="absolute z-10"
-              style="left: 10%; bottom: -8px; transform: translateX(-50%)"
-            >
-              <div class="flex flex-col items-center">
-                <span class="text-base">💙</span>
-                <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                  >1000회</span
-                >
-              </div>
+          </div>
+          <div
+            id="achievement-marker-3500"
+            class="absolute z-10"
+            style="left: 35%; bottom: -8px; transform: translateX(-50%)"
+          >
+            <div class="flex flex-col items-center">
+              <span class="text-base">💜</span>
+              <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                >3500회</span
+              >
             </div>
-            <div
-              id="achievement-marker-3500"
-              class="absolute z-10"
-              style="left: 35%; bottom: -8px; transform: translateX(-50%)"
-            >
-              <div class="flex flex-col items-center">
-                <span class="text-base">💜</span>
-                <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                  >3500회</span
-                >
-              </div>
+          </div>
+          <div
+            id="achievement-marker-5000"
+            class="absolute z-10"
+            style="left: 50%; bottom: -8px; transform: translateX(-50%)"
+          >
+            <div class="flex flex-col items-center">
+              <span class="text-base">💗</span>
+              <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                >5000회</span
+              >
             </div>
-            <div
-              id="achievement-marker-5000"
-              class="absolute z-10"
-              style="left: 50%; bottom: -8px; transform: translateX(-50%)"
-            >
-              <div class="flex flex-col items-center">
-                <span class="text-base">💗</span>
-                <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                  >5000회</span
-                >
-              </div>
+          </div>
+          <div
+            id="achievement-marker-7500"
+            class="absolute z-10"
+            style="left: 75%; bottom: -8px; transform: translateX(-50%)"
+          >
+            <div class="flex flex-col items-center">
+              <span class="text-base">❤️</span>
+              <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                >7500회</span
+              >
             </div>
-            <div
-              id="achievement-marker-7500"
-              class="absolute z-10"
-              style="left: 75%; bottom: -8px; transform: translateX(-50%)"
-            >
-              <div class="flex flex-col items-center">
-                <span class="text-base">❤️</span>
-                <span class="text-[9px] text-gray-500 whitespace-nowrap"
-                  >7500회</span
-                >
-              </div>
+          </div>
+          <div
+            id="achievement-marker-10000"
+            class="absolute z-10"
+            style="left: 100%; bottom: -8px; transform: translateX(-50%)"
+          >
+            <div class="flex flex-col items-center">
+              <span class="text-base">🖤</span>
+              <span class="text-[9px] text-gray-500 whitespace-nowrap"
+                >10000회</span
+              >
             </div>
-            <span
-              id="gauge-count"
-              class="absolute bottom-full text-xs font-semibold text-gray-800 transform -translate-x-1/2"
-              style="left: 0%"
-              >0</span
-            >
           </div>
         </div>
       </section>
