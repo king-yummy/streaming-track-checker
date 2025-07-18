@@ -1,16 +1,15 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/api/getGauge",
-      "destination": "/api/getGauge"
-    },
-    {
-      "source": "/api/incrementGauge",
-      "destination": "/api/incrementGauge"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/index.html"
+      "source": "/((?!api/).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "streaming-track-checker.vercel.app"
+        }
+      ],
+      "destination": "https://www.plli-checker.app/$1",
+      "permanent": true
     }
   ]
 }
