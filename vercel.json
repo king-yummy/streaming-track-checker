@@ -1,15 +1,12 @@
 {
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/((?!api/).*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "streaming-track-checker.vercel.app"
-        }
-      ],
-      "destination": "https://www.plli-checker.app/$1",
-      "permanent": true
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/:path((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
