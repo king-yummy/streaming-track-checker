@@ -11,6 +11,19 @@
       href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
+    <!-- Twitter Card only -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PLLI 화력게이지 이벤트 🎉" />
+    <meta
+      name="twitter:description"
+      content="화력 1만 돌파 기념! 응원 멘트 남기고 덕질 자금 받자 💰"
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.plli-checker.app/images/event-banner.png"
+    />
+    <meta name="twitter:url" content="https://www.plli-checker.app" />
+
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-GYGLSJRN79"
@@ -82,7 +95,7 @@
         <ul id="playlist" class="space-y-2"></ul>
       </main>
 
-      <section
+      <!-- <section
         id="fire-gauge-section"
         class="w-full max-w-md mt-4 mb-2 p-3 bg-blue-100 rounded-2xl shadow flex flex-col items-center"
       >
@@ -164,6 +177,45 @@
             </div>
           </div>
         </div>
+      </section> -->
+
+      <section
+        id="event-section"
+        class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow flex flex-col items-center space-y-3"
+      >
+        <!-- 제목 -->
+        <h2 class="text-sm text-gray-600 font-semibold">
+          🔥 화력게이지 1만 이벤트 🔥
+        </h2>
+
+        <!-- 안내 문구 -->
+        <p class="text-[12px] text-gray-500 text-center leading-tight">
+          응원 멘트를 남기고 X에 공유하면<br />
+          이벤트 참여 완료! easy~
+        </p>
+
+        <!-- 한 줄 입력창 + 공유 버튼 -->
+        <div class="flex w-full items-center gap-2">
+          <input
+            id="cheer-message"
+            type="text"
+            maxlength="100"
+            placeholder="EX) 숨스숨투 중인 플리들 파이팅 💗"
+            class="flex-1 text-sm p-2 rounded-md border border-gray-300 shadow-inner"
+          />
+          <button
+            id="tweet-button"
+            class="bg-[#dbeafe] text-white text-sm font-semibold px-4 py-2 rounded-md hover:opacity-90"
+          >
+            공유
+          </button>
+        </div>
+
+        <!-- 부가 안내 -->
+        <p class="text-[11px] text-gray-400 text-center">
+          📅 7/19(토)부터 7/26(토) 23:59까지<br />
+          🎁 27일 추첨! 덕질 자금 1만원 (1명)
+        </p>
       </section>
 
       <section

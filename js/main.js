@@ -29,9 +29,6 @@ const BASE_COUNTS = {
   rizz: OLD_SYSTEM_CYCLES * PER_CYCLE_OLD.rizz,
   chroma: OLD_SYSTEM_CYCLES * PER_CYCLE_OLD.chroma,
 };
-let loadingStartTime = Date.now();
-const MIN_LOADING_TIME = 2300;
-
 
 // =================================================================
 // ===============        사용자 ID 관련 로직 (신규)        ===============
@@ -42,16 +39,18 @@ function getUserID() {
   let userID = localStorage.getItem("plli_user_id");
   if (!userID) {
     // 간단한 고유 ID 생성 (UUID v4)
-    userID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-      var r = (Math.random() * 16) | 0,
-        v = c == "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
+    userID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
     localStorage.setItem("plli_user_id", userID);
   }
   return userID;
 }
-
 
 // =================================================================
 // ===============        투두리스트 관련 로직 (신규)       ===============
@@ -375,13 +374,14 @@ function addTodoEventListeners() {
       if (isChecked) {
         const itemData = findItemDataById(id);
         const group = e.target.closest(".accordion-item");
-        const groupTitle = group.querySelector(".group-check").dataset.groupTitle;
+        const groupTitle =
+          group.querySelector(".group-check").dataset.groupTitle;
         if (itemData) {
           gtag("event", "complete_todo_item", {
             item_id: itemData.ID,
             item_title: itemData.Title,
             group_title: groupTitle,
-            user_id: userID
+            user_id: userID,
           });
         }
       }
@@ -410,7 +410,7 @@ function addTodoEventListeners() {
         gtag("event", "complete_todo_group", {
           group_id: e.target.dataset.groupId,
           group_title: e.target.dataset.groupTitle,
-          user_id: userID
+          user_id: userID,
         });
       }
 
@@ -435,7 +435,7 @@ function addTodoEventListeners() {
         gtag("event", "view_task_details", {
           detail_type: isTip ? "tip" : "reward",
           item_id: id,
-          user_id: userID
+          user_id: userID,
         });
         openDetailsModal(data, isTip);
       }
@@ -818,12 +818,8 @@ document.addEventListener("DOMContentLoaded", () => {
       cacheTodoData().then(loadTodoListData),
     ]);
 
-    const timeElapsed = Date.now() - loadingStartTime;
-    const remainingTime = Math.max(0, MIN_LOADING_TIME - timeElapsed);
-    setTimeout(() => {
-      document.getElementById("loading-screen").style.display = "none";
-      document.getElementById("main-content").classList.remove("invisible");
-    }, remainingTime);
+    document.getElementById("loading-screen").style.display = "none";
+    document.getElementById("main-content").classList.remove("invisible");
   }
 
   loadAllData();
@@ -865,7 +861,7 @@ document.addEventListener("DOMContentLoaded", () => {
       gtag("event", "click_playlist_link", {
         platform: link.dataset.platform,
         device: link.dataset.device,
-        user_id: userID
+        user_id: userID,
       });
     });
   });
@@ -877,7 +873,6 @@ document.addEventListener("DOMContentLoaded", () => {
       gtag("event", "click_music_wave", { user_id: userID });
     });
   }
-
 
   if (tabButtons) {
     tabButtons.forEach((button) => {
@@ -967,7 +962,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // GA 이벤트: click_fire_gauge
       gtag("event", "click_fire_gauge", {
-        user_id: userID
+        user_id: userID,
       });
 
       isGaugeCoolingDown = true;
@@ -1020,4 +1015,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   fetchInitialCount();
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  const tweetBtn = document.getElementById("tweet-button");
+  const cheerInput = document.getElementById("cheer-message");
+
+  if (tweetBtn && cheerInput) {
+    tweetBtn.addEventListener("click", () => {
+      const message = cheerInput.value.trim();
+      if (!message) return alert("응원 멘트를 입력해주세요!");
+
+      const base = `🔥 PLLI 화력게이지 이벤트 응원 🔥\n`;
+      const tags = `\n#PLLI_스밍투표_이벤트 #PLLI_화력응원`;
+      const url = `https://www.plli-checker.app`;
+      const tweet = encodeURIComponent(`${base}${message}${tags}\n${url}`);
+
+      window.open(`https://twitter.com/intent/tweet?text=${tweet}`, "_blank");
+    });
+  }
 });
