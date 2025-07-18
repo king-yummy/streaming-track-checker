@@ -1,11 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
+      "source": "/api/getGauge",
+      "destination": "/api/getGauge"
     },
     {
-      "source": "/:path((?!api/).*)",
+      "source": "/api/incrementGauge",
+      "destination": "/api/incrementGauge"
+    },
+    {
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
