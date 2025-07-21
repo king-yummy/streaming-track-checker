@@ -1034,15 +1034,18 @@ window.addEventListener("DOMContentLoaded", () => {
   const tweetBtn = document.getElementById("tweet-button");
   const cheerInput = document.getElementById("cheer-message");
 
+  // '공유' 버튼을 눌렀을 때의 동작을 정의합니다.
   if (tweetBtn && cheerInput) {
     tweetBtn.addEventListener("click", () => {
       const message = cheerInput.value.trim();
       if (!message) return alert("응원 멘트를 입력해주세요!");
 
+      const userID = getUserID(); // 버튼 클릭 시 userID를 가져오도록 수정
+
       // GA 이벤트: share_event_tweet
       gtag("event", "share_event_tweet", {
         event_category: "Event",
-        event_label: message, // 사용자가 입력한 응원 문구를 라벨로 기록
+        event_label: message,
         user_id: userID,
       });
 
@@ -1050,7 +1053,6 @@ window.addEventListener("DOMContentLoaded", () => {
       const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
       const url = "바로가기: https://www.plli-checker.app";
 
-      // 헤더, 메시지, 태그, URL 사이에 줄바꿈(\n\n)을 추가하여 문단을 나눕니다.
       const tweet = encodeURIComponent(
         `${header}\n\n${message}\n\n${tags}\n${url}`
       );
