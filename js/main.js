@@ -1034,15 +1034,13 @@ window.addEventListener("DOMContentLoaded", () => {
   const tweetBtn = document.getElementById("tweet-button");
   const cheerInput = document.getElementById("cheer-message");
 
-  // '공유' 버튼을 눌렀을 때의 동작을 정의합니다.
   if (tweetBtn && cheerInput) {
     tweetBtn.addEventListener("click", () => {
       const message = cheerInput.value.trim();
       if (!message) return alert("응원 멘트를 입력해주세요!");
 
-      const userID = getUserID(); // 버튼 클릭 시 userID를 가져오도록 수정
+      const userID = getUserID();
 
-      // GA 이벤트: share_event_tweet
       gtag("event", "share_event_tweet", {
         event_category: "Event",
         event_label: message,
@@ -1051,17 +1049,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const header = "🔥숨스숨투 응원하고 덕질자금 받자!🔥";
       const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
-      // 1. 순수한 텍스트만 tweetText 변수에 담습니다.
+      const url = "https://www.plli-checker.app";
+
+      // ✅ 헤더, 메시지, 태그, URL 사이에 줄바꿈(\n\n)을 추가하여 가독성을 확보합니다.
       const tweetText = encodeURIComponent(
-        `${header}\n\n${message}\n\n${tags}`
+        `${header}\n\n${message}\n\n${tags}\n\n${url}`
       );
 
-      // 2. 공유할 URL을 별도로 준비합니다.
-      const shareUrl = encodeURIComponent("https://www.plli-checker.app");
-
-      // 3. text와 url 파라미터를 분리해서 전달합니다.
+      // ✅ text 파라미터 하나만 사용하여 안정적으로 URL과 텍스트를 전달합니다.
       window.open(
-        `https://twitter.com/intent/tweet?text=${tweetText}&url=${shareUrl}`,
+        `https://twitter.com/intent/tweet?text=${tweetText}`,
         "_blank"
       );
     });
