@@ -183,13 +183,17 @@ function renderTodoList(data) {
 
   // 4. 기존 그룹(투표, 수집) 렌더링
   for (const group of structuredGroups) {
-    const allSubItems = [...group.collectSubItems, ...group.voteTasks];
+    // '할 일' 항목만 필터링 (celebrate 항목 제외)
+    const actualTodoItems = [
+      ...group.collectSubItems,
+      ...group.voteTasks,
+    ].filter((item) => !item.ID.includes("_celebrate"));
+
+    // 실제 '할 일' 목록 기준으로 완료 여부 확인
     const isAllChecked =
-      allSubItems.length > 0 &&
-      allSubItems.every(
-        (item) =>
-          item.ID.includes("_celebrate") || // celebrate 항목은 항상 체크된 것으로 간주
-          localStorage.getItem(`checklist_${item.ID}`) === "true"
+      actualTodoItems.length > 0 &&
+      actualTodoItems.every(
+        (item) => localStorage.getItem(`checklist_${item.ID}`) === "true"
       );
 
     html += `
