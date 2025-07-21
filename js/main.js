@@ -1039,6 +1039,13 @@ window.addEventListener("DOMContentLoaded", () => {
       const message = cheerInput.value.trim();
       if (!message) return alert("응원 멘트를 입력해주세요!");
 
+      // GA 이벤트: share_event_tweet
+      gtag("event", "share_event_tweet", {
+        event_category: "Event",
+        event_label: message, // 사용자가 입력한 응원 문구를 라벨로 기록
+        user_id: userID,
+      });
+
       const header = "🔥숨스숨투 응원하고 덕질자금 받자!🔥";
       const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
       const url = "바로가기: https://www.plli-checker.app";
