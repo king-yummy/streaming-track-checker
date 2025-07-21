@@ -1026,10 +1026,14 @@ window.addEventListener("DOMContentLoaded", () => {
       const message = cheerInput.value.trim();
       if (!message) return alert("응원 멘트를 입력해주세요!");
 
-      const base = `🔥 PLLI 화력게이지 이벤트 응원 🔥\n`;
-      const tags = `\n#PLLI_스밍투표_이벤트 #PLLI_화력응원`;
-      const url = `https://www.plli-checker.app`;
-      const tweet = encodeURIComponent(`${base}${message}${tags}\n${url}`);
+      const header = "🔥숨스숨투 응원하고 덕질자금 받자!🔥";
+      const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
+      const url = "바로가기: https://www.plli-checker.app";
+
+      // 헤더, 메시지, 태그, URL 사이에 줄바꿈(\n\n)을 추가하여 문단을 나눕니다.
+      const tweet = encodeURIComponent(
+        `${header}\n\n${message}\n\n${tags}\n${url}`
+      );
 
       window.open(`https://twitter.com/intent/tweet?text=${tweet}`, "_blank");
     });
