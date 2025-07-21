@@ -1051,13 +1051,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const header = "🔥숨스숨투 응원하고 덕질자금 받자!🔥";
       const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
-      const url = "바로가기: https://www.plli-checker.app";
-
-      const tweet = encodeURIComponent(
-        `${header}\n\n${message}\n\n${tags}\n${url}`
+      // 1. 순수한 텍스트만 tweetText 변수에 담습니다.
+      const tweetText = encodeURIComponent(
+        `${header}\n\n${message}\n\n${tags}`
       );
 
-      window.open(`https://twitter.com/intent/tweet?text=${tweet}`, "_blank");
+      // 2. 공유할 URL을 별도로 준비합니다.
+      const shareUrl = encodeURIComponent("https://www.plli-checker.app");
+
+      // 3. text와 url 파라미터를 분리해서 전달합니다.
+      window.open(
+        `https://twitter.com/intent/tweet?text=${tweetText}&url=${shareUrl}`,
+        "_blank"
+      );
     });
   }
 });
