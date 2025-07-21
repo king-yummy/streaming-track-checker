@@ -64,7 +64,7 @@ function resetTodoListAtMidnight() {
   if (lastResetDate !== today) {
     console.log("자정이 지나 투두리스트를 초기화합니다.");
     Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith("checklist_")) {
+      if (key.startsWith("checklist_") || key.startsWith("group_checklist_")) {
         localStorage.removeItem(key);
       }
     });
@@ -189,12 +189,17 @@ function renderTodoList(data) {
       ...group.voteTasks,
     ].filter((item) => !item.ID.includes("_celebrate"));
 
-    // 실제 '할 일' 목록 기준으로 완료 여부 확인
-    const isAllChecked =
-      actualTodoItems.length > 0 &&
-      actualTodoItems.every(
+    let isAllChecked;
+    if (actualTodoItems.length > 0) {
+      // '할 일'이 있는 경우: 기존 로직 사용
+      isAllChecked = actualTodoItems.every(
         (item) => localStorage.getItem(`checklist_${item.ID}`) === "true"
       );
+    } else {
+      // '할 일'이 없는 경우: 그룹 자체의 상태를 확인
+      isAllChecked =
+        localStorage.getItem(`group_checklist_${group.id}`) === "true";
+    }
 
     html += `
             <div class="accordion-item bg-gray-50 rounded-lg overflow-hidden">
@@ -404,8 +409,12 @@ function addTodoEventListeners() {
   // 그룹 전체 체크박스
   document.querySelectorAll(".group-check").forEach((groupCheckbox) => {
     groupCheckbox.addEventListener("change", (e) => {
+      const groupId = e.target.dataset.groupId;
       const isChecked = e.target.checked;
       const groupItem = e.target.closest(".accordion-item");
+
+      // 그룹 체크박스 상태를 localStorage에 저장
+      localStorage.setItem(`group_checklist_${groupId}`, isChecked);
 
       e.target.nextElementSibling.classList.toggle("item-done", isChecked);
 
