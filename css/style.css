@@ -225,7 +225,7 @@
 
 #bottom-nav {
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-  background-color: #dbeafe; /* 배경색 적용 */
+  background-color: #afd1ff; /* 배경색 적용 */
   color: #000000; /* 텍스트 검정색 */
   border-top-left-radius: 24px; /* 상단 좌측 둥글게 */
   border-top-right-radius: 24px; /* 상단 우측 둥글게 */
@@ -262,5 +262,5 @@
   height: 4px;
   background-color: #9ca3af; /* gray-400 */
   border-radius: 2px;
-  margin-bottom: 16px; /* 핸들과 텍스트 사이 간격 조정 */
+  margin-bottom: 14px; /* 핸들과 텍스트 사이 간격 조정 */
 }
