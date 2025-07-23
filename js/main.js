@@ -1047,16 +1047,20 @@ window.addEventListener("DOMContentLoaded", () => {
         user_id: userID,
       });
 
-      const header = "🔥숨스숨투 응원하고 덕질자금 받자!🔥";
-      const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
+      const header = "🔥 PLLI 스밍/투표 독려 이벤트 🔥";
+      const eventInfo =
+        "📅 기간: 7/21(월) ~ 8/4(월) 23:59\n" +
+        "🎁 상품: 8/5 추첨! 덕질 자금 1만원 (1명)\n\n" +
+        "👇 로그인 필요없이 앱 하단에서 바로 참여 가능!";
+      const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원 #PLAVE";
       const url = "https://www.plli-checker.app";
 
-      // ✅ 헤더, 메시지, 태그, URL 사이에 줄바꿈(\n\n)을 추가하여 가독성을 확보합니다.
+      // 헤더, 메시지, 이벤트 정보, 태그, URL 사이에 줄바꿈(\n\n)을 추가하여 가독성을 확보합니다.
       const tweetText = encodeURIComponent(
-        `${header}\n\n${message}\n\n${tags}\n\n${url}`
+        `${header}\n\n${message}\n\n${eventInfo}\n\n${tags}\n\n${url}`
       );
 
-      // ✅ text 파라미터 하나만 사용하여 안정적으로 URL과 텍스트를 전달합니다.
+      // text 파라미터 하나만 사용하여 안정적으로 URL과 텍스트를 전달합니다.
       window.open(
         `https://twitter.com/intent/tweet?text=${tweetText}`,
         "_blank"
