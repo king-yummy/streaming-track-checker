@@ -1051,6 +1051,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const eventInfo =
         "📅 기간: 7/21(월) ~ 8/4(월) 23:59\n" +
         "🎁 상품: 8/5 추첨! 덕질 자금 1만원 (1명)\n\n" +
+        "💗 많이 공유할수록 당첨 확률 UP! UP!\n\n" +
         "👇 로그인 필요없이 앱 하단에서 바로 참여 가능!";
       const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원 #PLAVE";
       const url = "https://www.plli-checker.app";
