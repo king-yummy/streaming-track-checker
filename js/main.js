@@ -145,7 +145,6 @@ function renderTodoList(data) {
     return true;
   });
 
-  // [수정된 부분 1] 삭제했던 그룹핑 로직을 되살리고, 모든 아이템(visibleItems)을 그룹핑합니다.
   const rawGrouped = visibleItems.reduce((acc, item) => {
     (acc[item.GroupID] = acc[item.GroupID] || []).push(item);
     return acc;
@@ -163,7 +162,6 @@ function renderTodoList(data) {
         ? items.filter((item) => item.ParentID === collectHeader.ID)
         : [];
 
-      // [수정된 부분 2] voteTasks에 celebrate 항목이 포함되도록 수정합니다.
       const voteTasks = items.filter(
         (item) => !item.ParentID && !item.ID.includes("_collect")
       );
@@ -179,11 +177,9 @@ function renderTodoList(data) {
     })
     .filter((group) => group.title);
 
-  let html = ""; // 여기서부터 UI를 그리기 시작합니다.
+  let html = "";
 
-  // 4. 기존 그룹(투표, 수집) 렌더링
   for (const group of structuredGroups) {
-    // '할 일' 항목만 필터링 (celebrate 항목 제외)
     const actualTodoItems = [
       ...group.collectSubItems,
       ...group.voteTasks,
@@ -191,12 +187,10 @@ function renderTodoList(data) {
 
     let isAllChecked;
     if (actualTodoItems.length > 0) {
-      // '할 일'이 있는 경우: 기존 로직 사용
       isAllChecked = actualTodoItems.every(
         (item) => localStorage.getItem(`checklist_${item.ID}`) === "true"
       );
     } else {
-      // '할 일'이 없는 경우: 그룹 자체의 상태를 확인
       isAllChecked =
         localStorage.getItem(`group_checklist_${group.id}`) === "true";
     }
@@ -270,7 +264,6 @@ function renderTodoList(data) {
   addTodoEventListeners();
 }
 
-// '달성 완료' 항목 UI 생성 함수 (신규)
 function generateCelebrationItem(item) {
   const title = item.Title;
   return `
@@ -294,7 +287,6 @@ function generateChecklistItem(item, isSubItem) {
   const savedState = localStorage.getItem(`checklist_${item.ID}`) === "true";
   const title = item.Title;
 
-  // '달성 완료' 항목일 경우 (체크박스 없음)
   if (item.ID.includes("_celebrate")) {
     return `
       <li class="celebration-item flex justify-between items-center p-3 rounded-lg shadow-sm">
@@ -312,7 +304,6 @@ function generateChecklistItem(item, isSubItem) {
     `;
   }
 
-  // 일반 체크리스트 항목일 경우 (체크박스 있음)
   return `
       <li class="flex justify-between items-center ${
         isSubItem ? "text-sm" : "p-3 bg-white rounded-lg shadow-sm"
@@ -352,9 +343,8 @@ const generateTipButton = (item) =>
     : "";
 
 function addTodoEventListeners() {
-  const userID = getUserID(); // 사용자 ID 가져오기
+  const userID = getUserID();
 
-  // 아코디언 토글
   document.querySelectorAll(".accordion-header").forEach((header) => {
     header.addEventListener("click", (e) => {
       if (e.target.matches('input[type="checkbox"]')) return;
@@ -371,7 +361,6 @@ function addTodoEventListeners() {
     });
   });
 
-  // 개별 아이템 체크박스
   document.querySelectorAll(".item-check").forEach((checkbox) => {
     checkbox.addEventListener("change", (e) => {
       const id = e.target.dataset.id;
@@ -379,7 +368,6 @@ function addTodoEventListeners() {
       localStorage.setItem(`checklist_${id}`, isChecked);
       e.target.nextElementSibling.classList.toggle("item-done", isChecked);
 
-      // GA 이벤트: complete_todo_item
       if (isChecked) {
         const itemData = findItemDataById(id);
         const group = e.target.closest(".accordion-item");
@@ -406,19 +394,15 @@ function addTodoEventListeners() {
     });
   });
 
-  // 그룹 전체 체크박스
   document.querySelectorAll(".group-check").forEach((groupCheckbox) => {
     groupCheckbox.addEventListener("change", (e) => {
       const groupId = e.target.dataset.groupId;
       const isChecked = e.target.checked;
       const groupItem = e.target.closest(".accordion-item");
 
-      // 그룹 체크박스 상태를 localStorage에 저장
       localStorage.setItem(`group_checklist_${groupId}`, isChecked);
-
       e.target.nextElementSibling.classList.toggle("item-done", isChecked);
 
-      // GA 이벤트: complete_todo_group
       if (isChecked) {
         gtag("event", "complete_todo_group", {
           group_id: e.target.dataset.groupId,
@@ -436,7 +420,6 @@ function addTodoEventListeners() {
     });
   });
 
-  // 팁/보상 버튼
   document.querySelectorAll(".tip-button, .reward-button").forEach((button) => {
     button.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -444,7 +427,6 @@ function addTodoEventListeners() {
       const isTip = e.currentTarget.classList.contains("tip-button");
       const data = findItemDataById(id);
       if (data) {
-        // GA 이벤트: view_task_details
         gtag("event", "view_task_details", {
           detail_type: isTip ? "tip" : "reward",
           item_id: id,
@@ -822,8 +804,8 @@ function setRandomLoadingGif() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const userID = getUserID(); // 페이지 로드 시 사용자 ID 설정
-  resetTodoListAtMidnight(); // 자정 초기화 함수 호출
+  const userID = getUserID();
+  resetTodoListAtMidnight();
 
   async function loadAllData() {
     await Promise.all([
@@ -836,9 +818,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadAllData();
+
+  const openGuideButton = document.getElementById("streaming-guide-button");
   const guideModalOverlay = document.getElementById("guide-modal-overlay");
   const guideModalPanel = document.getElementById("guide-modal-panel");
-  const openGuideButton = document.getElementById("guide-button");
   const closeGuideButtonX = document.getElementById("close-guide-button-x");
   const closeGuideButtonMain = document.getElementById(
     "close-guide-button-main"
@@ -847,7 +830,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabContents = document.querySelectorAll(".tab-content");
 
   const openGuideModal = () => {
-    // GA 이벤트: view_streaming_guide
     gtag("event", "view_streaming_guide", { user_id: userID });
     guideModalOverlay.classList.remove("hidden");
     guideModalPanel.classList.remove("hidden");
@@ -868,7 +850,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (guideModalOverlay)
     guideModalOverlay.addEventListener("click", closeGuideModal);
 
-  // --- 투두리스트 패널 로직 (수정됨) ---
   const todolistOverlay = document.getElementById("todolist-overlay");
   const todolistPanel = document.getElementById("todolist-panel");
   const openTodolistButton = document.getElementById("open-todolist-button");
@@ -890,7 +871,6 @@ document.addEventListener("DOMContentLoaded", () => {
     closeTodolistButton.addEventListener("click", closeTodolist);
   if (todolistOverlay) todolistOverlay.addEventListener("click", closeTodolist);
 
-  // GA 이벤트: click_playlist_link
   document.querySelectorAll(".playlist-link").forEach((link) => {
     link.addEventListener("click", () => {
       gtag("event", "click_playlist_link", {
@@ -901,7 +881,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // GA 이벤트: click_music_wave
   const musicWaveLink = document.getElementById("music-wave-link");
   if (musicWaveLink) {
     musicWaveLink.addEventListener("click", () => {
@@ -973,7 +952,6 @@ document.addEventListener("DOMContentLoaded", () => {
     gaugeButton.addEventListener("click", async () => {
       if (isGaugeCoolingDown) return;
 
-      // GA 이벤트: click_fire_gauge
       gtag("event", "click_fire_gauge", {
         user_id: userID,
       });
@@ -1011,7 +989,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (infoButton) {
     infoButton.addEventListener("click", (e) => {
       e.stopPropagation();
-      // GA 이벤트: view_fire_gauge_info
       gtag("event", "view_fire_gauge_info", { user_id: userID });
       infoTooltip.classList.toggle("hidden");
     });
@@ -1049,19 +1026,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const header = "🔥 PLLI 스밍/투표 독려 이벤트 🔥";
       const eventInfo =
-        "📅 7/21(월) ~ 8/4(월)\n" +
-        "🎁 덕질 자금 1만원 (1명)\n" +
-        "💗 많이 공유할수록 당첨 확률 UP\n\n" +
-        "👇 회원가입 없이 앱 하단에서 바로 참여!";
-      const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
+        "📅 기간: 7/21(월) ~ 8/4(월) 23:59\n" +
+        "🎁 상품: 8/5 추첨! 덕질 자금 1만원 (1명)\n" +
+        "💗 많이 공유할수록 당첨 확률 UP! UP!\n\n" +
+        "👇 로그인 필요없이 앱 하단에서 바로 참여 가능!";
+      const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원 #PLAVE";
       const url = "https://www.plli-checker.app";
 
-      // 헤더, 메시지, 이벤트 정보, 태그, URL 사이에 줄바꿈(\n\n)을 추가하여 가독성을 확보합니다.
       const tweetText = encodeURIComponent(
         `${header}\n\n${message}\n\n${eventInfo}\n${tags}\n\n${url}`
       );
 
-      // text 파라미터 하나만 사용하여 안정적으로 URL과 텍스트를 전달합니다.
       window.open(
         `https://twitter.com/intent/tweet?text=${tweetText}`,
         "_blank"

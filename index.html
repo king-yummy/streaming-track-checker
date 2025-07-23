@@ -65,12 +65,6 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css" />
-
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9063401338616510"
-      crossorigin="anonymous"
-    ></script>
   </head>
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
@@ -94,18 +88,27 @@
         </div>
       </header>
 
-      <div class="w-full max-w-md mt-2">
+      <div class="w-full max-w-md mt-4 grid grid-cols-3 gap-2 px-1">
         <button
-          id="guide-button"
-          class="w-full flex justify-between items-center p-3 rounded-lg bg-white shadow hover:bg-gray-50 transition text-left"
+          id="streaming-guide-button"
+          class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
-          <div>
-            <p class="font-semibold text-gray-800">
-              🔊 원클릭 스밍 & 설정 가이드
-            </p>
-          </div>
-          <span class="text-lg text-blue-500 font-bold">&gt;</span>
+          <span class="text-3xl">🎵</span>
         </button>
+
+        <a
+          href="voting-guide.html"
+          class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
+        >
+          <span class="text-3xl">🗳️</span>
+        </a>
+
+        <a
+          href="notice.html"
+          class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
+        >
+          <span class="text-3xl">📢</span>
+        </a>
       </div>
 
       <main class="w-full max-w-md space-y-2 overflow-auto mt-4">
@@ -119,12 +122,10 @@
         <h2 class="text-sm text-gray-600 font-semibold">
           🔥 카쿠렌보 주간인기상 축하 이벤트 🔥
         </h2>
-
         <p class="text-[12px] text-gray-500 text-center leading-tight">
           응원의 말을 X에 공유하면 이벤트 참여 완~<br />
           중복 참여 가능! 많이 참여할수록 당첨 확률 UP<br />
         </p>
-
         <div class="flex w-full items-center gap-2">
           <input
             id="cheer-message"
@@ -140,7 +141,6 @@
             공유
           </button>
         </div>
-
         <p class="text-[11px] text-gray-400 text-center">
           📅 7/21(월)부터 8/4(월) 23:59까지<br />
           🎁 8/5 추첨! 덕질 자금 1만원 (1명)
