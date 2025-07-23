@@ -1049,8 +1049,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const header = "🔥 PLLI 스밍/투표 독려 이벤트 🔥";
       const eventInfo =
-        "📅 기간: 7/21(월) ~ 8/4(월)\n" +
-        "🎁 상품: 덕질 자금 1만원 (1명)\n" +
+        "📅 7/21(월) ~ 8/4(월)\n" +
+        "🎁 덕질 자금 1만원 (1명)\n" +
         "💗 많이 공유할수록 당첨 확률 UP\n\n" +
         "👇 회원가입 없이 앱 하단에서 바로 참여!";
       const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원";
