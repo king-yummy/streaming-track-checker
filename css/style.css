@@ -238,3 +238,29 @@
 #bottom-nav button:active {
   background-color: #bfdbfe; /* 조금 더 진한 파란색으로 눌림 효과 */
 }
+
+/* ==========[ 바텀시트 핸들 추가 ]========== */
+.bottom-sheet-container {
+  position: relative;
+  padding-top: 20px; /* 핸들과 내용이 겹치지 않도록 패딩 추가 */
+}
+
+.bottom-sheet-handle {
+  width: 40px;
+  height: 5px;
+  background-color: #d1d5db; /* gray-300 */
+  border-radius: 2.5px;
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ==========[ 투두리스트 버튼 핸들 스타일 ]========== */
+.bottom-button-handle {
+  width: 32px;
+  height: 4px;
+  background-color: #9ca3af; /* gray-400 */
+  border-radius: 2px;
+  margin-bottom: 16px; /* 핸들과 텍스트 사이 간격 조정 */
+}

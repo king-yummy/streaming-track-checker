@@ -868,6 +868,28 @@ document.addEventListener("DOMContentLoaded", () => {
   if (guideModalOverlay)
     guideModalOverlay.addEventListener("click", closeGuideModal);
 
+  // --- 투두리스트 패널 로직 (수정됨) ---
+  const todolistOverlay = document.getElementById("todolist-overlay");
+  const todolistPanel = document.getElementById("todolist-panel");
+  const openTodolistButton = document.getElementById("open-todolist-button");
+  const closeTodolistButton = document.getElementById("close-todolist-button");
+
+  const openTodolist = () => {
+    gtag("event", "open_todo_list", { user_id: userID });
+    todolistOverlay.classList.remove("hidden");
+    todolistPanel.classList.remove("hidden");
+  };
+  const closeTodolist = () => {
+    todolistOverlay.classList.add("hidden");
+    todolistPanel.classList.add("hidden");
+  };
+
+  if (openTodolistButton)
+    openTodolistButton.addEventListener("click", openTodolist);
+  if (closeTodolistButton)
+    closeTodolistButton.addEventListener("click", closeTodolist);
+  if (todolistOverlay) todolistOverlay.addEventListener("click", closeTodolist);
+
   // GA 이벤트: click_playlist_link
   document.querySelectorAll(".playlist-link").forEach((link) => {
     link.addEventListener("click", () => {
@@ -900,28 +922,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-
-  const todolistOverlay = document.getElementById("todolist-overlay");
-  const todolistPanel = document.getElementById("todolist-panel");
-  const openTodolistButton = document.getElementById("open-todolist-button");
-  const closeTodolistButton = document.getElementById("close-todolist-button");
-
-  const openTodolist = () => {
-    // GA 이벤트: open_todo_list
-    gtag("event", "open_todo_list", { user_id: userID });
-    todolistOverlay.classList.remove("hidden");
-    todolistPanel.classList.remove("hidden");
-  };
-  const closeTodolist = () => {
-    todolistOverlay.classList.add("hidden");
-    todolistPanel.classList.add("hidden");
-  };
-
-  if (openTodolistButton)
-    openTodolistButton.addEventListener("click", openTodolist);
-  if (closeTodolistButton)
-    closeTodolistButton.addEventListener("click", closeTodolist);
-  if (todolistOverlay) todolistOverlay.addEventListener("click", closeTodolist);
 
   const closeDetailsModalButton = document.getElementById(
     "close-details-modal-button"
