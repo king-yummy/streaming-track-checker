@@ -92,11 +92,6 @@ export function addTodoEventListeners() {
 export function initializeAllEventListeners() {
     const userID = getUserID();
 
-    const openGuideButton = document.getElementById("streaming-guide-button");
-    const guideModalOverlay = document.getElementById("guide-modal-overlay");
-    const guideModalPanel = document.getElementById("guide-modal-panel");
-    const closeGuideButtonX = document.getElementById("close-guide-button-x");
-    const closeGuideButtonMain = document.getElementById("close-guide-button-main");
     const tabButtons = document.querySelectorAll(".tab-button");
     const tabContents = document.querySelectorAll(".tab-content");
     const todolistOverlay = document.getElementById("todolist-overlay");
@@ -109,18 +104,6 @@ export function initializeAllEventListeners() {
     const tweetBtn = document.getElementById("tweet-button");
     const cheerInput = document.getElementById("cheer-message");
 
-    const openGuideModal = () => {
-        gtag("event", "view_streaming_guide", { user_id: userID });
-        guideModalOverlay.classList.remove("hidden");
-        guideModalPanel.classList.remove("hidden");
-        guideModalPanel.classList.add("flex");
-    };
-    const closeGuideModal = () => {
-        guideModalOverlay.classList.add("hidden");
-        guideModalPanel.classList.add("hidden");
-        guideModalPanel.classList.remove("flex");
-    };
-
     const openTodolist = () => {
         gtag("event", "open_todo_list", { user_id: userID });
         todolistOverlay.classList.remove("hidden");
@@ -130,11 +113,6 @@ export function initializeAllEventListeners() {
         todolistOverlay.classList.add("hidden");
         todolistPanel.classList.add("hidden");
     };
-
-    if (openGuideButton) openGuideButton.addEventListener("click", openGuideModal);
-    if (closeGuideButtonX) closeGuideButtonX.addEventListener("click", closeGuideModal);
-    if (closeGuideButtonMain) closeGuideButtonMain.addEventListener("click", closeGuideModal);
-    if (guideModalOverlay) guideModalOverlay.addEventListener("click", closeGuideModal);
 
     if (openTodolistButton) openTodolistButton.addEventListener("click", openTodolist);
     if (closeTodolistButton) closeTodolistButton.addEventListener("click", closeTodolist);
