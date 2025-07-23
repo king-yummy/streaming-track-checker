@@ -10,11 +10,31 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GYGLSJRN79"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GYGLSJRN79');
+
+        function getUserID() {
+            let userID = localStorage.getItem("plli_user_id");
+            if (!userID) {
+                userID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+                    var r = (Math.random() * 16) | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+                localStorage.setItem("plli_user_id", userID);
+            }
+            return userID;
+        }
+    </script>
 </head>
 <body class="font-sans bg-gray-100">
     <header class="w-full bg-white shadow-sm sticky top-0 z-10">
         <div class="max-w-md mx-auto p-4 relative flex justify-center items-center">
-            <a href="index.html" class="absolute left-4 text-gray-600 hover:text-gray-800">
+            <a href="index.html" onclick="gtag('event', 'click_back_button', { 'page': 'streaming_guide' });" class="absolute left-4 text-gray-600 hover:text-gray-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -48,62 +68,61 @@
                     <div class="mt-4 border-b pb-4">
                         <a id="music-wave-link" href="https://musicwave.melon.com/musicwave.htm?m=j4hnDsW7acKCvsaKSJd-lw&ref=kakaotalk" target="_blank" class="block w-full bg-green-500 text-white text-center font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition">🌊 멜론 뮤직웨이브 함께하기</a>
                     </div>
-                    <!-- Melon Content -->
                     <div>
                         <p class="font-semibold">Android / iOS / iPad</p>
                         <p class="text-xs text-gray-500 mb-2">아래 링크 4개를 순서대로 모두 클릭하세요.</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <a href="https://tinyurl.com/3x7we988" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-                            <a href="https://tinyurl.com/3d63nz3x" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-                            <a href="https://tinyurl.com/mr3rdrv6" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-                            <a href="https://tinyurl.com/2s493p82" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+                            <a href="https://tinyurl.com/3x7we988" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="android_ios">1번 링크</a>
+                            <a href="https://tinyurl.com/3d63nz3x" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="android_ios">2번 링크</a>
+                            <a href="https://tinyurl.com/mr3rdrv6" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="android_ios">3번 링크</a>
+                            <a href="https://tinyurl.com/2s493p82" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="android_ios">4번 링크</a>
                         </div>
                     </div>
                     <div>
                         <p class="font-semibold">PC - Windows</p>
                         <p class="text-xs text-gray-500 mb-2">아래 링크 4개를 순서대로 모두 클릭하세요.</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <a href="https://tinyurl.com/5f45aj7t" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-                            <a href="https://tinyurl.com/5azkkdm5" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-                            <a href="https://tinyurl.com/2kphp9kj" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-                            <a href="https://tinyurl.com/y3398rpy" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+                            <a href="https://tinyurl.com/5f45aj7t" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_windows">1번 링크</a>
+                            <a href="https://tinyurl.com/5azkkdm5" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_windows">2번 링크</a>
+                            <a href="https://tinyurl.com/2kphp9kj" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_windows">3번 링크</a>
+                            <a href="https://tinyurl.com/y3398rpy" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_windows">4번 링크</a>
                         </div>
                     </div>
                     <div>
                         <p class="font-semibold">PC - MAC</p>
                         <p class="text-xs text-gray-500 mb-2">아래 링크 4개를 순서대로 모두 클릭하세요.</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <a href="https://tinyurl.com/2ny6ruz6" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-                            <a href="https://tinyurl.com/4ubts2tn" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-                            <a href="https://tinyurl.com/34xfy2um" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-                            <a href="https://tinyurl.com/2nf988wz" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+                            <a href="https://tinyurl.com/2ny6ruz6" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_mac">1번 링크</a>
+                            <a href="https://tinyurl.com/4ubts2tn" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_mac">2번 링크</a>
+                            <a href="https://tinyurl.com/34xfy2um" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_mac">3번 링크</a>
+                            <a href="https://tinyurl.com/2nf988wz" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="melon" data-device="pc_mac">4번 링크</a>
                         </div>
                     </div>
                 </div>
                 <div data-content="genie" class="tab-content hidden space-y-2">
-                    <a href="https://tinyurl.com/bdhxmya2" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">Android</a>
-                    <a href="https://tinyurl.com/3hp322y9" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">iOS</a>
-                    <a href="https://tinyurl.com/3cvdp2ev" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">PC (WEB)</a>
+                    <a href="https://tinyurl.com/bdhxmya2" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="genie" data-device="android">Android</a>
+                    <a href="https://tinyurl.com/3hp322y9" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="genie" data-device="ios">iOS</a>
+                    <a href="https://tinyurl.com/3cvdp2ev" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="genie" data-device="pc_web">PC (WEB)</a>
                 </div>
                 <div data-content="bugs" class="tab-content hidden space-y-2">
-                    <a href="https://lrl.kr/VQZq" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">Android / iOS</a>
-                    <a href="https://lrl.kr/glwD1" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">PC (WEB)</a>
+                    <a href="https://lrl.kr/VQZq" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="bugs" data-device="android_ios">Android / iOS</a>
+                    <a href="https://lrl.kr/glwD1" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="bugs" data-device="pc_web">PC (WEB)</a>
                 </div>
                 <div data-content="vibe" class="tab-content hidden">
                     <p class="font-semibold">Android / iOS</p>
                     <p class="text-xs text-gray-500 mb-2">아래 링크 4개를 순서대로 모두 클릭하세요.</p>
                     <div class="grid grid-cols-2 gap-2">
-                        <a href="https://tinyurl.com/59zxz966" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-                        <a href="https://tinyurl.com/45nrfnp5" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-                        <a href="https://tinyurl.com/ms9dxp4v" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-                        <a href="https://tinyurl.com/4srnpxmu" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+                        <a href="https://tinyurl.com/59zxz966" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="vibe" data-device="android_ios">1번 링크</a>
+                        <a href="https://tinyurl.com/45nrfnp5" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="vibe" data-device="android_ios">2번 링크</a>
+                        <a href="https://tinyurl.com/ms9dxp4v" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="vibe" data-device="android_ios">3번 링크</a>
+                        <a href="https://tinyurl.com/4srnpxmu" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="vibe" data-device="android_ios">4번 링크</a>
                     </div>
                 </div>
                 <div data-content="flo" class="tab-content hidden">
-                    <a href="https://han.gl/ZCrlx" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">Android / iOS / PC - MAC</a>
+                    <a href="https://han.gl/ZCrlx" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="flo" data-device="all">Android / iOS / PC - MAC</a>
                 </div>
                 <div data-content="samsung" class="tab-content hidden">
-                    <a href="https://drive.google.com/drive/folders/1PJ1XMS5KLCcB7syC1_acW6zN3zuZjS8J" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200">플레이리스트 다운로드</a>
+                    <a href="https://drive.google.com/drive/folders/1PJ1XMS5KLCcB7syC1_acW6zN3zuZjS8J" target="_blank" class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200" data-platform="samsung" data-device="all">플레이리스트 다운로드</a>
                 </div>
             </div>
         </div>
@@ -111,11 +130,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const userID = getUserID();
+
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
 
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
+                    gtag('event', 'click_guide_tab', { 
+                        'platform': button.dataset.tab,
+                        'user_id': userID
+                    });
+
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     tabContents.forEach(content => content.classList.add('hidden'));
 
@@ -126,6 +152,23 @@
                     }
                 });
             });
+
+            document.querySelectorAll(".playlist-link").forEach((link) => {
+                link.addEventListener("click", () => {
+                    gtag("event", "click_playlist_link", {
+                        platform: link.dataset.platform,
+                        device: link.dataset.device,
+                        user_id: userID,
+                    });
+                });
+            });
+
+            const musicWaveLink = document.getElementById("music-wave-link");
+            if (musicWaveLink) {
+                musicWaveLink.addEventListener("click", () => {
+                    gtag("event", "click_music_wave", { user_id: userID });
+                });
+            }
         });
     </script>
 </body>
