@@ -1050,7 +1050,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const header = "🔥 PLLI 스밍/투표 독려 이벤트 🔥";
       const eventInfo =
         "📅 기간: 7/21(월) ~ 8/4(월) 23:59\n" +
-        "🎁 상품: 8/5 추첨! 덕질 자금 1만원 (1명)\n\n" +
+        "🎁 상품: 8/5 추첨! 덕질 자금 1만원 (1명)\n" +
         "💗 많이 공유할수록 당첨 확률 UP! UP!\n\n" +
         "👇 로그인 필요없이 앱 하단에서 바로 참여 가능!";
       const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원 #PLAVE";
@@ -1058,7 +1058,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // 헤더, 메시지, 이벤트 정보, 태그, URL 사이에 줄바꿈(\n\n)을 추가하여 가독성을 확보합니다.
       const tweetText = encodeURIComponent(
-        `${header}\n\n${message}\n\n${eventInfo}\n\n${tags}\n\n${url}`
+        `${header}\n\n${message}\n\n${eventInfo}\n${tags}\n\n${url}`
       );
 
       // text 파라미터 하나만 사용하여 안정적으로 URL과 텍스트를 전달합니다.
