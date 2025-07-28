@@ -1,49 +1,86 @@
-// vote_guide.js
-// 투표 가이드 페이지에서 CSV 기반 데이터를 검색하고 표시하기 위한 스크립트입니다.
+document.addEventListener("DOMContentLoaded", () => {
+  const appGuidesContainer = document.getElementById("app-guides-container");
+  const voteGuidesContainer = document.getElementById("vote-guides-container");
+  const searchInput = document.getElementById("search-input");
 
-// votes.json 파일을 불러와서 검색을 수행합니다.
-fetch('votes.json')
-  .then((response) => response.json())
-  .then((data) => {
-    const searchInput = document.getElementById('search');
-    const resultsContainer = document.getElementById('results');
+  let allData = { appGuides: [], voteGuides: [] };
 
-    function render(filter = '') {
-      const keyword = filter.trim().toLowerCase();
-      resultsContainer.innerHTML = '';
-      data.forEach((item) => {
-        const groupTitle = (item.GroupTitle || '').toLowerCase();
-        const title = (item.Title || '').toLowerCase();
-        // 키워드가 없거나 그룹명이나 제목에 포함될 경우만 표시
-        if (
-          !keyword ||
-          groupTitle.includes(keyword) ||
-          title.includes(keyword)
-        ) {
-          const div = document.createElement('div');
-          div.className = 'vote-item';
-          // 그룹 이름과 항목 제목
-          let header = '';
-          if (item.GroupTitle) header += `<strong>${item.GroupTitle}</strong>`;
-          if (item.Title) header += ` - ${item.Title}`;
-          div.innerHTML = `
-            <h3>${header}</h3>
-            ${item.StartDate ? `<p>시작: ${item.StartDate}</p>` : ''}
-            ${item.EndDate ? `<p>마감: ${item.EndDate}</p>` : ''}
-            ${item.AppLink ? `<p><a href="${item.AppLink}" target="_blank">앱 링크 이동</a></p>` : ''}
-            ${item.RewardText1 ? `<p>보상: ${item.RewardText1}</p>` : ''}
-          `;
-          resultsContainer.appendChild(div);
-        }
-      });
+  fetch("guides.json")
+    .then((response) => response.json())
+    .then((data) => {
+      allData = data;
+      displayGuides(allData.appGuides, appGuidesContainer);
+      displayGuides(allData.voteGuides, voteGuidesContainer);
+    })
+    .catch((error) => {
+      console.error("Error fetching guide data:", error);
+      appGuidesContainer.innerHTML =
+        '<p class="text-red-500">가이드 정보를 불러오는 데 실패했습니다.</p>';
+    });
+
+  function createGuideElement(guide) {
+    const element = document.createElement("div");
+    element.className =
+      "bg-white p-4 rounded-lg shadow-sm border border-gray-200";
+
+    const summaryContent = `
+            <span>${guide.title}</span>
+            <span class="text-sm font-normal text-blue-500 bg-blue-50 px-2 py-1 rounded-full">${guide.app}</span>
+        `;
+
+    const detailsContent = `
+            ${
+              guide.period
+                ? `<p class="text-sm mb-3"><strong>🗓️ 기간:</strong> ${guide.period}</p>`
+                : ""
+            }
+            <div class="prose max-w-none prose-sm">${guide.guide}</div>
+        `;
+
+    element.innerHTML = `
+            <details>
+                <summary class="font-bold text-md cursor-pointer flex justify-between items-center">
+                    ${summaryContent}
+                </summary>
+                <div class="mt-4 pt-4 border-t border-gray-200 text-gray-700">
+                    ${detailsContent}
+                </div>
+            </details>
+        `;
+    return element;
+  }
+
+  function displayGuides(guides, container) {
+    container.innerHTML = "";
+    if (guides.length === 0) {
+      container.innerHTML =
+        '<p class="text-gray-500 text-sm">표시할 가이드가 없습니다.</p>';
+      return;
     }
-    // 초기 렌더링
-    render();
-    // 검색 이벤트
-    searchInput.addEventListener('input', () => render(searchInput.value));
-  })
-  .catch((error) => {
-    console.error('votes.json 로딩 실패:', error);
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = '<p>데이터를 로딩하는 데 실패했습니다.</p>';
+    guides.forEach((guide) => {
+      const guideElement = createGuideElement(guide);
+      container.appendChild(guideElement);
+    });
+  }
+
+  searchInput.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.toLowerCase().trim();
+
+    const filterGuides = (guides) => {
+      if (!searchTerm) return guides;
+      return guides.filter((guide) => {
+        const guideText = guide.guide.replace(/<[^>]*>/g, "").toLowerCase(); // HTML 태그 제거
+        const searchInData = [
+          guide.title.toLowerCase(),
+          guide.app.toLowerCase(),
+          ...(guide.tags || []).map((tag) => tag.toLowerCase()),
+          guideText,
+        ].join(" ");
+        return searchInData.includes(searchTerm);
+      });
+    };
+
+    displayGuides(filterGuides(allData.appGuides), appGuidesContainer);
+    displayGuides(filterGuides(allData.voteGuides), voteGuidesContainer);
   });
+});

@@ -1,0 +1,111 @@
+{
+  "appGuides": [
+    {
+      "id": "higher_guide",
+      "title": "하이어 재화 가이드",
+      "app": "하이어",
+      "tags": ["하이어", "higher", "루비"],
+      "guide": "<h4>♦️ 재화: 루비</h4><img src='https://i.imgur.com/bTydVB1.jpg' alt='루비 설명' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>하이어 앱에서는 '루비'를 모아 투표에 사용할 수 있습니다. 루비는 획득 후 90일이 지나면 소멸되니 기간 내에 꼭 사용해야 합니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>광고 보기</strong><br><img src='https://i.imgur.com/rLIWQJw.jpg' alt='광고 보기' class='w-full rounded-md my-2 border'>매일 50회까지 시청 가능하며, 1회 시청 시 루비 1개를 획득할 수 있습니다. 매일 꾸준히 참여하는 것이 중요합니다.</li></ul>"
+    },
+    {
+      "id": "idolchamp_guide",
+      "title": "아이돌챔프 재화 가이드",
+      "app": "아이돌챔프",
+      "tags": ["아이돌챔프", "idolchamp", "챔심"],
+      "guide": "<h4>💎 재화: 챔심 (하트)</h4><img src='https://i.imgur.com/QXkLDAk.jpg' alt='챔심 종류' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>아이돌챔프의 재화는 💙파란하트(타임챔심)와 ❤️빨간하트(루비챔심) 두 종류입니다. <strong>파란하트는 매월 말일에 소멸</strong>되므로 월초부터 꾸준히 모아 월말에 모두 사용하는 것이 중요하며, 빨간하트는 소멸되지 않습니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>출석체크:</strong> 매일 출석 시 💙30개, 출석 후 광고를 보면 ❤️10개를 추가로 얻을 수 있습니다.</li><li><strong>룰렛 돌리기:</strong><img src='https://i.imgur.com/g6ZrR3F.jpg' alt='룰렛 돌리기' class='w-full rounded-md my-2 border'>광고 시청 후 룰렛을 돌려 ❤️1~100개를 랜덤으로 획득합니다.</li><li><strong>퀴즈 풀기:</strong><img src='https://i.imgur.com/NpgySXy.jpg' alt='퀴즈 풀기' class='w-full rounded-md my-2 border'>퀴즈를 풀고 정답을 맞히면 💙최대 20개를 획득할 수 있습니다.</li></ul>"
+    },
+    {
+      "id": "mubeat_guide",
+      "title": "뮤빗 재화 가이드",
+      "app": "뮤빗",
+      "tags": ["뮤빗", "mubeat", "하트비트"],
+      "guide": "<h4>❤️ 재화: 하트비트</h4><img src='https://i.imgur.com/2e0aFql.jpg' alt='하트비트' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>'쇼! 음악중심' 사전투표 등에 사용되는 하트비트는 <strong>적립 후 90일이 지나면 소멸</strong>됩니다. 스토어의 '하트비트' 탭에서 광고를 보고 모을 수 있습니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>광고 보기:</strong> 매일 15회까지 참여 가능하며, 1회 시청 시 ❤️3개를 획득합니다.</li><li><strong>퀴즈 풀기:</strong> 퀴즈 미션을 통해 추가 하트비트를 얻을 수 있습니다.</li></ul>"
+    },
+    {
+      "id": "upick_guide",
+      "title": "유픽 재화 가이드",
+      "app": "유픽",
+      "tags": ["유픽", "upick", "잼"],
+      "guide": "<h4>💎 재화: 잼</h4><img src='https://i.imgur.com/usXGjYH.jpg' alt='잼 종류' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>유픽은 🩷핑크잼(유료, 소멸X)과 💙블루잼(무료) 두 종류의 재화를 사용합니다. <strong>블루잼은 매달 15일과 말일에 소멸</strong>되므로 소멸 전에 모두 사용해야 합니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>출석 체크:</strong><img src='https://i.imgur.com/x9JpGIy.jpg' alt='출석 체크' class='w-full rounded-md my-2 border'>매월 20일 이상 꾸준히 출석하면 다량의 블루잼을 획득할 수 있습니다.</li><li><strong>영상 보기:</strong><img src='https://i.imgur.com/3gXqKvc.jpg' alt='영상 보기' class='w-full rounded-md my-2 border'>잼을 가장 많이 주는 [3]번부터 시청하는 것을 추천하며, 백그라운드 재생이 가능해 편리합니다.</li></ul>"
+    },
+    {
+      "id": "fanplus_guide",
+      "title": "팬플러스 재화 가이드",
+      "app": "팬플러스",
+      "tags": ["팬플러스", "fanplus", "투표권"],
+      "guide": "<h4>🎟️ 재화: 투표권</h4><p class='text-sm text-gray-600 mb-3'>팬플러스의 무료 투표권은 대부분 <strong>획득 후 24시간 이내에 소멸</strong>되므로, 얻는 즉시 사용하는 것이 중요합니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>출석체크:</strong><img src='https://i.imgur.com/fbnI582.jpg' alt='출석체크' class='w-full rounded-md my-2 border'>연속 출석 일수에 따라 더 많은 투표권을 얻을 수 있습니다.</li><li><strong>광고 보기:</strong><img src='https://i.imgur.com/iQ9Yisb.jpg' alt='광고 보기' class='w-full rounded-md my-2 border'>매일 5회까지 참여 가능하며, 회당 100표를 획득합니다.</li><li><strong>친구 투표권 주고받기:</strong><img src='https://i.imgur.com/zLJkVoQ.jpg' alt='친구 투표권' class='w-full rounded-md my-2 border'>친구와 투표권을 서로 주고받을 수 있습니다.</li></ul>"
+    },
+    {
+      "id": "choeaedol_guide",
+      "title": "최애돌 재화 가이드",
+      "app": "최애돌",
+      "tags": ["최애돌", "choeaedol", "하트"],
+      "guide": "<h4>❤️ 재화: 하트</h4><img src='https://i.imgur.com/5H8mKOJ.jpg' alt='하트 종류' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>소멸되지 않는 '에버 하트'와 <strong>매일 밤 11시 30분에 소멸</strong>되는 '데일리 하트'가 있습니다. 데일리 하트는 소멸 전 반드시 모두 사용해야 합니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>출석 및 접속:</strong><img src='https://i.imgur.com/wGy5no6.jpg' alt='출석 체크' class='w-full rounded-md my-2 border'>연속 출석 및 덕질타임(20:00~23:30) 접속 시 추가 하트를 획득합니다.</li><li><strong>친구 하트 주고받기:</strong><img src='https://i.imgur.com/hB6yFOl.jpg' alt='친구 하트' class='w-full rounded-md my-2 border'>친구 300명을 채우고 매일 3번씩 하트를 주고받는 것이 중요합니다.</li><li><strong>하트 박스:</strong><img src='https://i.imgur.com/N0FZzGe.jpg' alt='하트 박스' class='w-full rounded-md my-2 border'>4시간마다 5회씩 참여 가능하며, 랜덤으로 하트를 지급합니다.</li><li><strong>광고 보기:</strong><img src='https://i.imgur.com/tvTn8pM.jpg' alt='광고 보기' class='w-full rounded-md my-2 border'>30분마다 5회 참여 가능하며, 에버 하트 50개를 획득합니다.</li><li><strong>게시물 작성:</strong><img src='https://i.imgur.com/25IU29W.jpg' alt='게시물 작성' class='w-full rounded-md my-2 border'>영상, 고화질 사진, URL 등을 게시하면 하트를 얻을 수 있습니다.</li></ul>"
+    },
+    {
+      "id": "fannstar_guide",
+      "title": "팬앤스타 재화 가이드",
+      "app": "팬앤스타",
+      "tags": ["팬앤스타", "fannstar", "별", "G포인트"],
+      "guide": "<h4>⭐ 재화: 별, G포인트</h4><img src='https://i.imgur.com/rQu2gwt.jpg' alt='별 종류' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'><strong>일반 별은 유효기간이 15일</strong>로 매우 짧아 주의가 필요하며, 무지개 별은 1년입니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>타임 이벤트:</strong><img src='https://i.imgur.com/lXzYAzI.jpg' alt='타임 이벤트' class='w-full rounded-md my-2 border'>매일 특정 시간에 접속하면 보상을 받을 수 있습니다. 만약 놓쳤다면 앱 언어를 중국어로 변경해 추가 기회를 얻을 수 있습니다.</li><li><strong>동영상 투표:</strong><img src='https://i.imgur.com/tkc1wPR.jpg' alt='동영상 투표' class='w-full rounded-md my-2 border'>하루 40번까지 가능하며, 쿨타임이 존재합니다. (멤버십 회원은 쿨타임 없음)</li><li><strong>기타:</strong> 출석체크, 뉴스 보기, 스폰 미션, 룰렛 등을 통해서도 재화를 모을 수 있습니다.</li></ul>"
+    },
+    {
+      "id": "podoal_guide",
+      "title": "포도알 재화 가이드",
+      "app": "포도알",
+      "tags": ["포도알", "podoal", "포도"],
+      "guide": "<h4>🍇 재화: 포도알, 포도 젤리</h4><img src='https://i.imgur.com/EgG2qUl.jpg' alt='포도 종류' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>포도알(🟣)과 포도 젤리(⚡)를 모아 ASEA 차트 투표 등에 사용합니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>출석체크:</strong><img src='https://i.imgur.com/xjTFKuT.jpg' alt='출석체크' class='w-full rounded-md my-2 border'>연속 출석 일수에 따라 더 많은 포도알을 획득합니다.</li><li><strong>광고 보기:</strong><img src='https://i.imgur.com/eA2jXTM.jpg' alt='광고 보기' class='w-full rounded-md my-2 border'>매일 25회 참여 가능하며, 회당 포도알 300개를 얻을 수 있습니다.</li></ul>"
+    },
+    {
+      "id": "bugs_guide",
+      "title": "벅스 재화 가이드",
+      "app": "벅스",
+      "tags": ["벅스", "bugs", "하트"],
+      "guide": "<h4>❤️ 재화: 하트</h4><img src='https://i.imgur.com/9e6tmur.jpg' alt='하트 종류' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>핑크 하트(🩷)와 골드 하트(💛)가 있습니다. <strong>매일 지급되는 핑크 하트는 당일 소멸</strong>되므로 매일 투표에 사용하는 것이 좋습니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>광고 보기:</strong><img src='https://i.imgur.com/4DPYYvl.jpg' alt='광고 보기' class='w-full rounded-md my-2 border'>#5, #6 광고를 시청하여 핑크 하트를 10개씩 적립할 수 있습니다. (쿨타임 3분)</li></ul>"
+    },
+    {
+      "id": "my1pick_guide",
+      "title": "마이원픽 재화 가이드",
+      "app": "마이원픽",
+      "tags": ["마이원픽", "my1pick", "하트"],
+      "guide": "<h4>❤️ 재화: 하트</h4><img src='https://i.imgur.com/f3333Ze.jpg' alt='하트 종류' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>🩵데이하트, 🩷원픽하트, 💛골드하트 세 종류가 있습니다. <strong>데이하트는 매일 소멸</strong>되므로, K-그룹 차트에서 플레이브에게 매일 투표해 소진해야 합니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>출석체크:</strong><img src='https://i.imgur.com/YSpDdRC.jpg' alt='출석체크' class='w-full rounded-md my-2 border'>연속 출석 일수에 따라 다양한 종류의 하트를 획득합니다.</li><li><strong>광고 보기:</strong><img src='https://i.imgur.com/aVc72pM.jpg' alt='광고 보기' class='w-full rounded-md my-2 border'>광고 종류에 따라 💛골드하트(매일 15회) 또는 🩷원픽하트(매일 10회)를 획득할 수 있습니다.</li></ul>"
+    },
+    {
+      "id": "giftree_guide",
+      "title": "기프트리 재화 가이드",
+      "app": "기프트리",
+      "tags": ["기프트리", "giftree", "투표권"],
+      "guide": "<h4>🎟️ 재화: 투표권</h4><img src='https://i.imgur.com/b9jVt7t.jpg' alt='획득 방법' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>기프트리는 다양한 방법으로 투표권을 모아 생일 투표 등에 사용할 수 있습니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>로그인(출석체크):</strong> 매일 로그인하여 기본 투표권을 획득합니다.</li><li><strong>광고 보기:</strong><img src='https://i.imgur.com/fNYjZGd.jpg' alt='배너 광고' class='w-full rounded-md my-2 border'>충전소의 배너 광고나 프리미엄 영상 광고(6회)를 통해 투표권을 얻습니다.</li><li><strong>기사 보기:</strong><img src='https://i.imgur.com/fuhIIRh.jpg' alt='기사 보기' class='w-full rounded-md my-2 border'>충전소에서 기사를 클릭하면 즉시 투표권이 지급됩니다.</li></ul>"
+    },
+    {
+      "id": "idoki_guide",
+      "title": "아이도키 재화 가이드",
+      "app": "아이도키",
+      "tags": ["아이도키", "idoki", "하트"],
+      "guide": "<h4>❤️ 재화: 하트</h4><img src='https://i.imgur.com/x22dYxI.jpg' alt='하트 설명' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>아이도키의 하트는 <strong>적립 후 30일이 지나면 소멸</strong>됩니다.</p><h5 class='font-semibold text-sm mt-4 mb-2'>획득 방법</h5><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>출석체크:</strong><img src='https://i.imgur.com/JsEOStv.jpg' alt='출석체크' class='w-full rounded-md my-2 border'>매일 출석하여 ❤️10개를 획득합니다.</li><li><strong>광고 보기:</strong><img src='https://i.imgur.com/IAC8avG.jpg' alt='광고 보기' class='w-full rounded-md my-2 border'>10분 쿨타임이 있으며, 광고 시청 시 ❤️3개를 획득합니다.</li></ul>"
+    },
+    {
+      "id": "dcinside_guide",
+      "title": "디시인사이드 재화 가이드",
+      "app": "디시인사이드",
+      "tags": ["디시인사이드", "dc", "투표권"],
+      "guide": "<h4>🎟️ 재화: 투표권</h4><img src='https://i.imgur.com/OqvemX5.jpg' alt='투표권 적립' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>보이그룹 왕좌 같은 투표에 참여하기 위해 광고 시청이나 미션 수행을 통해 투표권을 적립할 수 있습니다.</p>"
+    }
+  ],
+  "voteGuides": [
+    {
+      "id": "usen_guide",
+      "title": "USEN 투표 가이드",
+      "app": "USEN",
+      "tags": ["유센", "usen", "일본"],
+      "guide": "<h4>✅ 투표 방법</h4><img src='https://raw.githubusercontent.com/king-yummy/streaming-track-checker/refs/heads/main/images/kakurenbo.jpeg' alt='카쿠렌보' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>USEN은 별도의 재화 없이 직접 투표하는 방식입니다. 위클리 랭킹 20위 안에 들면 일본 현지 매장에 플레이브의 노래가 BGM으로 방송됩니다.</p><ol class='list-decimal list-inside space-y-2 text-sm'><li><img src='https://i.imgur.com/sdqCKum.jpg' alt='로그인' class='w-full rounded-md my-2 border'>가운데 버튼을 눌러 소셜 계정으로 로그인합니다.</li><li><img src='https://i.imgur.com/FAwjhyA.jpg' alt='투표' class='w-full rounded-md my-2 border'>'24회 표 투표' 버튼을 클릭합니다.</li><li><img src='https://i.imgur.com/1KBXFjW.jpg' alt='완료' class='w-full rounded-md my-2 border'>투표가 완료되었습니다!</li></ol>"
+    },
+    {
+      "id": "melon_guide",
+      "title": "멜론 주간인기상 투표",
+      "app": "멜론",
+      "tags": ["멜론", "melon", "주간인기상"],
+      "guide": "<h4>🏆 주간인기상 투표</h4><img src='https://i.imgur.com/WLgl7i2.jpg' alt='멜론 주간인기상' class='w-full rounded-md my-2 border'><p class='text-sm text-gray-600 mb-3'>멜론 주간인기상은 별도의 재화 없이 계정의 이용권 유무에 따라 투표권이 지급됩니다. 스밍 순위도 함께 반영되므로 스밍이 매우 중요합니다.</p><ul class='list-disc list-inside space-y-2 text-sm'><li><strong>이용권 보유 계정:</strong> 매일 3표 투표 가능</li><li><strong>이용권 미보유 계정:</strong> 매일 1표 투표 가능</li></ul>"
+    }
+  ]
+}
