@@ -88,18 +88,30 @@
         </div>
       </header>
 
-      <div class="w-full max-w-md mt-4 grid grid-cols-3 gap-2 px-1">
-        <a href="streaming-guide.html" onclick="gtag('event', 'view_streaming_guide', {'user_id': getUserID()});" class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition">
+      <div class="w-full max-w-md mt-4 grid grid-cols-4 gap-2 px-1">
+        <!-- 앱 가이드 -->
+        <a
+          href="app-guide.html"
+          class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
+        >
+          <span class="text-3xl">📱</span>
+        </a>
+        <!-- 음원 가이드 -->
+        <a
+          href="streaming-guide.html"
+          onclick="gtag('event', 'view_streaming_guide', {'user_id': getUserID()});"
+          class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
+        >
           <span class="text-3xl">🎵</span>
         </a>
-
+        <!-- 투표 가이드 -->
         <a
           href="voting-guide.html"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">🗳️</span>
         </a>
-
+        <!-- 공지 -->
         <a
           href="notice.html"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
@@ -203,18 +215,21 @@
       </footer>
     </div>
 
-    <nav id="bottom-nav" class="fixed bottom-0 inset-x-0 z-[95] w-full max-w-md mx-auto">
-        <button
-          id="open-todolist-button"
-          class="w-full h-20 flex items-center justify-center"
-        >
-          <div class="flex flex-col items-center">
-            <div class="bottom-button-handle"></div>
-            <span class="text-xl" style="font-family: 'Jua', sans-serif"
-              >Today's To-Do List</span
-            >
-          </div>
-        </button>
+    <nav
+      id="bottom-nav"
+      class="fixed bottom-0 inset-x-0 z-[95] w-full max-w-md mx-auto"
+    >
+      <button
+        id="open-todolist-button"
+        class="w-full h-20 flex items-center justify-center"
+      >
+        <div class="flex flex-col items-center">
+          <div class="bottom-button-handle"></div>
+          <span class="text-xl" style="font-family: 'Jua', sans-serif"
+            >Today's To-Do List</span
+          >
+        </div>
+      </button>
     </nav>
 
     <div
