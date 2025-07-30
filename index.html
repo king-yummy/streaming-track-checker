@@ -92,6 +92,7 @@
         <!-- 앱 가이드 -->
         <a
           href="app-guide.html"
+          onclick="gtag('event', 'view_app_guide', {'user_id': getUserID()});"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">📱</span>
@@ -107,6 +108,7 @@
         <!-- 투표 가이드 -->
         <a
           href="voting-guide.html"
+          onclick="gtag('event', 'view_voting_guide', {'user_id': getUserID()});"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">🗳️</span>
@@ -114,6 +116,7 @@
         <!-- 공지 -->
         <a
           href="notice.html"
+          onclick="gtag('event', 'view_notice', {'user_id': getUserID()});"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">📢</span>
