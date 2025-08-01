@@ -3,6 +3,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const voteGuidesContainer = document.getElementById("vote-guides-container");
   const searchInput = document.getElementById("search-input");
 
+  const startBtn = document.getElementById("startMacro");
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      const extensionId = "elamnoganflfallmgnchjdmimanffjbd";
+      chrome.runtime.sendMessage(
+        extensionId,
+        { action: "start" },
+        (response) => {
+          console.log("확장 프로그램 응답:", response);
+        }
+      );
+    });
+  }
+
   let allData = { appGuides: [], voteGuides: [] };
 
   fetch("guides.json")
