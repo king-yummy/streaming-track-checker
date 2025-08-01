@@ -1,13 +1,14 @@
 export default function handler(req, res) {
-  // ✅ CORS 대응: OPTIONS method 처리
+  // 🧩 Preflight 요청 처리
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*"); // ⭐ 중요
     res.status(200).end();
-    return;
+    return; // ⭐ 이거 꼭 있어야 CORS 에러 안 남
   }
 
+  // ✅ 모든 응답에 CORS 헤더 삽입
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
 
@@ -17,7 +18,7 @@ export default function handler(req, res) {
   if (!validPassword) {
     return res
       .status(500)
-      .json({ success: false, error: "서버에 비밀번호가 설정되지 않았어요." });
+      .json({ success: false, error: "No password set on server." });
   }
 
   if (input === validPassword) {
