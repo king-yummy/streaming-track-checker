@@ -1,6 +1,15 @@
 export default function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // allow Chrome extension fetch
-  res.setHeader("Access-Control-Allow-Methods", "GET");
+  // ✅ CORS 대응: OPTIONS method 처리
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.status(200).end();
+    return;
+  }
+
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
 
   const validPassword = process.env.PLLI_PASSWORD;
   const input = req.query.pw;
