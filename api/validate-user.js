@@ -1,16 +1,22 @@
-// /api/validate-user.js
 import fs from "fs";
 import path from "path";
 
 export default function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
+  if (req.method !== "POST") {
+    return res.status(405).end(); // Method Not Allowed
+  }
 
-  const { name } = req.body;
+  try {
+    const filePath = path.resolve(process.cwd(), "user.json");
+    const data = fs.readFileSync(filePath, "utf-8");
+    const users = JSON.parse(data);
 
-  const filePath = path.join(process.cwd(), "user.json");
-  const rawData = fs.readFileSync(filePath, "utf-8");
-  const users = JSON.parse(rawData);
+    const { name } = req.body;
+    const valid = users.includes(name);
 
-  const isValid = users.includes(name.trim());
-  res.status(200).json({ valid: isValid });
+    res.status(200).json({ valid });
+  } catch (error) {
+    console.error("User validation error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 }
