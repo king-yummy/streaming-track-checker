@@ -84,34 +84,25 @@
         class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3 mb-6"
       >
         <div class="flex items-center space-x-2">
-          <span class="text-lg">🔧</span>
-          <h3 class="text-md font-bold">플리 전용 도구(테스트 중! 아직 사용 불가!)</h3>
+          <span class="text-lg">🔐</span>
+          <h3 class="text-md font-bold">플리 보조 프로그램 인증 센터</h3>
         </div>
 
         <p class="text-sm text-gray-700 leading-relaxed">
-          오직
-          <span class="font-semibold text-blue-600">플리만을 위한 도구</span
-          >입니다
+          플리 보조 프로그램은 관리자 인증 후 사용하실 수 있습니다.<br />
+          비밀번호 복사 후 프로그램에 붙여넣기 하세요.
         </p>
 
-        <p class="text-xs text-gray-500">
-          🔐 자세한 소개와 사용 방법은
-          <a
-            href="https://open.kakao.com/o/gHDHDsyh"
-            target="_blank"
-            class="text-blue-500 underline hover:text-blue-600"
-          >
-            플리 미도미도 알림방 (카톡 오픈채팅방)
-          </a>
-          에서만 공유돼요!
+        <p class="text-sm text-red-500 leading-relaxed">
+          📌 비밀번호는 매일 변경되며, 무단 배포시 해당 계정은 정지됩니다.
         </p>
 
-        <button
-          id="startMacro"
-          class="mt-2 w-full py-2 rounded-md bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition"
-        >
-          🚀 실행하기
+        <button id="copyPwBtn"
+          onclick="copyRandomPassword()" class="mt-2 w-full py-2 rounded-md
+          bg-blue-500 text-white text-sm font-semibold" > 🔑 비밀번호 복사하기
         </button>
+
+        <div id="pw-feedback" class="text-xs text-green-600 pt-1"></div>
       </div>
 
       <div class="mb-8">
@@ -126,5 +117,6 @@
     </main>
 
     <script src="vote_guide.js"></script>
+    <script src="./js/pw.js"></script>
   </body>
 </html>
