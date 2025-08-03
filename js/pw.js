@@ -1,63 +1,49 @@
 async function copyPasswordForUser() {
-  const input = document.getElementById("user-name");
-  const feedback = document.getElementById("pw-feedback");
-  const button = document.getElementById("copy-btn");
+  const nameInput = document.getElementById("user-name");
+  const feedbackDiv = document.getElementById("pw-feedback");
+  const copyButton = document.getElementById("copy-btn");
 
-  const username = input.value.trim();
+  const username = nameInput.value.trim();
   if (!username) {
-    feedback.textContent = "❌ 이름을 입력해주세요.";
-    feedback.className = "text-xs pt-1 text-red-500";
+    feedbackDiv.textContent = "❌ 이름을 입력해주세요.";
+    feedbackDiv.className = "text-xs pt-1 text-red-500";
     return;
   }
 
-  // 서버에 사용자 유효성 검사 요청
-  const validationRes = await fetch("/api/validate-user", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: username }),
-  });
+  // 로딩 상태 시작: 버튼 비활성화 및 메시지 초기화
+  copyButton.disabled = true;
+  copyButton.textContent = "확인 중...";
+  feedbackDiv.textContent = "";
 
-  if (!validationRes.ok) {
-    feedback.textContent = "⚠️ 서버 오류가 발생했습니다.";
-    feedback.className = "text-xs pt-1 text-red-500";
-    return;
+  try {
+    // 1. 서버에 사용자 이름으로 비밀번호를 직접 요청합니다.
+    const response = await fetch("/api/validate-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: username }),
+    });
+
+    // 서버로부터 받은 응답을 JSON 형태로 변환합니다.
+    const result = await response.json();
+
+    // 2. 서버 응답이 실패한 경우 (예: 403, 404, 500 오류)
+    if (!response.ok) {
+      // 서버가 보낸 에러 메시지를 그대로 사용자에게 보여줍니다.
+      throw new Error(result.message || "알 수 없는 오류가 발생했습니다.");
+    }
+
+    // 3. 성공한 경우: 받은 비밀번호를 클립보드에 복사합니다.
+    await navigator.clipboard.writeText(result.password);
+
+    feedbackDiv.textContent = "✔️ 비밀번호 복사 완료!";
+    feedbackDiv.className = "text-xs pt-1 text-green-600";
+  } catch (error) {
+    // 4. 실패한 경우: 에러 메시지를 사용자에게 보여줍니다.
+    feedbackDiv.textContent = `❌ ${error.message}`;
+    feedbackDiv.className = "text-xs pt-1 text-red-500";
+  } finally {
+    // 5. 작업 완료 후, 버튼을 다시 활성화하고 원래 텍스트로 되돌립니다.
+    copyButton.disabled = false;
+    copyButton.textContent = "🔑 복사";
   }
-
-  const { valid } = await validationRes.json();
-  if (!valid) {
-    feedback.textContent = "🚫 인증되지 않은 사용자입니다.";
-    feedback.className = "text-xs pt-1 text-red-500";
-    return;
-  }
-
-  // 비밀번호 가져오기
-  const pwRes = await fetch("/pw.json");
-  const pwData = await pwRes.json();
-  const now = new Date();
-  const date = now.toISOString().slice(0, 10);
-  const hour = now.getHours().toString().padStart(2, "0");
-  const minute = now.getMinutes();
-  const slot = minute < 30 ? `${hour}:00` : `${hour}:30`;
-  const todayPw = pwData[date]?.[slot];
-
-  if (!todayPw) {
-    feedback.textContent = "❌ 오늘의 비밀번호가 아직 없습니다.";
-    feedback.className = "text-xs pt-1 text-red-500";
-    return;
-  }
-
-  await navigator.clipboard.writeText(todayPw);
-
-  // 성공 피드백
-  feedback.textContent = `✔️ 비밀번호 복사 완료!`;
-  feedback.className = "text-xs pt-1 text-green-600";
-  button.classList.remove("bg-blue-500");
-  button.classList.add("bg-white", "border", "border-gray-800", "text-black");
-
-  // 로그 기록 요청
-  fetch("/api/log-usage", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: username, timestamp: now.toISOString() }),
-  }).catch(console.error);
 }
