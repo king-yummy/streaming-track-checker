@@ -39,14 +39,13 @@ async function copyPasswordForUser() {
 
   await navigator.clipboard.writeText(todayPw);
 
-  // 로그 전송
-  fetch("/api/log-usage", {
+  // 인증 성공 시 로그 서버로 전송
+  fetch("/api/log-auth", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: username,
-      timestamp: new Date().toISOString(),
-    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username }),
   });
 
   // 버튼 스타일 & 성공 피드백
