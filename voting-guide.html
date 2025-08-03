@@ -94,15 +94,26 @@
         </p>
 
         <p class="text-sm text-red-500 leading-relaxed">
-          📌 비밀번호는 매일 변경되며, 무단 배포시 해당 계정은 정지됩니다.
+          📌 무단 배포 및 악용 의심 계정은 사용이 정지됩니다.
         </p>
 
-        <button id="copyPwBtn"
-          onclick="copyRandomPassword()" class="mt-2 w-full py-2 rounded-md
-          bg-blue-500 text-white text-sm font-semibold" > 🔑 비밀번호 복사하기
-        </button>
+        <div class="flex gap-2">
+          <input
+            id="user-name"
+            type="text"
+            placeholder="이름을 입력하세요"
+            class="flex-1 p-2 border rounded-md text-sm"
+          />
+          <button
+            id="copy-btn"
+            onclick="copyPasswordForUser()"
+            class="py-2 px-4 rounded-md bg-blue-500 text-white text-sm font-semibold"
+          >
+            🔑 복사
+          </button>
+        </div>
 
-        <div id="pw-feedback" class="text-xs text-green-600 pt-1"></div>
+        <div id="pw-feedback" class="text-xs pt-1"></div>
       </div>
 
       <div class="mb-8">

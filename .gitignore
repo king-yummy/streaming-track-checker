@@ -13,3 +13,5 @@ tokens.json
 .env*.local
 
 pw.json
+user.json
+usage-log.json
