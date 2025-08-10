@@ -80,42 +80,6 @@
         </div>
       </div>
 
-      <div
-        class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3 mb-6"
-      >
-        <div class="flex items-center space-x-2">
-          <span class="text-lg">🔐</span>
-          <h3 class="text-md font-bold">플리 보조 프로그램 인증 센터</h3>
-        </div>
-
-        <p class="text-sm text-gray-700 leading-relaxed">
-          플리 보조 프로그램은 관리자 인증 후 사용하실 수 있습니다.<br />
-          비밀번호 복사 후 프로그램에 붙여넣기 하세요.
-        </p>
-
-        <p class="text-sm text-red-500 leading-relaxed">
-          📌 무단 배포 및 악용 의심 계정은 사용이 정지됩니다.
-        </p>
-
-        <div class="flex gap-2">
-          <input
-            id="user-name"
-            type="text"
-            placeholder="이름을 입력하세요"
-            class="flex-1 p-2 border rounded-md text-sm"
-          />
-          <button
-            id="copy-btn"
-            onclick="copyPasswordForUser()"
-            class="py-2 px-4 rounded-md bg-blue-500 text-white text-sm font-semibold"
-          >
-            🔑 복사
-          </button>
-        </div>
-
-        <div id="pw-feedback" class="text-xs pt-1"></div>
-      </div>
-
       <div class="mb-8">
         <h3 class="text-lg font-bold mb-3">💎 앱별 재화 수집 가이드</h3>
         <div id="app-guides-container" class="space-y-3"></div>
@@ -128,6 +92,5 @@
     </main>
 
     <script src="vote_guide.js"></script>
-    <script src="./js/pw.js"></script>
   </body>
 </html>

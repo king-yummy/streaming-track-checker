@@ -11,30 +11,6 @@
       href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="PLLI 응원 멘트 남기고 덕질 자금 받자 💰"
-    />
-    <meta
-      name="twitter:description"
-      content="PLLI 응원 멘트 남기고 덕질 자금 받자 💰"
-    />
-    <meta name="twitter:image" content="https://i.imgur.com/LrmhSc0.jpg" />
-    <meta name="twitter:url" content="https://www.plli-checker.app" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.plli-checker.app" />
-    <meta
-      property="og:title"
-      content="PLLI 응원 멘트 남기고 덕질 자금 받자 💰"
-    />
-    <meta
-      property="og:description"
-      content="PLLI 응원 멘트 남기고 덕질 자금 받자 💰"
-    />
-    <meta property="og:image" content="https://i.imgur.com/LrmhSc0.jpg" />
-
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-GYGLSJRN79"
@@ -89,7 +65,6 @@
       </header>
 
       <div class="w-full max-w-md mt-4 grid grid-cols-4 gap-2 px-1">
-        <!-- 앱 가이드 -->
         <a
           href="app-guide.html"
           onclick="gtag('event', 'view_app_guide', {'user_id': getUserID()});"
@@ -97,7 +72,6 @@
         >
           <span class="text-3xl">📱</span>
         </a>
-        <!-- 음원 가이드 -->
         <a
           href="streaming-guide.html"
           onclick="gtag('event', 'view_streaming_guide', {'user_id': getUserID()});"
@@ -105,7 +79,6 @@
         >
           <span class="text-3xl">🎵</span>
         </a>
-        <!-- 투표 가이드 -->
         <a
           href="voting-guide.html"
           onclick="gtag('event', 'view_voting_guide', {'user_id': getUserID()});"
@@ -113,7 +86,6 @@
         >
           <span class="text-3xl">🗳️</span>
         </a>
-        <!-- 공지 -->
         <a
           href="notice.html"
           onclick="gtag('event', 'view_notice', {'user_id': getUserID()});"
@@ -128,35 +100,41 @@
       </main>
 
       <section
-        id="event-section"
-        class="relative z-10 w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow flex flex-col items-center space-y-3"
+        class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow"
       >
-        <h2 class="text-sm text-gray-600 font-semibold">
-          🔥 카쿠렌보 주간인기상 축하 이벤트 🔥
-        </h2>
-        <p class="text-[12px] text-gray-500 text-center leading-tight">
-          응원의 말을 X에 공유하면 이벤트 참여 완~<br />
-          중복 참여 가능! 많이 참여할수록 당첨 확률 UP<br />
-        </p>
-        <div class="flex w-full items-center gap-2">
-          <input
-            id="cheer-message"
-            type="text"
-            maxlength="100"
-            placeholder="EX) 숨스숨투 중인 플리들 파이팅 💗"
-            class="flex-1 text-sm p-2 rounded-md border border-gray-300 shadow-inner"
-          />
-          <button
-            id="tweet-button"
-            class="bg-[#dbeafe] text-blue-900 text-sm font-semibold px-4 py-2 rounded-md"
-          >
-            공유
-          </button>
+        <div class="space-y-3">
+          <div class="flex items-center space-x-2">
+            <span class="text-lg">🔐</span>
+            <h3 class="text-md font-bold">플리 보조 프로그램 인증 센터</h3>
+          </div>
+
+          <p class="text-sm text-gray-700 leading-relaxed">
+            플리 보조 프로그램은 관리자 인증 후 사용하실 수 있습니다.<br />
+            비밀번호 복사 후 프로그램에 붙여넣기 하세요.
+          </p>
+
+          <p class="text-sm text-red-500 leading-relaxed">
+            📌 무단 배포 및 악용 의심 계정은 사용이 정지됩니다.
+          </p>
+
+          <div class="flex gap-2">
+            <input
+              id="user-name"
+              type="text"
+              placeholder="이름을 입력하세요"
+              class="flex-1 p-2 border rounded-md text-sm"
+            />
+            <button
+              id="copy-btn"
+              onclick="copyPasswordForUser()"
+              class="py-2 px-4 rounded-md bg-blue-500 text-white text-sm font-semibold"
+            >
+              🔑 복사
+            </button>
+          </div>
+
+          <div id="pw-feedback" class="text-xs pt-1"></div>
         </div>
-        <p class="text-[11px] text-gray-400 text-center">
-          📅 7/21(월)부터 8/4(월) 23:59까지<br />
-          🎁 8/5 추첨! 덕질 자금 1만원 (1명)
-        </p>
       </section>
 
       <section
@@ -304,5 +282,6 @@
     </div>
 
     <script type="module" src="js/main.js"></script>
+    <script src="./js/pw.js"></script>
   </body>
 </html>
