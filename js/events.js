@@ -6,8 +6,11 @@ import {
   getMessaging,
   getToken,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
+import { onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
 
 const findItemDataById = (id) => allTodoData.find((item) => item.ID === id);
+const VAPID_KEY =
+  "BHKOgIoE52ImNaT3yKv_w1yJVSPL2WfUZHCp2VKUF0DvWiOVi2cNFQ-qS2XzjRt2HliwcK-U-BFrDXbxBfpI7MA";
 
 // Firebase 앱 설정
 const firebaseConfig = {
@@ -51,85 +54,115 @@ async function saveNotificationSettings() {
  * 알림 시스템 전체를 초기화하고 이벤트 리스너를 설정하는 함수
  */
 export async function initializeNotificationSystem() {
-  const bellBtn = document.getElementById("notification-bell-btn");
-  const modalOverlay = document.getElementById(
-    "pre-notification-modal-overlay"
-  );
-  const modalPanel = document.getElementById("pre-notification-modal-panel");
-  const allowBtn = document.getElementById("pre-notification-allow-btn");
-  const denyBtn = document.getElementById("pre-notification-deny-btn");
+  // notice.html 의 토글 DOM
+  const noticeToggle = document.getElementById("notice-toggle");
+  const calendarToggle = document.getElementById("calendar-toggle");
+  if (!noticeToggle || !calendarToggle) return;
 
-  if (!bellBtn || !modalPanel) return;
+  // Firebase 초기화/인스턴스는 기존 코드 그대로 사용한다고 가정
+  // const app = initializeApp(firebaseConfig);
+  // const messaging = getMessaging(app);
+  // let currentToken = "";
 
-  // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-  // 서비스 워커가 준비될 때까지 기다리는 코드를 추가합니다.
+  // 1) SW 준비 보장
+  let swReg;
   try {
-    await navigator.serviceWorker.ready;
-  } catch (error) {
-    console.error("서비스 워커 준비 대기 중 오류:", error);
-    // 서비스 워커를 사용할 수 없으면 알림 버튼을 숨깁니다.
-    bellBtn.style.display = "none";
+    swReg = await navigator.serviceWorker.ready;
+  } catch (e) {
+    console.error("[알림] 서비스워커 준비 실패:", e);
     return;
   }
-  // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-  const openModal = () => {
-    modalOverlay.classList.remove("hidden");
-    modalPanel.classList.remove("hidden");
-  };
-  const closeModal = () => {
-    modalOverlay.classList.add("hidden");
-    modalPanel.classList.add("hidden");
-  };
-
-  bellBtn.addEventListener("click", () => {
-    if (Notification.permission === "denied") {
-      alert(
-        "알림이 차단되어 있습니다. 브라우저 설정에서 알림 권한을 직접 허용해주세요."
-      );
-      return;
+  // 2) 권한/토큰 확보
+  async function ensurePermissionAndToken() {
+    if (Notification.permission === "default") {
+      const p = await Notification.requestPermission();
+      if (p !== "granted") return null;
+    } else if (Notification.permission === "denied") {
+      return null;
     }
-    openModal();
-  });
-
-  allowBtn.addEventListener("click", async () => {
-    const noticeOptIn = document.getElementById("modal-notice-opt-in").checked;
-    const calendarOptIn = document.getElementById(
-      "modal-calendar-opt-in"
-    ).checked;
-
-    const permissionGranted = await requestPermissionAndGetToken(
-      noticeOptIn,
-      calendarOptIn
-    );
-
-    if (permissionGranted) {
-      alert("알림이 성공적으로 설정되었습니다!");
-    }
-    closeModal();
-  });
-
-  denyBtn.addEventListener("click", closeModal);
-  modalOverlay.addEventListener("click", closeModal);
-
-  // 페이지 로드 시, 저장된 알림 설정을 불러오는 로직
-  if (Notification.permission === "granted") {
-    const token = await getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" });
-    if (token) {
-      currentToken = token;
-      // 서버에 현재 토큰의 설정값을 요청
-      try {
-        const response = await fetch(`/api/save-token?token=${token}`);
-        const settings = await response.json();
-        // 받아온 설정값으로 체크박스 상태 업데이트
-        noticeCheck.checked = settings.noticeOptIn;
-        calendarCheck.checked = settings.calendarOptIn;
-        console.log("서버에서 알림 설정을 불러왔습니다:", settings);
-      } catch (error) {
-        console.error("알림 설정 불러오기 실패:", error);
-      }
+    try {
+      // 🔑 여기에 Firebase 콘솔의 Web Push 인증서 키(VAPID)를 넣어주세요
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: swReg,
+      });
+      currentToken = token || "";
+      return currentToken || null;
+    } catch (err) {
+      console.error("[알림] FCM 토큰 획득 실패:", err);
+      return null;
     }
   }
+
+  // 3) 서버에 내 현재 설정 저장
+  async function saveCurrentSettings() {
+    if (!currentToken) return;
+    try {
+      await fetch("/api/save-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: currentToken,
+          noticeOptIn: noticeToggle.checked,
+          calendarOptIn: calendarToggle.checked,
+        }),
+      });
+    } catch (e) {
+      console.error("[알림] 설정 저장 실패:", e);
+    }
+  }
+
+  // 4) 초기 상태 복원 (권한 O + 토큰 존재 시)
+  try {
+    if (Notification.permission === "granted") {
+      const token = await ensurePermissionAndToken();
+      if (token) {
+        currentToken = token;
+        const res = await fetch(
+          `/api/save-token?token=${encodeURIComponent(token)}`
+        );
+        if (res.ok) {
+          const { noticeOptIn = false, calendarOptIn = false } =
+            await res.json();
+          noticeToggle.checked = !!noticeOptIn;
+          calendarToggle.checked = !!calendarOptIn;
+        }
+      }
+    }
+  } catch (e) {
+    console.error("[알림] 초기 설정 복원 실패:", e);
+  }
+
+  // 5) 토글 변경 → 권한/토큰 확보 → 서버에 저장
+  async function onToggleChange() {
+    const token = await ensurePermissionAndToken();
+    if (!token) {
+      // 권한 거부된 경우 토글 원복
+      noticeToggle.checked = false;
+      calendarToggle.checked = false;
+      alert("브라우저 알림 권한이 필요합니다.");
+      return;
+    }
+    await saveCurrentSettings();
+    console.log("[알림] 저장됨:", {
+      notice: noticeToggle.checked,
+      calendar: calendarToggle.checked,
+    });
+  }
+
+  noticeToggle.addEventListener("change", onToggleChange);
+  calendarToggle.addEventListener("change", onToggleChange);
+
+  onMessage(messaging, (payload) => {
+    const n = payload.notification || {};
+    if (!n.title && !n.body) return;
+    try {
+      new Notification(n.title || "알림", { body: n.body || "" });
+    } catch (e) {
+      console.log("[알림] foreground 표시 실패:", e);
+    }
+  });
 }
 
 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
