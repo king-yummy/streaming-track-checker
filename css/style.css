@@ -264,3 +264,53 @@
   border-radius: 2px;
   margin-bottom: 14px; /* 핸들과 텍스트 사이 간격 조정 */
 }
+
+/* [추가] 공지사항 스와이퍼 버튼 스타일 */
+.notice-swiper-button-prev,
+.notice-swiper-button-next {
+  color: #3b82f6; /* 파란색 */
+  top: 50%;
+  transform: translateY(-50%);
+}
+.notice-swiper-button-prev {
+  left: -10px;
+}
+.notice-swiper-button-next {
+  right: -10px;
+}
+
+/* [추가] 일일 일정 모달 메뉴 스타일 */
+.event-item {
+  position: relative;
+}
+
+.kebab-menu {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.kebab-menu-options {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.kebab-menu-options button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.kebab-menu-options button:hover {
+  background-color: #f3f4f6;
+}

@@ -1,7 +1,14 @@
-import { schedule, allTodoData } from './state.js';
-import { formatKoreanTime, formatTimeMMSS, formatBold } from './utils.js';
-import { START_AT_MS, CUTOVER_AT_MS, PER_CYCLE_OLD, PER_CYCLE_NEW, BASE_COUNTS, TARGETS } from './config.js';
-import { addTodoEventListeners } from './events.js';
+import { schedule, allTodoData } from "./state.js";
+import { formatKoreanTime, formatTimeMMSS, formatBold } from "./utils.js";
+import {
+  START_AT_MS,
+  CUTOVER_AT_MS,
+  PER_CYCLE_OLD,
+  PER_CYCLE_NEW,
+  BASE_COUNTS,
+  TARGETS,
+} from "./config.js";
+import { addTodoEventListeners } from "./events.js";
 
 export function renderPlaylist() {
   const ul = document.getElementById("playlist");
@@ -443,4 +450,104 @@ function addCarouselEventListeners() {
 export function closeDetailsModal() {
   document.getElementById("details-modal-overlay").classList.add("hidden");
   document.getElementById("details-modal-panel").classList.add("hidden");
+}
+
+// -----------------------------------------------------------------
+// ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼ 아래 함수들을 추가합니다 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+// -----------------------------------------------------------------
+
+/**
+ * [최종 수정] 공지사항 목록을 '페이지네이션' 기능이 포함된 아코디언 방식으로 렌더링하는 함수
+ */
+export function renderNoticeList(noticeData, currentPage = 1) {
+  const container = document.getElementById("notice-list-container");
+  const paginationContainer = document.getElementById(
+    "notice-pagination-container"
+  );
+  if (!container || !paginationContainer || !noticeData) return;
+
+  const itemsPerPage = 3; // 한 페이지에 3개씩 표시
+  const sortedNotices = noticeData.sort((a, b) => b.ID - a.ID);
+
+  // 현재 페이지에 해당하는 데이터만 잘라내기
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedNotices = sortedNotices.slice(startIndex, endIndex);
+
+  // 1. 공지사항 목록 표시 (3개)
+  container.innerHTML = paginatedNotices
+    .map(
+      (notice) => `
+      <details class="bg-white rounded-lg shadow-sm overflow-hidden border">
+          <summary class="p-4 cursor-pointer flex justify-between items-center">
+              <div class="flex items-center">
+                  <span class="font-semibold text-gray-800">${
+                    notice.Title
+                  }</span>
+                  ${
+                    notice.New === "TRUE"
+                      ? '<span class="ml-2 text-xs bg-red-500 text-white font-bold px-2 py-0.5 rounded-full">N</span>'
+                      : ""
+                  }
+              </div>
+              <div class="text-sm text-gray-500">${notice.Date}</div>
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-gray-50">
+              <p class="text-gray-700 whitespace-pre-wrap">${notice.Content.replace(
+                /\\n/g,
+                "\n"
+              )}</p>
+          </div>
+      </details>
+  `
+    )
+    .join("");
+
+  // 2. 페이지네이션 버튼 생성
+  const totalPages = Math.ceil(sortedNotices.length / itemsPerPage);
+  paginationContainer.innerHTML = ""; // 기존 버튼 초기화
+
+  if (totalPages > 1) {
+    for (let i = 1; i <= totalPages; i++) {
+      const pageButton = document.createElement("button");
+      pageButton.textContent = i;
+      pageButton.className = `px-3 py-1 rounded-md text-sm font-medium ${
+        i === currentPage
+          ? "bg-blue-500 text-white"
+          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+      }`;
+      pageButton.onclick = () => renderNoticeList(noticeData, i);
+      paginationContainer.appendChild(pageButton);
+    }
+  }
+}
+
+/**
+ * [신규] 새로운 공지사항이 있는지 확인하고 알림 아이콘을 표시하는 함수
+ */
+export function checkNewNotices(noticeData) {
+  if (!noticeData || noticeData.length === 0) return;
+
+  const lastCheckedId = parseInt(
+    localStorage.getItem("lastCheckedNoticeId") || "0",
+    10
+  );
+  const latestId = Math.max(...noticeData.map((n) => parseInt(n.ID, 10)));
+
+  const noticeDot = document.getElementById("notice-dot");
+  if (noticeDot) {
+    if (latestId > lastCheckedId) {
+      noticeDot.classList.remove("hidden");
+    } else {
+      noticeDot.classList.add("hidden");
+    }
+  }
+
+  const noticeLink = document.getElementById("notice-link");
+  if (noticeLink) {
+    noticeLink.addEventListener("click", () => {
+      localStorage.setItem("lastCheckedNoticeId", latestId);
+      if (noticeDot) noticeDot.classList.add("hidden");
+    });
+  }
 }
