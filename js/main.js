@@ -73,8 +73,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // 2. 공지 & 캘린더 페이지 (notice.html)일 경우
   else if (path.endsWith("notice.html")) {
-    // [수정] 공지사항 데이터 로드 후, 1페이지를 렌더링하도록 인자 추가
-    loadNoticeList().then((noticeData) => renderNoticeList(noticeData, 1));
+    const cachedNotices = sessionStorage.getItem("noticeData");
+    if (cachedNotices) {
+      const noticeData = JSON.parse(cachedNotices);
+      renderNoticeList(noticeData, 1);
+    } else {
+      loadNoticeList().then((noticeData) => {
+        sessionStorage.setItem("noticeData", JSON.stringify(noticeData));
+        renderNoticeList(noticeData, 1);
+      });
+    }
   }
 });
 
