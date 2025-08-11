@@ -1,88 +1,59 @@
-// api/cron.js (시간 조작 기능이 포함된, 즉시 확인용 테스트 버전)
+// firebase-messaging-sw.js
 
-import { getMessaging } from "firebase-admin/messaging";
-import { initializeApp, cert, getApps } from "firebase-admin/app";
-import fs from "fs";
-import path from "path";
-
-// 서비스 계정 키 파일을 읽어옵니다.
-const serviceAccount = JSON.parse(
-  fs.readFileSync(path.resolve("./plli-service-account.json"), "utf8")
+// Firebase 앱 및 메시징 모듈을 가져옵니다.
+importScripts(
+  "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"
 );
 
-// Firebase 앱 중복 초기화 방지
-if (!getApps().length) {
-  initializeApp({
-    credential: cert(serviceAccount),
-  });
-}
+// Firebase 앱을 초기화합니다.
+firebase.initializeApp({
+  apiKey: "AIzaSyDam42H9W_iouj0rkMZDDzSWsrmx8BlVkQ",
+  authDomain: "plli-checker.firebaseapp.com",
+  projectId: "plli-checker",
+  storageBucket: "plli-checker.firebasestorage.app",
+  messagingSenderId: "517953309352",
+  appId: "1:517953309352:web:a5c5a3919ff5bd8822d09d",
+});
 
-const TOKEN_FILE = path.join("/tmp", "tokens.json");
+const messaging = firebase.messaging();
 
-function readTokens() {
-  if (!fs.existsSync(TOKEN_FILE)) return [];
-  try {
-    return JSON.parse(fs.readFileSync(TOKEN_FILE, "utf8"));
-  } catch (error) {
-    return [];
+// 중복 알림 방지를 위한 변수
+let lastNotificationTimestamp = 0;
+
+// 백그라운드에서 메시지를 수신했을 때 실행될 핸들러
+messaging.onBackgroundMessage((payload) => {
+  console.log("📥 백그라운드 메시지 수신:", payload);
+
+  const now = Date.now();
+  // 마지막 알림 후 2초 이내에 온 알림은 중복으로 간주하고 무시합니다.
+  if (now - lastNotificationTimestamp < 2000) {
+    console.log("🔥 중복 알림(유령) 감지! 무시합니다.");
+    return;
   }
-}
+  lastNotificationTimestamp = now;
 
-// Vercel Cron Job이 호출할 기본 함수
-export default function handler(req, res) {
-  // --- 시간 체크 로직 ---
-  const now = new Date();
-  const kstOffset = 9 * 60 * 60 * 1000;
-  const kstTime = new Date(now.getTime() + kstOffset);
-
-  // ✅ [테스트용 코드!] 아래 줄이 현재 시간을 무조건 '7시'로 만듭니다.
-  // 실제 운영 시에는 이 줄을 지우고 아래 줄의 주석을 풀어주세요.
-  // const kstHour = 7;
-  const kstHour = kstTime.getUTCHours(); // <-- 실제 운영용 코드
-
-  // 알림을 보낼 시간대 (오전 7시, 10시, 오후 1시, 4시, 7시, 10시, 새벽 1시)
-  const targetHours = [7, 10, 13, 16, 19, 22, 1];
-
-  // 현재 시간이 알림을 보낼 시간이 아니면, 아무것도 하지 않고 종료
-  if (!targetHours.includes(kstHour)) {
-    const logMessage = `CRON JOB: 현재 시간(${kstHour}시)은 발송 시간이 아니므로 건너뜁니다.`;
-    console.log(logMessage);
-    return res.status(200).send(logMessage);
-  }
-
-  // --- 알림 발송 로직 ---
-  console.log(
-    `CRON JOB: ${kstHour}시 알림 발송 작업을 시작합니다. (테스트 모드)`
-  );
-
-  const allTokens = readTokens();
-  const optedInTokens = allTokens
-    .filter((t) => t.alarmOptIn)
-    .map((t) => t.token);
-
-  if (optedInTokens.length === 0) {
-    console.log("CRON JOB: 알림을 받을 사용자가 없어 작업을 종료합니다.");
-    return res.status(200).send("No users to notify");
-  }
-
-  // "스밍 체크" 알림 메시지
-  const message = {
-    notification: {
-      title: "👀 스밍 체크!",
-      body: "스밍이 멈춰있진 않나요? 한번 확인해주세요! 🎵",
-    },
-    tokens: optedInTokens,
+  // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+  // 여기가 새로 추가된 알림 구분 로직입니다.
+  // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+  const notificationTitle = payload.notification.title || "새로운 알림";
+  const notificationOptions = {
+    body: payload.notification.body || "",
+    tag: "plli-notification-tag", // 알림을 하나로 묶어주는 태그
   };
 
-  getMessaging()
-    .sendEachForMulticast(message)
-    .then((response) => {
-      const logMessage = `CRON JOB: ${response.successCount} 성공, ${response.failureCount} 실패`;
-      console.log(logMessage);
-      res.status(200).send(logMessage);
-    })
-    .catch((error) => {
-      console.error("CRON JOB: 알림 발송 중 오류 발생:", error);
-      res.status(500).send("Error sending notifications");
-    });
-}
+  // 제목에 포함된 아이콘으로 알림 종류를 구분합니다.
+  if (notificationTitle.includes("📢")) {
+    notificationOptions.icon = "/icon-512.png"; // 공지용 아이콘
+  } else if (notificationTitle.includes("🗓️")) {
+    notificationOptions.icon = "/icon-192.png"; // 캘린더용 아이콘 (다른 아이콘으로 변경 가능)
+  } else {
+    notificationOptions.icon = "/icon-192.png"; // 기본 아이콘
+  }
+  // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+  // 최종적으로 사용자에게 알림을 표시합니다.
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});

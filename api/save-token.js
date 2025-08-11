@@ -3,7 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 
-// Vercel의 서버리스 환경에서는 파일을 /tmp/ 경로에만 쓸 수 있습니다.
 const TOKEN_FILE = path.join("/tmp", "tokens.json");
 
 function readTokens() {
@@ -19,29 +18,47 @@ function saveTokens(tokens) {
   fs.writeFileSync(TOKEN_FILE, JSON.stringify(tokens, null, 2));
 }
 
-// Vercel 서버리스 함수는 이렇게 만듭니다.
 export default function handler(req, res) {
-  // POST 요청이 아니면 거부
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+  // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+  // GET 요청을 처리하는 로직 추가
+  if (req.method === "GET") {
+    const { token } = req.query;
+    if (!token) {
+      return res.status(400).json({ error: "Token required" });
+    }
+    const tokens = readTokens();
+    const existingToken = tokens.find((t) => t.token === token);
+    if (existingToken) {
+      return res.status(200).json({
+        noticeOptIn: existingToken.noticeOptIn || false,
+        calendarOptIn: existingToken.calendarOptIn || false,
+      });
+    } else {
+      // 저장된 설정이 없으면 기본값 false를 반환
+      return res.status(200).json({ noticeOptIn: false, calendarOptIn: false });
+    }
+  }
+  // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+  // POST 요청 처리 로직 (기존과 동일)
+  if (req.method === "POST") {
+    const { token, noticeOptIn, calendarOptIn } = req.body;
+    if (!token) {
+      return res.status(400).json({ error: "Token required" });
+    }
+    const tokens = readTokens();
+    const index = tokens.findIndex((t) => t.token === token);
+
+    if (index > -1) {
+      tokens[index].noticeOptIn = noticeOptIn;
+      tokens[index].calendarOptIn = calendarOptIn;
+    } else {
+      tokens.push({ token, noticeOptIn, calendarOptIn });
+    }
+    saveTokens(tokens);
+    return res.status(200).json({ success: true });
   }
 
-  const { token, alarmOptIn } = req.body;
-  if (!token) {
-    return res.status(400).json({ error: "Token required" });
-  }
-
-  const tokens = readTokens();
-  const index = tokens.findIndex((t) => t.token === token);
-
-  if (index > -1) {
-    tokens[index].alarmOptIn = alarmOptIn;
-  } else {
-    tokens.push({ token, alarmOptIn });
-  }
-
-  saveTokens(tokens);
-
-  // 성공적으로 처리되었음을 클라이언트에 알림
-  res.status(200).json({ success: true });
+  // 허용되지 않은 메소드
+  return res.status(405).json({ error: "Method Not Allowed" });
 }

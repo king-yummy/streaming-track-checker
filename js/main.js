@@ -1,5 +1,9 @@
 import { loadStreamingList, loadTodoListData, loadNoticeList } from "./api.js";
-import { initializeAllEventListeners } from "./events.js";
+import {
+  initializeAllEventListeners,
+  initializeNotificationSystem,
+} from "./events.js";
+
 import { setSchedule, setAllTodoData } from "./state.js";
 import {
   initializeStreamingUI,
@@ -73,6 +77,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // 2. 공지 & 캘린더 페이지 (notice.html)일 경우
   else if (path.endsWith("notice.html")) {
+    // 알림 토글 스위치 관련 기능을 실행하는 함수를 호출합니다.
+    initializeNotificationSystem();
+
     const cachedNotices = sessionStorage.getItem("noticeData");
     if (cachedNotices) {
       const noticeData = JSON.parse(cachedNotices);
