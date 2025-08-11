@@ -2,6 +2,7 @@ async function copyPasswordForUser() {
   const nameInput = document.getElementById("user-name");
   const feedbackDiv = document.getElementById("pw-feedback");
   const copyButton = document.getElementById("copy-btn");
+  const melonGuideButton = document.getElementById("melon-guide-btn");
 
   const username = nameInput.value.trim();
   if (!username) {
@@ -14,6 +15,7 @@ async function copyPasswordForUser() {
   copyButton.disabled = true;
   copyButton.textContent = "확인 중...";
   feedbackDiv.textContent = "";
+  melonGuideButton.classList.add("hidden"); // 버튼을 다시 숨깁니다.
 
   try {
     // 1. 서버에 사용자 이름으로 비밀번호를 직접 요청합니다.
@@ -37,6 +39,12 @@ async function copyPasswordForUser() {
 
     feedbackDiv.textContent = "✔️ 비밀번호 복사 완료!";
     feedbackDiv.className = "text-xs pt-1 text-green-600";
+
+    // '멜론이 가이드' 버튼을 보여주고 이벤트 리스너를 추가합니다.
+    melonGuideButton.classList.remove("hidden");
+    melonGuideButton.onclick = () => {
+      window.location.href = "melonee-guide.html"; // 파일명을 수정했습니다.
+    };
   } catch (error) {
     // 4. 실패한 경우: 에러 메시지를 사용자에게 보여줍니다.
     feedbackDiv.textContent = `❌ ${error.message}`;
