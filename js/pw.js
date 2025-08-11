@@ -2,7 +2,6 @@ async function copyPasswordForUser() {
   const nameInput = document.getElementById("user-name");
   const feedbackDiv = document.getElementById("pw-feedback");
   const copyButton = document.getElementById("copy-btn");
-  const melonGuideButton = document.getElementById("melon-guide-btn");
 
   const username = nameInput.value.trim();
   if (!username) {
@@ -15,7 +14,6 @@ async function copyPasswordForUser() {
   copyButton.disabled = true;
   copyButton.textContent = "확인 중...";
   feedbackDiv.textContent = "";
-  melonGuideButton.classList.add("hidden"); // 버튼을 다시 숨깁니다.
 
   try {
     // 1. 서버에 사용자 이름으로 비밀번호를 직접 요청합니다.
