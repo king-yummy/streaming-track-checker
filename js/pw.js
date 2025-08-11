@@ -52,6 +52,6 @@ async function copyPasswordForUser() {
   } finally {
     // 5. 작업 완료 후, 버튼을 다시 활성화하고 원래 텍스트로 되돌립니다.
     copyButton.disabled = false;
-    copyButton.textContent = "🔑";
+    copyButton.textContent = "🔑 복사";
   }
 }
