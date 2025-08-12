@@ -238,6 +238,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
     height: "auto",
+    locale: "ko", // 한국어 적용
+    titleFormat: {
+      // 제목 포맷 변경
+      year: "numeric",
+      month: "short", // 8월 형태
+    },
     headerToolbar: {
       left: "prev,next today",
       center: "title",
@@ -249,22 +255,17 @@ document.addEventListener("DOMContentLoaded", function () {
         click: () => openEditModal(new Date().toISOString().slice(0, 10)),
       },
     },
-    events: "/api/events", // [수정] 새 API 주소
+    events: "/api/events",
     displayEventTime: false,
-    // 날짜 셀 클릭: 기존 로직을 헬퍼로 단순화
     dateClick: function (info) {
       openDailyEventsModal(info.date, getEventsOnDate(calendar, info.date));
     },
-
-    // ★ 이벤트(제목/점) 클릭: 해당 '셀의 날짜'로 모달 열기
     eventClick: function (info) {
-      info.jsEvent.preventDefault(); // url 이동 방지 등
-      // 클릭된 이벤트가 놓인 day 셀에서 날짜를 추출 (멀티데이 이벤트 대응)
+      info.jsEvent.preventDefault();
       const dayCell = info.el.closest(".fc-daygrid-day");
       const dateStr =
         dayCell?.getAttribute("data-date") || info.event.startStr.slice(0, 10);
       const date = new Date(dateStr);
-
       openDailyEventsModal(date, getEventsOnDate(calendar, date));
     },
   });
