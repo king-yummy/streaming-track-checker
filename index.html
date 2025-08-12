@@ -23,6 +23,22 @@
       gtag("js", new Date());
 
       gtag("config", "G-GYGLSJRN79");
+
+      function getUserID() {
+        let userID = localStorage.getItem("plli_user_id");
+        if (!userID) {
+          userID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+            /[xy]/g,
+            function (c) {
+              var r = (Math.random() * 16) | 0,
+                v = c == "x" ? r : (r & 0x3) | 0x8;
+              return v.toString(16);
+            }
+          );
+          localStorage.setItem("plli_user_id", userID);
+        }
+        return userID;
+      }
     </script>
     <meta name="theme-color" content="#dbeafe" />
     <meta name="google-adsense-account" content="ca-pub-9063401338616510" />
