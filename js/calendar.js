@@ -41,18 +41,25 @@ document.addEventListener("DOMContentLoaded", function () {
     addEndTimeBtn.textContent = "+ 종료일시 추가";
 
     if (event) {
-      // 수정
-      const start = new Date(event.start);
       editModalTitle.textContent = "일정 수정";
+
+      // FullCalendar 이벤트 객체의 문자열을 활용 (타임존 변환 X)
+      const startStr = event.startStr; // "YYYY-MM-DDTHH:mm:ss" 형태
       titleInput.value = event.title;
-      dateInput.value = start.toISOString().slice(0, 10);
-      timeInput.value = start.toTimeString().slice(0, 5);
+      dateInput.value = startStr.slice(0, 10);
+      timeInput.value = startStr.slice(11, 16);
+
       if (event.end) {
-        const end = new Date(event.end);
+        const endStr = event.endStr;
         endTimeContainer.classList.remove("hidden");
         addEndTimeBtn.textContent = "- 종료일시 제거";
-        endDateInput.value = end.toISOString().slice(0, 10);
-        endTimeInput.value = end.toTimeString().slice(0, 5);
+        endDateInput.value = endStr.slice(0, 10);
+        endTimeInput.value = endStr.slice(11, 16);
+      } else {
+        endTimeContainer.classList.add("hidden");
+        addEndTimeBtn.textContent = "+ 종료일시 추가";
+        endDateInput.value = "";
+        endTimeInput.value = "10:00";
       }
     } else {
       // 추가
