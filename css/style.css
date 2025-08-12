@@ -313,3 +313,41 @@
 .kebab-menu-options button:hover {
   background-color: #f3f4f6;
 }
+
+.alert-box {
+  background: #fff9f0; /* 연한 노랑-오렌지톤 배경 */
+  border-left: 6px solid #ff4c4c; /* 강한 빨강 테두리 */
+  padding: 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  font-size: 0.95rem;
+}
+
+.alert-box h4 {
+  color: #d32f2f; /* 진한 빨강 */
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.alert-box h4::before {
+  content: "🚨";
+  margin-right: 8px;
+  font-size: 1.4rem;
+}
+
+.alert-box ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.alert-box ul {
+  list-style: disc; /* 기본 점 불릿 */
+  padding-left: 1.2rem; /* 점이 잘 보이도록 여백 */
+}
+
+.alert-box ul li {
+  margin: 0.4rem 0;
+}
