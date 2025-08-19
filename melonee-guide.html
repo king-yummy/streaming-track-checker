@@ -10,35 +10,6 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css" />
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-GYGLSJRN79"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-GYGLSJRN79");
-
-      function getUserID() {
-        let userID = localStorage.getItem("plli_user_id");
-        if (!userID) {
-          userID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-            /[xy]/g,
-            function (c) {
-              var r = (Math.random() * 16) | 0,
-                v = c == "x" ? r : (r & 0x3) | 0x8;
-              return v.toString(16);
-            }
-          );
-          localStorage.setItem("plli_user_id", userID);
-        }
-        return userID;
-      }
-    </script>
   </head>
   <body class="font-sans bg-gray-50">
     <header class="w-full bg-white shadow-sm sticky top-0 z-10">
@@ -68,10 +39,10 @@
       </div>
     </header>
 
-<main class="w-full max-w-md mx-auto p-6 bg-white min-h-screen pb-16">
+    <main class="w-full max-w-md mx-auto p-6 bg-white min-h-screen pb-16">
       <section class="mb-8">
         <h3 class="text-lg font-bold mb-3 border-l-4 border-blue-500 pl-3">
-          0. 멜론이를 설치하기 전에..
+          STEP0. 멜론이란?
         </h3>
         <div class="bg-blue-50 p-4 rounded-lg space-y-3 text-sm text-gray-800">
           <p>
@@ -97,7 +68,7 @@
               <strong>언제 쓰면 좋을까요?</strong>
               <div class="mt-1 ml-5 pl-3 text-xs border-l-2 border-blue-200">
                 <strong>플놀하는 날! 여행갈 때! 출근할 때!</strong> 등등 장시간
-                외출하는 날에 집에서 PC로 돌려놓고 나가면 24시간 돌릴 수 있어요
+                외출하는 날에 집에서 PC로 돌려놓고 나가면 24시간 돌릴 수 있어요.
               </div>
             </li>
           </ul>
@@ -106,30 +77,42 @@
 
       <section class="mb-8">
         <h3 class="text-lg font-bold mb-3 border-l-4 border-blue-500 pl-3">
-          1. 플리 멜론이 설치하기 [크롬 사용⭐]
+          STEP1. 관리자 인증 받기
+        </h3>
+        <div class="space-y-4 text-sm">
+          <p>관리자에게 공카 인증을 보내주세요.</p>
+          <a
+            href="https://open.kakao.com/o/gHDHDsyh"
+            target="_blank"
+            class="block w-full text-center bg-[#FEE500] text-black font-bold py-3 px-4 rounded-lg hover:opacity-90 transition"
+            >공카 인증 보낼 곳</a
+          >
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h3 class="text-lg font-bold mb-3 border-l-4 border-blue-500 pl-3">
+          STEP2. 멜론이 설치
         </h3>
         <div class="space-y-4 text-sm">
           <a
-            href="https://drive.google.com/file/d/1nuKHcnGe_L1ClDEcT3uUo2Ow4YnL2weg/view?usp=sharing"
+            href="https://drive.google.com/file/d/1X0u86Ty-R66wQIp8x9rN33ilAgxA_X_c/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
-            onclick="gtag('event', 'click_download_melonee', {'user_id': getUserID()});"
             class="block w-full text-center bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition"
             >설치 파일 다운로드 (Google Drive)</a
           >
           <div class="bg-gray-100 p-4 rounded-lg">
             <p class="text-center mb-4">
-              다운로드 시 경고창이 떠도 놀라지 마세요!<br />
-              아래 순서대로 클릭하면 안전하게 설치할 수 있어요.
+              다운로드 시 경고창이 떠도 놀라지 마세요!<br />아래 순서대로
+              클릭하면 안전하게 설치할 수 있어요.
             </p>
-
             <img
               src="https://i.imgur.com/aoLn3dE.jpg"
               alt="무시하고 다운로드"
               class="w-full rounded-md border"
             />
             <p class="text-center py-2">'무시하고 다운로드'를 클릭해주세요.</p>
-
             <img
               src="https://i.imgur.com/ovxVje6.jpg"
               alt="추가 정보 클릭 후 실행"
@@ -140,92 +123,96 @@
               <strong class="text-red-500">"실행"</strong>을 클릭해주세요.
             </p>
           </div>
-
           <p class="text-center">이후 원하는 언어로 설정하고 다운 받으면 끝!</p>
         </div>
       </section>
 
       <section class="mb-8">
         <h3 class="text-lg font-bold mb-3 border-l-4 border-blue-500 pl-3">
-          2. 디스코드 사용법
+          STEP3. 멜론이 시작하기
         </h3>
         <div class="space-y-4 text-sm">
-          <ul class="list-decimal list-inside space-y-3">
-            <li>디스코드 앱 설치 후 로그인 (익명 계정 추천!)</li>
-            <li>
-              아래 링크를 통해 '멜론이 서버'에 접속하면 끝!
-              <a
-                href="https://discord.gg/bZnxx8utT9"
-                target="_blank"
-                rel="noopener noreferrer"
-                onclick="gtag('event', 'click_melonee_discord', {'user_id': getUserID()});"
-                class="block w-full text-center bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-600 transition mt-2"
-                >멜론이 디스코드 서버 접속하기</a
-              >
-            </li>
-            <li>
-              멜론이가 캡챠를 발견하면 이곳으로 화면을 캡쳐해서 보내줄 거예요.
-            </li>
-            <img
-              src="discord.gif"
-              alt="디스코드 코드 입력 방법"
-              class="w-full rounded-md border"
-            />
-            <li>
-              <code class="bg-gray-200 px-2 py-1 rounded">/code</code> 라고
-              입력하고, <strong>tag</strong>에는 멜론이가 보내준 태그를,
-              <strong>value</strong>에는 화면에 보이는 인증번호를 입력하면 자동
-              입력이 완료됩니다.
-            </li>
-          </ul>
+          <p>
+            1) <strong>배율 선택하기!!</strong> [설정 &gt; 디스플레이 &gt; 배율]
+            확인 후 125% 혹은 100% 선택해주세요
+          </p>
+          <img
+            src="https://i.imgur.com/ihcuiJm.jpg"
+            alt="배율 설정 안내"
+            class="w-full rounded-md mt-2 border"
+          />
+
+          <p>2) '멜론이 인증센터'에서 비밀번호 복사 후 인증</p>
+          <img
+            src="https://i.imgur.com/3H3h2gJ.jpg"
+            alt="인증센터 비밀번호 복사"
+            class="w-full rounded-md mt-2 border"
+          />
+
+          <p>3) <strong>멜론 플레이어 왼쪽 상단</strong>에 마우스 두고 ENTER</p>
+          <img
+            src="https://i.imgur.com/krkstDf.jpg"
+            alt="플레이어 위치 지정"
+            class="w-full rounded-md mt-2 border"
+          />
+
+          <div class="alert-box">
+            <h4>필수 체크리스트 & 주의사항</h4>
+            <ul>
+              <li>멜론 창은 분리모드로! 세로 길이 제일 짧게!</li>
+              <li>
+                <strong>[멜론 최상단 고정]</strong> 멜론 누르고
+                <code>Win + Ctrl + T</code> 단축어
+              </li>
+              <li>멜론 반복재생 확인 !! 플레이어 위치 옮기지 않기 !!</li>
+              <li>다중 모니터 사용시 무조건 1번 주모니터에서 사용 !!</li>
+              <li>
+                멜론을 모니터 구석에 두면 pc 알림이 타인에게 노출될 수 있으니
+                주의!
+              </li>
+              <li>마우스를 모니터 왼쪽위 코너에 두지 말아주세요!</li>
+              <li>
+                문제발생시 그 상태에서 칼리고만 누른 후 전체화면을 보내주세요
+              </li>
+              <li>무단 배포 금지!! <strong>무단 사용 모니터링 중</strong></li>
+            </ul>
+          </div>
         </div>
       </section>
 
       <section>
         <h3 class="text-lg font-bold mb-3 border-l-4 border-blue-500 pl-3">
-          3. 멜론이 사용하기 (다 왔어요~)
+          STEP4. 디스코드 사용
         </h3>
-
-        <div class="alert-box">
-          <h4>실행 전 필수 체크리스트 & 주의사항</h4>
-          <ul>
-            <li>멜론 창은 분리모드로! 세로 길이 제일 짧게!</li>
-            <li>[설정>디스플레이>배율] 125% 확인!</li>
-            <li>듀얼모니터 사용 중이라면 꼭! 1번 주모니터 사용!</li>
-            <li>멜론 반복재생 확인!!!!</li>
-            <li>실행 중엔 멜론 플레이어 위치를 옮기지 말아주세요</li>
-            <li>
-              팝업 감지 안 될 땐 팝업 끄지 말고 칼리고 버튼 누른 후 관리자에게
-              문의
-            </li>
-            <li>꼭꼭!! 관리자 인증 후 사용!! 무단 사용 모니터링 중</li>
-          </ul>
-        </div>
-
         <div class="space-y-4 text-sm">
-          <ul class="list-decimal list-inside space-y-3">
-            <img
-              src="playing.gif"
-              alt="스밍 중인 플레이어 예시"
-              class="w-full rounded-md mt-4 border"
-            />
-
-            <li>
-              'PLLI 스밍/투표 체크' 페이지 하단 인증센터에 이름을 넣어주세요.
-            </li>
-            <li>자동으로 복사된 비밀번호를 멜론이에 입력해주세요.</li>
-            <li>
-              메시지에 따라
-              <strong
-                >멜론 플레이어(분리모드)의 왼쪽 상단, 오른쪽 하단, 재생 버튼
-                위</strong
-              >에 마우스를 순서대로 두고 ENTER 키를 눌러주세요.
-            </li>
-            <li>
-              <strong>플레이어는 모니터 중앙 쪽</strong>에 두는 걸 권장합니다!
-              디스코드에 pc 알림이 노출되거나, 팝업 위치가 잘못될 수 있어요.
-            </li>
-          </ul>
+          <p>1) 디스코드 앱 설치 후 로그인 (익명 계정 추천!)</p>
+          <p>2) 아래 링크를 통해 '멜론이 서버'에 접속하면 끝!</p>
+          <a
+            href="https://discord.gg/bZnxx8utT9"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block w-full text-center bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-600 transition mt-2"
+            >멜론이 디스코드 서버 접속하기</a
+          >
+          <p>
+            3) 멜론이가 캡챠를 발견하면 이곳으로 화면을 캡쳐해서 보내줄 거예요.
+          </p>
+          <p>
+            4) <code class="bg-gray-200 px-2 py-1 rounded">/code</code> 라고
+            입력하고, <strong>tag</strong>에는 멜론이가 보내준 태그를,
+            <strong>value</strong>에는 화면에 보이는 인증번호를 입력하면 자동
+            입력이 완료됩니다.
+          </p>
+          <img
+            src="discord.gif"
+            alt="디스코드 코드 입력 방법"
+            class="w-full rounded-md border"
+          />
+          <img
+            src="https://i.imgur.com/nA4CNYt.jpg"
+            alt="/code 예시 이미지"
+            class="w-full rounded-md mt-2 border"
+          />
         </div>
       </section>
     </main>
