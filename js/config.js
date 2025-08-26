@@ -1,12 +1,13 @@
 // Google Sheets API 설정
 export const SPREADSHEET_ID = "1tGslp_8ahx8E5Y8kvIFq3DAcciLgtSyTvlTBROOrsKg";
 
-export const GOOGLE_SHEETS_API_KEY = "AIzaSyDam42H9W_iouj0rkMZDDzSWsrmx8BlVkQY";
+// ✅ 새로 만든 제한 없는 API 키로 교체
+export const GOOGLE_SHEETS_API_KEY = "AIzaSyC1ChqA2Nc_ry82lMjsqPaR93B_FywoDOY";
 
-// 각 시트 gid (시트 탭 ID)
-export const STREAMING_SHEET_ID = 0;
-export const TODO_SHEET_ID = 673035369;
-export const NOTICE_SHEET_ID = 2027332980;
+// 시트 제목 (탭 이름) — 실제 시트에 맞게 수정
+export const STREAMING_SHEET_TITLE = "StreamingList";
+export const TODO_SHEET_TITLE = "TodoList";
+export const NOTICE_SHEET_TITLE = "notice";
 
 // 스밍 리스트 관련 변수
 export const START_AT_MS = new Date("2025-06-16T00:00:00+09:00").getTime();

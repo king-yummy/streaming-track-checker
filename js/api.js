@@ -1,11 +1,11 @@
-// js/api.js — Google Sheets API v4 (GET) 사용 버전
+// js/api.js — Google Sheets API v4 (GET) + 시트제목 직접 사용 버전
 
 import {
   SPREADSHEET_ID,
   GOOGLE_SHEETS_API_KEY,
-  STREAMING_SHEET_ID,
-  TODO_SHEET_ID,
-  NOTICE_SHEET_ID,
+  STREAMING_SHEET_TITLE,
+  TODO_SHEET_TITLE,
+  NOTICE_SHEET_TITLE,
 } from "./config.js";
 import { setSchedule, setAllTodoData } from "./state.js";
 import {
@@ -21,33 +21,7 @@ function toSec(mmss = "") {
   return m * 60 + s;
 }
 
-/** gid(sheetId) → 시트 제목(title) 캐싱 조회 */
-const __sheetTitleCache = new Map();
-async function getSheetTitleById(sheetId) {
-  if (__sheetTitleCache.has(sheetId)) return __sheetTitleCache.get(sheetId);
-
-  const url =
-    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}` +
-    `?fields=sheets(properties(sheetId,title))&key=${GOOGLE_SHEETS_API_KEY}`;
-
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch sheet meta. HTTP ${res.status}`);
-  }
-  const json = await res.json();
-  const title = json?.sheets?.find((s) => s?.properties?.sheetId === sheetId)
-    ?.properties?.title;
-
-  if (!title) {
-    throw new Error(
-      `sheetId(${sheetId})에 해당하는 시트 제목을 찾지 못했습니다.`
-    );
-  }
-  __sheetTitleCache.set(sheetId, title);
-  return title;
-}
-
-/** 시트 제목으로 A1 Range rows 불러오기 (키만으로 접근, 공개 시트 전제) */
+/** 시트 제목으로 A1 Range rows 불러오기 (공개 시트 + API 키 전제) */
 async function fetchRowsByTitle(sheetTitle, a1Range = "A:Z") {
   const range = encodeURIComponent(`${sheetTitle}!${a1Range}`);
   const url =
@@ -60,12 +34,6 @@ async function fetchRowsByTitle(sheetTitle, a1Range = "A:Z") {
   return json?.valueRanges?.[0]?.values ?? [];
 }
 
-/** gid 지정해서 값 불러오기 (내부 헬퍼) */
-async function fetchRowsByGid(sheetId, a1Range = "A:Z") {
-  const title = await getSheetTitleById(sheetId);
-  return fetchRowsByTitle(title, a1Range);
-}
-
 /* =========================
  *  Public Loader Functions
  * ========================= */
@@ -73,7 +41,7 @@ async function fetchRowsByGid(sheetId, a1Range = "A:Z") {
 /** 스트리밍 리스트: [제목, 시작, 종료, 표지] */
 export async function loadStreamingList() {
   try {
-    const values = await fetchRowsByGid(STREAMING_SHEET_ID, "A:D");
+    const values = await fetchRowsByTitle(STREAMING_SHEET_TITLE, "A:D");
     if (!values || values.length < 2) {
       setSchedule([]);
       sessionStorage.setItem("streamingSchedule", "[]");
@@ -107,7 +75,7 @@ export async function loadStreamingList() {
 /** 투두리스트: 1행 헤더 기반 객체화 */
 export async function loadTodoListData() {
   try {
-    const values = await fetchRowsByGid(TODO_SHEET_ID, "A:Z");
+    const values = await fetchRowsByTitle(TODO_SHEET_TITLE, "A:Z");
     if (!values || values.length === 0) {
       setAllTodoData([]);
       sessionStorage.setItem("todoData", "[]");
@@ -143,7 +111,7 @@ export async function loadTodoListData() {
 /** 공지사항: 1행 헤더 기반 객체 배열 반환 */
 export async function loadNoticeList() {
   try {
-    const values = await fetchRowsByGid(NOTICE_SHEET_ID, "A:Z");
+    const values = await fetchRowsByTitle(NOTICE_SHEET_TITLE, "A:Z");
     if (!values || values.length < 2) return [];
 
     const headers = values[0].map((h) =>
@@ -161,7 +129,6 @@ export async function loadNoticeList() {
       return obj;
     });
 
-    // 화면에 뿌리는 함수가 따로 있으면 여기서 호출
     if (typeof renderNoticeList === "function") {
       renderNoticeList(noticeData);
     }
