@@ -1,12 +1,14 @@
 // Google Sheet URL
-export const STREAMING_LIST_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?gid=0&single=true&output=csv";
+export const SPREADSHEET_ID =
+  "2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ";
 
-export const TODO_LIST_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?gid=673035369&single=true&output=csv";
+// 실제 API 호출 시 필요한 Google Cloud API 키. 운영 환경에서는 반드시 자신의 키로 교체하세요.
+export const GOOGLE_SHEETS_API_KEY = "AIzaSyDam42H9W_iouj0rkMZDDzSWsrmx8BlVkQY";
 
-export const NOTICE_LIST_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ/pub?gid=2027332980&single=true&output=csv";
+// 개별 시트 ID (예전 URL의 gid 값과 동일)
+export const STREAMING_SHEET_ID = 0;
+export const TODO_SHEET_ID = 673035369;
+export const NOTICE_SHEET_ID = 2027332980;
 
 // 스밍 리스트 관련 변수
 export const START_AT_MS = new Date("2025-06-16T00:00:00+09:00").getTime();
