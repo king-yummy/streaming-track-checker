@@ -1,11 +1,9 @@
-// Google Sheet URL
-export const SPREADSHEET_ID =
-  "2PACX-1vR7sUDMYoUsBpvEC9LjO25CnstexV74iKXfwRWVdqpQCOm65rzvJ6RrnedOv6JSqEYJNqyr2cje75CJ";
+// Google Sheets API 설정
+export const SPREADSHEET_ID = "1tGslp_8ahx8E5Y8kvIFq3DAcciLgtSyTvlTBROOrsKg";
 
-// 실제 API 호출 시 필요한 Google Cloud API 키. 운영 환경에서는 반드시 자신의 키로 교체하세요.
 export const GOOGLE_SHEETS_API_KEY = "AIzaSyDam42H9W_iouj0rkMZDDzSWsrmx8BlVkQY";
 
-// 개별 시트 ID (예전 URL의 gid 값과 동일)
+// 각 시트 gid (시트 탭 ID)
 export const STREAMING_SHEET_ID = 0;
 export const TODO_SHEET_ID = 673035369;
 export const NOTICE_SHEET_ID = 2027332980;
