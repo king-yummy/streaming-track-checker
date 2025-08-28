@@ -346,7 +346,7 @@ export function initializeAllEventListeners() {
     });
   }
 
-  // 🔽 여기서부터 슈퍼팬 관련 코드 추가
+  // ▼▼▼▼▼ 슈퍼팬 관련 로직 (이 부분을 통째로 교체해주세요) ▼▼▼▼▼
   const clickCountSpan = document.getElementById("superfan-click-count");
   let clickCount = parseInt(localStorage.getItem("superfanClickCount") || "0");
   let clickedLinks = JSON.parse(
@@ -421,24 +421,11 @@ export function initializeAllEventListeners() {
         const allLinks = await res.json();
         const unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
 
+        // ✅ 여기가 수정된 부분입니다.
         if (unclicked.length === 0) {
-          if (
-            allLinks.length > 0 &&
-            confirm(
-              "모든 링크를 다 누르셨어요! 🎉\n기록을 초기화하고 처음부터 다시 도울까요?"
-            )
-          ) {
-            localStorage.removeItem("superfanClickedLinks");
-            clickedLinks = [];
-            window.open(allLinks[0], "_blank");
-            clickedLinks.push(allLinks[0]);
-            localStorage.setItem(
-              "superfanClickedLinks",
-              JSON.stringify(clickedLinks)
-            );
-          } else {
-            alert("아직 등록된 링크가 없거나, 모든 링크를 이미 클릭했습니다.");
-          }
+          alert(
+            "모든 링크를 다 누르셨어요! 🎉 새로운 링크가 등록되면 다시 도와주세요."
+          );
           return;
         }
 
@@ -458,4 +445,5 @@ export function initializeAllEventListeners() {
       }
     });
   }
+  // ▲▲▲▲▲ 슈퍼팬 관련 로직 끝 ▲▲▲▲▲
 }
