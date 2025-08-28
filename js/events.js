@@ -345,4 +345,98 @@ export function initializeAllEventListeners() {
       );
     });
   }
+
+  // 🔽 여기서부터 슈퍼팬 관련 코드 추가
+  let clickCount = parseInt(localStorage.getItem("superfanClickCount") || "0");
+  let clickedLinks = JSON.parse(
+    localStorage.getItem("superfanClickedLinks") || "[]"
+  );
+
+  const helpBtn = document.getElementById("help-superfan-btn");
+  const registerBtn = document.getElementById("register-superfan-link-btn");
+  const modalOverlay = document.getElementById("superfan-modal-overlay");
+  const modalPanel = document.getElementById("superfan-modal-panel");
+  const closeModalBtn = document.getElementById("close-superfan-modal-btn");
+  const submitBtn = document.getElementById("submit-superfan-link-btn");
+  const urlInput = document.getElementById("superfan-url-input");
+  const feedback = document.getElementById("superfan-feedback");
+
+  if (helpBtn) helpBtn.textContent = `링크 클릭 ${clickCount}회`;
+
+  // 모달 열고 닫기
+  function openModal() {
+    modalOverlay.classList.remove("hidden");
+    modalPanel.classList.remove("hidden");
+    feedback.textContent = "";
+    urlInput.value = "";
+  }
+  function closeModal() {
+    modalOverlay.classList.add("hidden");
+    modalPanel.classList.add("hidden");
+  }
+  if (registerBtn) registerBtn.addEventListener("click", openModal);
+  if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
+  if (modalOverlay) modalOverlay.addEventListener("click", closeModal);
+
+  // 링크 등록
+  if (submitBtn) {
+    submitBtn.addEventListener("click", async () => {
+      const url = urlInput.value.trim();
+      if (!url) {
+        feedback.textContent = "🔗 링크를 입력해주세요.";
+        feedback.className = "text-xs pt-1 text-red-500 text-center";
+        return;
+      }
+      submitBtn.disabled = true;
+      submitBtn.textContent = "등록 중...";
+      try {
+        const res = await fetch("/api/superfan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url }),
+        });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error);
+        feedback.textContent = "✅ 등록 완료!";
+        feedback.className = "text-xs pt-1 text-green-600 text-center";
+        setTimeout(closeModal, 1200);
+      } catch (err) {
+        feedback.textContent = `❌ ${err.message}`;
+        feedback.className = "text-xs pt-1 text-red-500 text-center";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "등록하기";
+      }
+    });
+  }
+
+  // 도와주기 버튼
+  if (helpBtn) {
+    helpBtn.addEventListener("click", async () => {
+      try {
+        const res = await fetch("/api/superfan");
+        if (!res.ok) throw new Error("링크 불러오기 실패");
+        const allLinks = await res.json();
+        const unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
+        if (unclicked.length === 0) {
+          alert(
+            "이미 등록된 모든 링크를 다 눌렀습니다. 새로운 링크가 올라오면 다시 도와줄 수 있어요!"
+          );
+          return;
+        }
+        const next = unclicked[Math.floor(Math.random() * unclicked.length)];
+        window.open(next, "_blank");
+        clickedLinks.push(next);
+        localStorage.setItem(
+          "superfanClickedLinks",
+          JSON.stringify(clickedLinks)
+        );
+        clickCount++;
+        localStorage.setItem("superfanClickCount", clickCount);
+        helpBtn.textContent = `링크 클릭 ${clickCount}회`;
+      } catch (err) {
+        alert(`에러: ${err.message}`);
+      }
+    });
+  }
 }

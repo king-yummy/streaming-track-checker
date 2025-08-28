@@ -120,9 +120,87 @@
         </a>
       </div>
 
+      <!-- 🔽 새로 추가되는 슈퍼팬 섹션 -->
+      <section
+        class="w-full max-w-md mx-auto mt-4 mb-2 p-4 bg-white rounded-2xl shadow"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-md font-bold">🤝 슈퍼팬 서로 돕기</h3>
+            <p class="text-xs text-gray-600 mt-1">
+              클릭 품앗이로 선발 확률을 높여요!
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <!-- 버튼 1: 내 링크 등록 -->
+            <button
+              id="register-superfan-link-btn"
+              class="text-xs py-2 px-3 rounded-md bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300"
+            >
+              내 링크 등록
+            </button>
+            <!-- 버튼 2: 도와주기 (클릭 횟수 표시) -->
+            <button
+              id="help-superfan-btn"
+              class="py-2 px-4 rounded-md bg-blue-500 text-white font-semibold shadow hover:bg-blue-600 transition"
+            >
+              링크 클릭 0회
+            </button>
+          </div>
+        </div>
+      </section>
+
       <main class="w-full max-w-md space-y-2 overflow-auto mt-4">
         <ul id="playlist" class="space-y-2"></ul>
       </main>
+
+      <!-- 🔽 내 링크 등록 모달 -->
+      <div
+        id="superfan-modal-overlay"
+        class="fixed inset-0 bg-black bg-opacity-60 z-[110] hidden"
+      ></div>
+      <div
+        id="superfan-modal-panel"
+        class="fixed inset-0 z-[120] p-4 flex items-center justify-center hidden"
+      >
+        <div
+          class="w-full max-w-sm bg-white rounded-2xl shadow-xl transform transition-all"
+        >
+          <div class="p-5">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-bold">슈퍼팬 링크 등록</h3>
+              <button
+                id="close-superfan-modal-btn"
+                class="text-gray-400 hover:text-gray-700 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              나의 슈퍼팬 지원 링크를 공유해주세요.<br />다른 플리가 클릭해서
+              도와줄 거예요!
+            </p>
+            <div class="space-y-3">
+              <input
+                type="url"
+                id="superfan-url-input"
+                placeholder="https://plus.mnet.com/..."
+                class="w-full p-2 border rounded-md text-sm"
+              />
+              <button
+                id="submit-superfan-link-btn"
+                class="w-full py-2 px-4 rounded-md bg-blue-500 text-white font-semibold"
+              >
+                등록하기
+              </button>
+              <div
+                id="superfan-feedback"
+                class="text-xs pt-1 text-center"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <section
         class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow"
