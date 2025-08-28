@@ -21,11 +21,13 @@ function toSec(mmss = "") {
   return m * 60 + s;
 }
 
+/** 시트 제목으로 A1 Range rows 불러오기 (공개 시트 + API 키 전제) */
 async function fetchRowsByTitle(sheetTitle, a1Range = "A:Z") {
-  const ranges = `${sheetTitle}!${a1Range}`;
-  const url = `/api/sheets?ranges=${encodeURIComponent(
-    ranges
-  )}&majorDimension=ROWS`;
+  const range = encodeURIComponent(`${sheetTitle}!${a1Range}`);
+  const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}` +
+    `/values:batchGet?ranges=${range}&majorDimension=ROWS&key=${GOOGLE_SHEETS_API_KEY}`;
+
   const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   const json = await res.json();
@@ -33,7 +35,7 @@ async function fetchRowsByTitle(sheetTitle, a1Range = "A:Z") {
 }
 
 /* =========================
- *  Public Loader Functions
+ * Public Loader Functions
  * ========================= */
 
 /** 스트리밍 리스트: [제목, 시작, 종료, 표지] */
