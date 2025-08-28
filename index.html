@@ -122,34 +122,34 @@
 
       <!-- 🔽 새로 추가되는 슈퍼팬 섹션 -->
       <section
-        class="w-full max-w-md mx-auto mt-4 mb-2 p-4 bg-white rounded-2xl shadow"
+        class="w-full max-w-md mx-auto mt-4 mb-2 p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg text-white"
       >
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-md font-bold">🤝 슈퍼팬 서로 돕기</h3>
-            <p class="text-xs text-gray-600 mt-1">
-              클릭 품앗이로 선발 확률을 높여요!
-            </p>
-          </div>
-          <div class="flex gap-2">
-            <!-- 버튼 1: 내 링크 등록 -->
-            <button
-              id="register-superfan-link-btn"
-              class="text-xs py-2 px-3 rounded-md bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300"
-            >
-              내 링크 등록
-            </button>
-            <!-- 버튼 2: 도와주기 (클릭 횟수 표시) -->
-            <button
-              id="help-superfan-btn"
-              class="py-2 px-4 rounded-md bg-blue-500 text-white font-semibold shadow hover:bg-blue-600 transition"
-            >
-              링크 클릭 0회
-            </button>
-          </div>
+        <div class="text-center">
+          <h3 class="text-lg font-bold tracking-wider">
+            [ M넷 슈per팬 플리 품앗이 ]
+          </h3>
+          <p class="text-xs mt-2 mb-1">
+            클릭 품앗이로 짱짱팬 선발 확률을 높여요!
+          </p>
+          <p class="text-xs text-blue-200 mb-4">
+            자동으로 아직 누르지 않은 링크를 열어드릴게요.
+          </p>
+        </div>
+        <div class="flex justify-center gap-3">
+          <button
+            id="register-superfan-link-btn"
+            class="text-sm py-1 px-4 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition"
+          >
+            내 링크 등록
+          </button>
+          <button
+            id="help-superfan-btn"
+            class="text-sm py-1 px-5 rounded-lg bg-white text-blue-600 font-bold shadow hover:bg-gray-100 transition"
+          >
+            링크 클릭 <span id="superfan-click-count">0</span>회
+          </button>
         </div>
       </section>
-
       <main class="w-full max-w-md space-y-2 overflow-auto mt-4">
         <ul id="playlist" class="space-y-2"></ul>
       </main>
