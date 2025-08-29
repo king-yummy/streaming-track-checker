@@ -1,18 +1,19 @@
-// api/event-reminders.js (KST 시간대 수정 완료)
+// api/event-reminders.js
+
 import admin from "firebase-admin";
-import fs from "fs";
-import path from "path";
-import os from "os";
 import { kv } from "@vercel/kv";
 
-const TMP_DIR = path.join(os.tmpdir(), "plli-checker");
-const TOKEN_FILE = path.join(TMP_DIR, "tokens.json");
+const TOKENS_KEY = "fcm-tokens"; // Vercel KV에서 사용할 키
 
-function readTokens() {
-  if (!fs.existsSync(TOKEN_FILE)) return [];
+// Vercel KV에서 모든 토큰 정보를 읽어오는 함수
+async function readTokensFromKV() {
   try {
-    return JSON.parse(fs.readFileSync(TOKEN_FILE, "utf8"));
-  } catch {
+    const tokensData = await kv.hgetall(TOKENS_KEY);
+    if (!tokensData) return [];
+    // hgetall은 객체를 반환하므로, 값들만 배열로 추출
+    return Object.values(tokensData);
+  } catch (error) {
+    console.error("Failed to read tokens from KV:", error);
     return [];
   }
 }
@@ -32,16 +33,7 @@ async function getAllEvents() {
     const raw = await kv.hgetall("events");
     if (!raw) return [];
     return Object.values(raw)
-      .map((v) => {
-        if (typeof v === "string") {
-          try {
-            return JSON.parse(v);
-          } catch {
-            return null;
-          }
-        }
-        return v; // 이미 객체인 경우 그대로 사용
-      })
+      .map((v) => (typeof v === "string" ? JSON.parse(v) : v))
       .filter(Boolean);
   } catch (e) {
     if (String(e?.message || e).includes("WRONGTYPE")) {
@@ -59,11 +51,9 @@ export default async function handler(req, res) {
   try {
     const events = await getAllEvents();
 
-    // ▼▼▼▼▼ [수정] 현재 시간을 KST 기준으로 계산 ▼▼▼▼▼
     const nowUtc = new Date();
     const kstOffset = 9 * 60 * 60 * 1000;
     const nowKst = new Date(nowUtc.getTime() + kstOffset);
-    // ▲▲▲▲▲ 수정 끝 ▲▲▲▲▲
 
     const windowMs = 60 * 1000; // 1분 윈도우
     const targetMs = 15 * 60 * 1000; // 15분
@@ -72,10 +62,7 @@ export default async function handler(req, res) {
       if (!ev?.start) return false;
       if (typeof ev.start === "string" && !ev.start.includes("T")) return false;
 
-      // ▼▼▼▼▼ [수정] KV에 저장된 시간을 UTC로 간주하고 KST로 변환하여 비교 ▼▼▼▼▼
       const startKst = new Date(ev.start + "Z").getTime() + kstOffset;
-      // ▲▲▲▲▲ 수정 끝 ▲▲▲▲▲
-
       if (isNaN(startKst)) return false;
       const diff = startKst - nowKst.getTime();
       return Math.abs(diff - targetMs) <= windowMs;
@@ -84,10 +71,12 @@ export default async function handler(req, res) {
     if (!candidates.length)
       return res.status(200).json({ sent: 0, note: "no events in window" });
 
-    const allTokens = readTokens();
+    // Vercel KV에서 토큰 정보 읽기
+    const allTokens = await readTokensFromKV();
     const targets = allTokens
       .filter((t) => t.calendarOptIn)
       .map((t) => t.token);
+
     if (!targets.length)
       return res.status(200).json({ sent: 0, note: "no opt-in tokens" });
 
@@ -104,13 +93,11 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // ▼▼▼▼▼ [수정] 알림 본문에 표시될 시간도 KST 기준으로 변경 ▼▼▼▼▼
       const startTimeKst = new Date(
         new Date(ev.start + "Z").getTime() + kstOffset
       );
       const hh = String(startTimeKst.getUTCHours()).padStart(2, "0");
       const mm = String(startTimeKst.getUTCMinutes()).padStart(2, "0");
-      // ▲▲▲▲▲ 수정 끝 ▲▲▲▲▲
 
       const result = await admin.messaging().sendEachForMulticast({
         tokens: targets,
