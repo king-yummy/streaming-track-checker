@@ -12,8 +12,7 @@
   "crons": [
     {
       "path": "/api/event-reminders",
-      "schedule": "*/1 * * * *",
-      "timezone": "Asia/Seoul"
+      "schedule": "*/1 * * * *"
     }
   ]
 }
