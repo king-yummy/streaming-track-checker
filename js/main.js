@@ -1,9 +1,10 @@
+// js/main.js (수정 완료된 코드)
+
 import { loadStreamingList, loadTodoListData, loadNoticeList } from "./api.js";
 import {
   initializeAllEventListeners,
   initializeNotificationSystem,
 } from "./events.js";
-
 import { setSchedule, setAllTodoData } from "./state.js";
 import {
   initializeStreamingUI,
@@ -11,11 +12,6 @@ import {
   renderNoticeList,
   checkNewNotices,
 } from "./ui.js";
-
-import {
-  initializeAllEventListeners,
-  initializeNotificationSystem,
-} from "./events.js";
 
 /**
  * 자정이 지났을 때 투두리스트 체크 상태를 초기화하는 함수
