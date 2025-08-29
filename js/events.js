@@ -399,6 +399,16 @@ export function initializeAllEventListeners() {
         });
         const result = await res.json();
         if (!res.ok) throw new Error(result.error);
+
+        // [개선] 새 링크 등록 시, 로컬 캐시에도 바로 추가
+        const cachedLinks = JSON.parse(
+          sessionStorage.getItem("superfanLinks") || "[]"
+        );
+        if (!cachedLinks.includes(url)) {
+          cachedLinks.push(url);
+          sessionStorage.setItem("superfanLinks", JSON.stringify(cachedLinks));
+        }
+
         feedback.textContent = "✅ 등록 완료!";
         feedback.className = "text-xs pt-1 text-green-600 text-center";
         setTimeout(closeModal, 1200);
@@ -415,13 +425,25 @@ export function initializeAllEventListeners() {
   // 도와주기 버튼 로직
   if (helpBtn) {
     helpBtn.addEventListener("click", async () => {
+      helpBtn.disabled = true; // 중복 클릭 방지
       try {
-        const res = await fetch("/api/superfan");
-        if (!res.ok) throw new Error("링크 불러오기 실패");
-        const allLinks = await res.json();
-        const unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
+        // 1. 우선 로컬 캐시에서 링크 목록 가져오기
+        let allLinks = JSON.parse(
+          sessionStorage.getItem("superfanLinks") || "[]"
+        );
+        let unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
 
-        // ✅ 여기가 수정된 부분입니다.
+        // 2. 만약 안 누른 링크가 없다면, 서버에 새로 요청해서 목록 갱신
+        if (unclicked.length === 0) {
+          const res = await fetch("/api/superfan");
+          if (!res.ok) throw new Error("링크 목록을 새로고침하지 못했어요.");
+
+          allLinks = await res.json();
+          sessionStorage.setItem("superfanLinks", JSON.stringify(allLinks)); // 캐시 갱신
+          unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
+        }
+
+        // 3. 갱신 후에도 안 누른 링크가 없다면, 최종 메시지 표시
         if (unclicked.length === 0) {
           alert(
             "모든 링크를 다 누르셨어요! 🎉 새로운 링크가 등록되면 다시 도와주세요."
@@ -429,6 +451,7 @@ export function initializeAllEventListeners() {
           return;
         }
 
+        // 4. 안 누른 링크가 있다면, 랜덤으로 하나 열기
         const next = unclicked[Math.floor(Math.random() * unclicked.length)];
         window.open(next, "_blank");
 
@@ -442,6 +465,8 @@ export function initializeAllEventListeners() {
         if (clickCountSpan) clickCountSpan.textContent = clickCount;
       } catch (err) {
         alert(`에러: ${err.message}`);
+      } finally {
+        helpBtn.disabled = false; // 버튼 다시 활성화
       }
     });
   }

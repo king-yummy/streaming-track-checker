@@ -12,6 +12,11 @@ import {
   checkNewNotices,
 } from "./ui.js";
 
+import {
+  initializeAllEventListeners,
+  initializeNotificationSystem,
+} from "./events.js";
+
 /**
  * 자정이 지났을 때 투두리스트 체크 상태를 초기화하는 함수
  */
@@ -46,6 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 새로운 공지가 있는지 확인해서 📢 아이콘에 점 표시
     loadNoticeList().then(checkNewNotices);
+
+    // ▼▼▼▼▼ [추가!] 슈퍼팬 링크 목록 미리 불러와서 캐싱하기 ▼▼▼▼▼
+    fetch("/api/superfan")
+      .then((res) => res.json())
+      .then((links) => {
+        sessionStorage.setItem("superfanLinks", JSON.stringify(links));
+      })
+      .catch((err) => console.error("슈퍼팬 링크 미리 로딩 실패:", err));
+    // ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
 
     if (sessionStorage.getItem("isInitialized")) {
       // 캐시된 데이터로 화면 빠르게 로드
