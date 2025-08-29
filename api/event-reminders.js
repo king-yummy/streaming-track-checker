@@ -1,4 +1,4 @@
-// api/event-reminders.js
+// api/event-reminders.js (KST 시간대 수정 완료)
 import admin from "firebase-admin";
 import fs from "fs";
 import path from "path";
@@ -59,16 +59,25 @@ export default async function handler(req, res) {
   try {
     const events = await getAllEvents();
 
-    const now = Date.now();
+    // ▼▼▼▼▼ [수정] 현재 시간을 KST 기준으로 계산 ▼▼▼▼▼
+    const nowUtc = new Date();
+    const kstOffset = 9 * 60 * 60 * 1000;
+    const nowKst = new Date(nowUtc.getTime() + kstOffset);
+    // ▲▲▲▲▲ 수정 끝 ▲▲▲▲▲
+
     const windowMs = 60 * 1000; // 1분 윈도우
     const targetMs = 15 * 60 * 1000; // 15분
 
     const candidates = events.filter((ev) => {
       if (!ev?.start) return false;
       if (typeof ev.start === "string" && !ev.start.includes("T")) return false;
-      const start = new Date(ev.start).getTime();
-      if (isNaN(start)) return false;
-      const diff = start - now;
+
+      // ▼▼▼▼▼ [수정] KV에 저장된 시간을 UTC로 간주하고 KST로 변환하여 비교 ▼▼▼▼▼
+      const startKst = new Date(ev.start + "Z").getTime() + kstOffset;
+      // ▲▲▲▲▲ 수정 끝 ▲▲▲▲▲
+
+      if (isNaN(startKst)) return false;
+      const diff = startKst - nowKst.getTime();
       return Math.abs(diff - targetMs) <= windowMs;
     });
 
@@ -95,9 +104,13 @@ export default async function handler(req, res) {
         continue;
       }
 
-      const start = new Date(ev.start);
-      const hh = String(start.getHours()).padStart(2, "0");
-      const mm = String(start.getMinutes()).padStart(2, "0");
+      // ▼▼▼▼▼ [수정] 알림 본문에 표시될 시간도 KST 기준으로 변경 ▼▼▼▼▼
+      const startTimeKst = new Date(
+        new Date(ev.start + "Z").getTime() + kstOffset
+      );
+      const hh = String(startTimeKst.getUTCHours()).padStart(2, "0");
+      const mm = String(startTimeKst.getUTCMinutes()).padStart(2, "0");
+      // ▲▲▲▲▲ 수정 끝 ▲▲▲▲▲
 
       const result = await admin.messaging().sendEachForMulticast({
         tokens: targets,
