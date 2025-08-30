@@ -26,9 +26,7 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-GYGLSJRN79");
-
       function getUserID() {
         let userID = localStorage.getItem("plli_user_id");
         if (!userID) {
@@ -120,7 +118,6 @@
         </a>
       </div>
 
-      <!-- 🔽 새로 추가되는 슈퍼팬 섹션 -->
       <section
         class="w-full max-w-md mx-auto mt-4 mb-2 p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg text-white"
       >
@@ -154,7 +151,6 @@
         <ul id="playlist" class="space-y-2"></ul>
       </main>
 
-      <!-- 🔽 내 링크 등록 모달 -->
       <div
         id="superfan-modal-overlay"
         class="fixed inset-0 bg-black bg-opacity-60 z-[110] hidden"
@@ -210,7 +206,6 @@
             <span class="text-lg">🔐</span>
             <h3 class="text-md font-bold">플리 멜론이 인증 센터</h3>
           </div>
-
           <p class="text-sm text-gray-700 leading-relaxed">
             멜론이 프로그램은
             <a
@@ -220,14 +215,12 @@
               class="text-blue-600 hover:underline font-bold"
               >관리자 인증(클릭)</a
             >
-            후 사용하실 수 있습니다.<br />
-            비밀번호 복사 후 프로그램에 붙여넣기 하세요.
+            후 사용하실 수 있습니다.<br />비밀번호 복사 후 프로그램에 붙여넣기
+            하세요.
           </p>
-
           <p class="text-sm text-red-500 leading-relaxed">
             📌 무단 배포 및 악용 의심 계정은 사용이 정지됩니다.
           </p>
-
           <div class="flex gap-2">
             <input
               id="user-name"
@@ -243,9 +236,7 @@
               🔑 복사
             </button>
           </div>
-
           <div id="pw-feedback" class="text-xs pt-1"></div>
-
           <button
             id="melon-guide-btn"
             onclick="gtag('event', 'view_melonee_guide', {'user_id': getUserID()}); window.location.href='melonee-guide.html'"
@@ -253,6 +244,36 @@
           >
             🍈 멜론이 가이드
           </button>
+        </div>
+      </section>
+
+      <section
+        id="ad-container-1"
+        class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
+        style="
+          display: none;
+          min-height: 120px;
+          max-height: 160px;
+          flex-direction: column;
+          justify-content: center;
+        "
+      >
+        <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+          ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+        </h3>
+        <div style="text-align: center">
+          <ins
+            class="adsbygoogle"
+            style="display: block"
+            data-ad-client="ca-pub-9063401338616510"
+            data-ad-slot="광고단위_ID"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+            data-ad-callback="adCallback"
+          ></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </div>
       </section>
 
@@ -281,6 +302,36 @@
         </div>
       </section>
 
+      <section
+        id="ad-container-2"
+        class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
+        style="
+          display: none;
+          min-height: 120px;
+          max-height: 160px;
+          flex-direction: column;
+          justify-content: center;
+        "
+      >
+        <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+          ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+        </h3>
+        <div style="text-align: center">
+          <ins
+            class="adsbygoogle"
+            style="display: block"
+            data-ad-client="ca-pub-9063401338616510"
+            data-ad-slot="광고단위_ID"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+            data-ad-callback="adCallback"
+          ></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+      </section>
+
       <footer
         class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2"
       >
@@ -291,8 +342,7 @@
             rel="noopener"
             class="text-blue-600 hover:underline"
             >플레이브 음원총공팀</a
-          >
-          의 스밍 가이드에 따라 운영되는 페이지입니다.
+          >의 스밍 가이드에 따라 운영되는 페이지입니다.
         </p>
         <p>
           앱 관련 문의 및 건의사항은 X(트위터)
@@ -304,16 +354,44 @@
               class="text-blue-600 hover:underline"
               >@plave_pretty</a
             ></strong
-          >
-          로 보내주세요.
+          >로 보내주세요.
         </p>
         <p class="text-[10px] text-gray-400 mt-2">
           이 페이지는 플레이브 팬덤 <strong>PLLI</strong>만을 위해
-          제작하였습니다.<br />
-          타 팬덤에서의 무단 복제·재가공·사용 발견 시 빠르게 대응합니다. 🕵️‍♀️
+          제작하였습니다.<br />타 팬덤에서의 무단 복제·재가공·사용 발견 시
+          빠르게 대응합니다. 🕵️‍♀️
         </p>
 
         <div class="border-t border-gray-200 pt-3 mt-3 space-y-2">
+          <section
+            id="ad-container-3"
+            class="my-4 p-4 bg-white rounded-2xl shadow"
+            style="
+              display: none;
+              min-height: 120px;
+              max-height: 160px;
+              flex-direction: column;
+              justify-content: center;
+            "
+          >
+            <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+              ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+            </h3>
+            <div style="text-align: center">
+              <ins
+                class="adsbygoogle"
+                style="display: block"
+                data-ad-client="ca-pub-9063401338616510"
+                data-ad-slot="광고단위_ID"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+                data-ad-callback="adCallback"
+              ></ins>
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+            </div>
+          </section>
           <p>
             <a href="/privacy.html" class="hover:underline"
               >개인정보 처리방침</a
@@ -327,6 +405,36 @@
             받으며, 무단 전재 및 재배포를 금지합니다.
           </p>
         </div>
+
+        <section
+          id="ad-container-4"
+          class="my-4 p-4 bg-white rounded-2xl shadow"
+          style="
+            display: none;
+            min-height: 120px;
+            max-height: 160px;
+            flex-direction: column;
+            justify-content: center;
+          "
+        >
+          <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+            ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+          </h3>
+          <div style="text-align: center">
+            <ins
+              class="adsbygoogle"
+              style="display: block"
+              data-ad-client="ca-pub-9063401338616510"
+              data-ad-slot="광고단위_ID"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+              data-ad-callback="adCallback"
+            ></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+          </div>
+        </section>
       </footer>
     </div>
 
@@ -402,5 +510,17 @@
 
     <script type="module" src="js/main.js"></script>
     <script src="./js/pw.js"></script>
+
+    <script>
+      function adCallback(ad) {
+        if (ad.is_empty) {
+          return;
+        }
+        const adContainer = ad.el.closest('section[id^="ad-container-"]');
+        if (adContainer) {
+          adContainer.style.display = "flex";
+        }
+      }
+    </script>
   </body>
 </html>

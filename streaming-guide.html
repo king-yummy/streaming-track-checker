@@ -32,7 +32,6 @@
       }
       gtag("js", new Date());
       gtag("config", "G-GYGLSJRN79");
-
       function getUserID() {
         let userID = localStorage.getItem("plli_user_id");
         if (!userID) {
@@ -94,6 +93,36 @@
           </ul>
         </div>
       </div>
+
+      <section
+        id="ad-container-1"
+        class="my-4 p-4 bg-white rounded-2xl shadow"
+        style="
+          display: none;
+          min-height: 120px;
+          max-height: 160px;
+          flex-direction: column;
+          justify-content: center;
+        "
+      >
+        <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+          ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+        </h3>
+        <div style="text-align: center">
+          <ins
+            class="adsbygoogle"
+            style="display: block"
+            data-ad-client="ca-pub-9063401338616510"
+            data-ad-slot="광고단위_ID"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+            data-ad-callback="adCallback"
+          ></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+      </section>
 
       <hr class="my-6 border-gray-200" />
 
@@ -277,7 +306,6 @@
               </div>
             </div>
           </div>
-
           <div data-content="genie" class="tab-content hidden space-y-2">
             <a
               href="https://tinyurl.com/bdhxmya2"
@@ -304,7 +332,6 @@
               >💻 PC (WEB)</a
             >
           </div>
-
           <div data-content="bugs" class="tab-content hidden space-y-2">
             <a
               href="https://lrl.kr/VQZq"
@@ -323,7 +350,6 @@
               >💻 PC (WEB)</a
             >
           </div>
-
           <div data-content="vibe" class="tab-content hidden space-y-4">
             <div
               class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-center"
@@ -371,7 +397,6 @@
               </div>
             </div>
           </div>
-
           <div data-content="flo" class="tab-content hidden">
             <a
               href="https://han.gl/ZCrlx"
@@ -382,7 +407,6 @@
               >📱/💻 모든 기기에서 클릭</a
             >
           </div>
-
           <div data-content="samsung" class="tab-content hidden">
             <a
               href="https://drive.google.com/drive/folders/1PJ1XMS5KLCcB7syC1_acW6zN3zuZjS8J"
@@ -396,6 +420,37 @@
         </div>
       </div>
     </main>
+
+    <section
+      id="ad-container-2"
+      class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md mx-auto"
+      style="
+        display: none;
+        min-height: 120px;
+        max-height: 160px;
+        flex-direction: column;
+        justify-content: center;
+      "
+    >
+      <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+        ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+      </h3>
+      <div style="text-align: center">
+        <ins
+          class="adsbygoogle"
+          style="display: block"
+          data-ad-client="ca-pub-9063401338616510"
+          data-ad-slot="광고단위_ID"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+          data-ad-callback="adCallback"
+        ></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </section>
+
     <footer
       class="w-full bg-gray-100 max-w-md mx-auto p-4 mt-6 text-center text-sm text-gray-600"
     >
@@ -406,29 +461,24 @@
           target="_blank"
           rel="noopener noreferrer"
           class="underline hover:text-gray-700"
+          >플레이브 음원총공팀</a
         >
-          플레이브 음원총공팀
-        </a>
       </p>
     </footer>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const userID = getUserID();
-
         const tabButtons = document.querySelectorAll(".tab-button");
         const tabContents = document.querySelectorAll(".tab-content");
-
         tabButtons.forEach((button) => {
           button.addEventListener("click", () => {
             gtag("event", "click_guide_tab", {
               platform: button.dataset.tab,
               user_id: userID,
             });
-
             tabButtons.forEach((btn) => btn.classList.remove("active"));
             tabContents.forEach((content) => content.classList.add("hidden"));
-
             button.classList.add("active");
             const activeContent = document.querySelector(
               `[data-content="${button.dataset.tab}"]`
@@ -438,7 +488,6 @@
             }
           });
         });
-
         document.querySelectorAll(".playlist-link").forEach((link) => {
           link.addEventListener("click", () => {
             gtag("event", "click_playlist_link", {
@@ -448,7 +497,6 @@
             });
           });
         });
-
         const musicWaveLink = document.getElementById("music-wave-link");
         if (musicWaveLink) {
           musicWaveLink.addEventListener("click", () => {
@@ -456,6 +504,18 @@
           });
         }
       });
+    </script>
+
+    <script>
+      function adCallback(ad) {
+        if (ad.is_empty) {
+          return;
+        }
+        const adContainer = ad.el.closest('section[id^="ad-container-"]');
+        if (adContainer) {
+          adContainer.style.display = "flex";
+        }
+      }
     </script>
   </body>
 </html>
