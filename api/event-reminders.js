@@ -102,19 +102,24 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // ✅ 수정: 알림 메시지에 표시될 시간도 정확한 KST 기준으로 포맷팅
+      // ✅ 수정: 서버 시간대와 무관하게 항상 KST로 시간을 포맷팅하는 로직
       const startTimeKst = new Date(ev.start + "+09:00");
 
-      // ✅ .getUTCHours()를 .getHours()로 변경하여 KST 기준 시간을 가져옴
-      const hh = String(startTimeKst.getHours()).padStart(2, "0");
-      const mm = String(startTimeKst.getMinutes()).padStart(2, "0");
+      // toLocaleString을 사용해 KST 시간(HH:mm) 문자열을 직접 생성
+      const timeStringKst = startTimeKst.toLocaleTimeString("ko-KR", {
+        timeZone: "Asia/Seoul",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      // timeStringKst는 "15:40"과 같은 형태가 됨
 
       const result = await admin.messaging().sendEachForMulticast({
         tokens: targets,
         webpush: {
           notification: {
             title: `🗓️ 곧 시작: ${ev.title || "이벤트"}`,
-            body: `${hh}:${mm} 시작 (15분 전)`,
+            body: `${timeStringKst} 시작 (15분 전)`, // 정확한 KST 시간이 여기에 표시됨
             icon: "/icon-192.png",
             tag: `event-${id}`,
           },
