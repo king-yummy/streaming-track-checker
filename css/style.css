@@ -428,3 +428,20 @@
   padding: 1px 4px;
   border-radius: 4px;
 }
+
+/* --- 캘린더 디자인 개선 (추가) --- */
+
+/* 이벤트 앞에 붙는 파란 점 제거 */
+.fc-daygrid-event-dot {
+  display: none;
+}
+
+/* 이벤트 텍스트가 점이 사라진 공간만큼 왼쪽으로 붙도록 조정 */
+.fc-daygrid-event .fc-event-title {
+  padding-left: 2px;
+}
+
+/* 캘린더 전체 좌우 패딩을 살짝 줄여서 내부 공간 확보 */
+.fc {
+  padding: 0.5rem 0.25rem; /* 기존 0.5rem에서 좌우만 0.25rem으로 변경 */
+}

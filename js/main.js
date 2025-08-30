@@ -1,4 +1,4 @@
-// js/main.js (오류 수정 및 디버깅 코드 추가 버전)
+// js/main.js (최종 배포용 코드)
 
 import { loadStreamingList, loadTodoListData, loadNoticeList } from "./api.js";
 import {
@@ -27,17 +27,19 @@ function resetTodoListAtMidnight() {
   }
 }
 
+/**
+ * 필요한 경우 알림 허용 유도 팝업을 표시하는 함수
+ */
 function showNotificationPromptIfNeeded() {
-  /* ▼▼▼▼▼ 테스트를 위해 이 조건문을 잠시 주석 처리합니다! ▼▼▼▼▼ */
-  /*
+  // ▼▼▼▼▼ 주석을 해제하여 원래 로직으로 복원합니다. ▼▼▼▼▼
   if (
-    !('Notification' in window) ||
+    !("Notification" in window) ||
     Notification.permission !== "default" ||
     localStorage.getItem("notificationPromptDismissed") === "true"
   ) {
     return;
   }
-  */
+  // ▲▲▲▲▲ 여기까지 복원 ▲▲▲▲▲
 
   const overlay = document.getElementById("notification-prompt-overlay");
   const panel = document.getElementById("notification-prompt-panel");
@@ -50,20 +52,13 @@ function showNotificationPromptIfNeeded() {
   panel.classList.remove("hidden");
 
   allowBtn.addEventListener("click", async () => {
-    console.log("'알림 받기' 버튼 클릭됨!"); // 디버깅 로그 1
-
-    const token = await requestNotificationPermission(); // 'token' 변수를 여기서 선언합니다.
-    console.log("권한 요청 후 받은 토큰:", token); // 디버깅 로그 2
-
+    const token = await requestNotificationPermission();
     localStorage.setItem("notificationPromptDismissed", "true");
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
 
     if (token) {
-      console.log("토큰이 유효하여 페이지를 notice.html로 이동합니다."); // 디버깅 로그 3
       window.location.href = "notice.html";
-    } else {
-      console.log("토큰이 없어서 페이지를 이동하지 않습니다."); // 디버깅 로그 4
     }
   });
 
