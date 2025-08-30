@@ -49,37 +49,12 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
     />
-    <script>
-      window.tailwindConfig = {
-        theme: {
-          fontFamily: {
-            sans: ["Pretendard", "ui-sans-serif", "system-ui"],
-          },
-        },
-      };
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
   >
-    <script>
-      // AdSense 설정용: URL에 ?adsense_preview=true가 있으면 숨겨진 광고 컨테이너를 강제로 표시합니다.
-      if (
-        new URLSearchParams(window.location.search).get("adsense_preview") ===
-        "true"
-      ) {
-        document.addEventListener("DOMContentLoaded", () => {
-          const adContainers = document.querySelectorAll(
-            'section[id^="ad-container-"]'
-          );
-          adContainers.forEach((container) => {
-            container.style.display = "flex";
-          });
-        });
-      }
-    </script>
     <div id="loading-screen">
       <img
         src="bg_asia.png"
@@ -106,28 +81,24 @@
       <div class="w-full max-w-md mt-4 grid grid-cols-4 gap-2 px-1">
         <a
           href="app-guide.html"
-          onclick="gtag('event', 'view_app_guide', {'user_id': getUserID()});"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">📱</span>
         </a>
         <a
           href="streaming-guide.html"
-          onclick="gtag('event', 'view_streaming_guide', {'user_id': getUserID()});"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">🎵</span>
         </a>
         <a
           href="voting-guide.html"
-          onclick="gtag('event', 'view_voting_guide', {'user_id': getUserID()});"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">🗳️</span>
         </a>
         <a
           href="notice.html"
-          onclick="gtag('event', 'view_notice', {'user_id': getUserID()});"
           class="flex flex-col items-center justify-center h-12 bg-white rounded-md shadow-sm hover:bg-gray-50 active:bg-blue-50 transition"
         >
           <span class="text-3xl">📢</span>
@@ -267,9 +238,10 @@
         id="ad-container-1"
         class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
         style="
-          display: none;
+          visibility: hidden;
           min-height: 120px;
           max-height: 160px;
+          display: flex;
           flex-direction: column;
           justify-content: center;
         "
@@ -282,10 +254,9 @@
             class="adsbygoogle"
             style="display: block"
             data-ad-client="ca-pub-9063401338616510"
-            data-ad-slot="광고단위_ID"
+            data-ad-slot="3718792037"
             data-ad-format="auto"
             data-full-width-responsive="true"
-            data-ad-callback="adCallback"
           ></ins>
           <script>
             (adsbygoogle = window.adsbygoogle || []).push({});
@@ -322,9 +293,10 @@
         id="ad-container-2"
         class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
         style="
-          display: none;
+          visibility: hidden;
           min-height: 120px;
           max-height: 160px;
+          display: flex;
           flex-direction: column;
           justify-content: center;
         "
@@ -337,10 +309,9 @@
             class="adsbygoogle"
             style="display: block"
             data-ad-client="ca-pub-9063401338616510"
-            data-ad-slot="광고단위_ID"
+            data-ad-slot="3718792037"
             data-ad-format="auto"
             data-full-width-responsive="true"
-            data-ad-callback="adCallback"
           ></ins>
           <script>
             (adsbygoogle = window.adsbygoogle || []).push({});
@@ -383,9 +354,10 @@
             id="ad-container-3"
             class="my-4 p-4 bg-white rounded-2xl shadow"
             style="
-              display: none;
+              visibility: hidden;
               min-height: 120px;
               max-height: 160px;
+              display: flex;
               flex-direction: column;
               justify-content: center;
             "
@@ -398,10 +370,9 @@
                 class="adsbygoogle"
                 style="display: block"
                 data-ad-client="ca-pub-9063401338616510"
-                data-ad-slot="광고단위_ID"
+                data-ad-slot="3718792037"
                 data-ad-format="auto"
                 data-full-width-responsive="true"
-                data-ad-callback="adCallback"
               ></ins>
               <script>
                 (adsbygoogle = window.adsbygoogle || []).push({});
@@ -426,9 +397,10 @@
           id="ad-container-4"
           class="my-4 p-4 bg-white rounded-2xl shadow"
           style="
-            display: none;
+            visibility: hidden;
             min-height: 120px;
             max-height: 160px;
+            display: flex;
             flex-direction: column;
             justify-content: center;
           "
@@ -441,10 +413,9 @@
               class="adsbygoogle"
               style="display: block"
               data-ad-client="ca-pub-9063401338616510"
-              data-ad-slot="광고단위_ID"
+              data-ad-slot="3718792037"
               data-ad-format="auto"
               data-full-width-responsive="true"
-              data-ad-callback="adCallback"
             ></ins>
             <script>
               (adsbygoogle = window.adsbygoogle || []).push({});
@@ -528,15 +499,25 @@
     <script src="./js/pw.js"></script>
 
     <script>
-      function adCallback(ad) {
-        if (ad.is_empty) {
-          return;
-        }
-        const adContainer = ad.el.closest('section[id^="ad-container-"]');
-        if (adContainer) {
-          adContainer.style.display = "flex";
-        }
+      function revealAdWhenFilled(containerId) {
+        const box = document.getElementById(containerId);
+        if (!box) return;
+        const tick = setInterval(() => {
+          const filled = box.querySelector("ins.adsbygoogle iframe");
+          if (filled) {
+            box.style.visibility = "visible";
+            clearInterval(tick);
+          }
+        }, 300);
+        setTimeout(() => clearInterval(tick), 10000);
       }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        revealAdWhenFilled("ad-container-1");
+        revealAdWhenFilled("ad-container-2");
+        revealAdWhenFilled("ad-container-3");
+        revealAdWhenFilled("ad-container-4");
+      });
     </script>
   </body>
 </html>
