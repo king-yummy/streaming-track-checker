@@ -1,11 +1,10 @@
-// api/save-token.js
+// /api/save-token.js
 
 import { kv } from "@vercel/kv";
 
-const TOKENS_KEY = "fcm-tokens"; // Vercel KV에서 사용할 키
+const TOKENS_KEY = "fcm-tokens";
 
 export default async function handler(req, res) {
-  // GET 요청: 특정 토큰의 현재 설정 값을 반환
   if (req.method === "GET") {
     const { token } = req.query;
     if (!token) return res.status(400).json({ error: "Token required" });
@@ -13,8 +12,7 @@ export default async function handler(req, res) {
     try {
       const settings = await kv.hget(TOKENS_KEY, token);
       return res.status(200).json({
-        noticeOptIn: settings?.noticeOptIn || false,
-        calendarOptIn: settings?.calendarOptIn || false,
+        alarmOptIn: settings?.alarmOptIn || false, // 단일 값으로 반환
       });
     } catch (error) {
       console.error("[save-token GET] KV Error:", error);
@@ -22,20 +20,21 @@ export default async function handler(req, res) {
     }
   }
 
-  // POST 요청: 토큰과 설정 값을 저장하거나 업데이트
   if (req.method === "POST") {
-    const { token, noticeOptIn, calendarOptIn } = req.body;
+    const { token, alarmOptIn } = req.body; // 단일 값으로 받음
     if (!token) return res.status(400).json({ error: "Token required" });
 
     try {
       const currentSettings = (await kv.hget(TOKENS_KEY, token)) || {};
-
       const newSettings = {
         ...currentSettings,
-        token, // 토큰 정보도 함께 저장
-        noticeOptIn: noticeOptIn,
-        calendarOptIn: calendarOptIn,
+        token,
+        alarmOptIn: alarmOptIn, // 단일 값으로 저장
       };
+
+      // 불필요해진 이전 키는 삭제 (선택적)
+      delete newSettings.noticeOptIn;
+      delete newSettings.calendarOptIn;
 
       await kv.hset(TOKENS_KEY, { [token]: newSettings });
       return res.status(200).json({ success: true });

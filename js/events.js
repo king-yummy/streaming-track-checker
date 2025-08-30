@@ -51,20 +51,12 @@ async function saveNotificationSettings() {
 }
 
 /**
- * 알림 시스템 전체를 초기화하고 이벤트 리스너를 설정하는 함수
+ * 알림 시스템 전체를 초기화하고 이벤트 리스너를 설정하는 함수 (통합 버전)
  */
 export async function initializeNotificationSystem() {
-  // notice.html 의 토글 DOM
-  const noticeToggle = document.getElementById("notice-toggle");
-  const calendarToggle = document.getElementById("calendar-toggle");
-  if (!noticeToggle || !calendarToggle) return;
+  const alarmToggle = document.getElementById("alarm-toggle");
+  if (!alarmToggle) return;
 
-  // Firebase 초기화/인스턴스는 기존 코드 그대로 사용한다고 가정
-  // const app = initializeApp(firebaseConfig);
-  // const messaging = getMessaging(app);
-  // let currentToken = "";
-
-  // 1) SW 준비 보장
   let swReg;
   try {
     swReg = await navigator.serviceWorker.ready;
@@ -73,7 +65,6 @@ export async function initializeNotificationSystem() {
     return;
   }
 
-  // 2) 권한/토큰 확보
   async function ensurePermissionAndToken() {
     if (Notification.permission === "default") {
       const p = await Notification.requestPermission();
@@ -82,7 +73,6 @@ export async function initializeNotificationSystem() {
       return null;
     }
     try {
-      // 🔑 여기에 Firebase 콘솔의 Web Push 인증서 키(VAPID)를 넣어주세요
       const token = await getToken(messaging, {
         vapidKey: VAPID_KEY,
         serviceWorkerRegistration: swReg,
@@ -95,7 +85,6 @@ export async function initializeNotificationSystem() {
     }
   }
 
-  // 3) 서버에 내 현재 설정 저장
   async function saveCurrentSettings() {
     if (!currentToken) return;
     try {
@@ -104,8 +93,7 @@ export async function initializeNotificationSystem() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token: currentToken,
-          noticeOptIn: noticeToggle.checked,
-          calendarOptIn: calendarToggle.checked,
+          alarmOptIn: alarmToggle.checked, // 통합된 값 전송
         }),
       });
     } catch (e) {
@@ -113,7 +101,6 @@ export async function initializeNotificationSystem() {
     }
   }
 
-  // 4) 초기 상태 복원 (권한 O + 토큰 존재 시)
   try {
     if (Notification.permission === "granted") {
       const token = await ensurePermissionAndToken();
@@ -123,10 +110,8 @@ export async function initializeNotificationSystem() {
           `/api/save-token?token=${encodeURIComponent(token)}`
         );
         if (res.ok) {
-          const { noticeOptIn = false, calendarOptIn = false } =
-            await res.json();
-          noticeToggle.checked = !!noticeOptIn;
-          calendarToggle.checked = !!calendarOptIn;
+          const { alarmOptIn = false } = await res.json(); // 통합된 값 수신
+          alarmToggle.checked = !!alarmOptIn;
         }
       }
     }
@@ -134,25 +119,18 @@ export async function initializeNotificationSystem() {
     console.error("[알림] 초기 설정 복원 실패:", e);
   }
 
-  // 5) 토글 변경 → 권한/토큰 확보 → 서버에 저장
   async function onToggleChange() {
     const token = await ensurePermissionAndToken();
     if (!token) {
-      // 권한 거부된 경우 토글 원복
-      noticeToggle.checked = false;
-      calendarToggle.checked = false;
+      alarmToggle.checked = false;
       alert("브라우저 알림 권한이 필요합니다.");
       return;
     }
     await saveCurrentSettings();
-    console.log("[알림] 저장됨:", {
-      notice: noticeToggle.checked,
-      calendar: calendarToggle.checked,
-    });
+    console.log("[알림] 설정 저장됨:", { alarm: alarmToggle.checked });
   }
 
-  noticeToggle.addEventListener("change", onToggleChange);
-  calendarToggle.addEventListener("change", onToggleChange);
+  alarmToggle.addEventListener("change", onToggleChange);
 
   onMessage(messaging, (payload) => {
     const n = payload.notification || {};

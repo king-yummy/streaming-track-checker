@@ -1,23 +1,16 @@
-// api/event-reminders.js
+// /api/event-reminders.js (통합 버전)
 
-import admin from "firebase-admin";
 import { kv } from "@vercel/kv";
+import admin from "firebase-admin";
+import { google } from "googleapis";
 
-const TOKENS_KEY = "fcm-tokens"; // Vercel KV에서 사용할 키
+// --- 상수 설정 ---
+const TOKENS_KEY = "fcm-tokens";
+const SPREADSHEET_ID = "1tGslp_8ahx8E5Y8kvIFq3DAcciLgtSyTvlTBROOrsKg";
+const NOTICE_SHEET_TITLE = "notice";
+const LAST_NOTICE_ID_KEY = "last-sent-notice-id";
 
-// Vercel KV에서 모든 토큰 정보를 읽어오는 함수
-async function readTokensFromKV() {
-  try {
-    const tokensData = await kv.hgetall(TOKENS_KEY);
-    if (!tokensData) return [];
-    // hgetall은 객체를 반환하므로, 값들만 배열로 추출
-    return Object.values(tokensData);
-  } catch (error) {
-    console.error("Failed to read tokens from KV:", error);
-    return [];
-  }
-}
-
+// --- Firebase Admin SDK 초기화 ---
 function ensureAdmin() {
   if (!admin.apps.length) {
     const json = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
@@ -28,114 +21,197 @@ function ensureAdmin() {
   }
 }
 
-async function getAllEvents() {
+// --- 공통 헬퍼 함수: 모든 토큰 정보 읽기 ---
+async function readTokensFromKV() {
   try {
-    const raw = await kv.hgetall("events");
-    if (!raw) return [];
-    return Object.values(raw)
-      .map((v) => (typeof v === "string" ? JSON.parse(v) : v))
-      .filter(Boolean);
-  } catch (e) {
-    if (String(e?.message || e).includes("WRONGTYPE")) {
-      await kv.del("events");
-      return [];
-    }
-    throw e;
+    const tokensData = await kv.hgetall(TOKENS_KEY);
+    return tokensData ? Object.values(tokensData) : [];
+  } catch (error) {
+    console.error("Failed to read tokens from KV:", error);
+    return [];
   }
 }
 
-export default async function handler(req, res) {
-  if (req.method !== "POST" && req.method !== "GET") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+// --- 캘린더 이벤트 알림 처리 로직 ---
+async function handleEventReminders(optedInTokens) {
+  if (optedInTokens.length === 0) {
+    console.log("[Events] No users opted in for notifications.");
+    return 0;
   }
-  try {
-    const events = await getAllEvents();
-    const nowUtc = new Date(); // 서버의 현재 시간 (UTC)
 
-    // [수정] 1분 -> 3분 윈도우로 변경
-    const windowMs = 3 * 60 * 1000;
-    const targetMs = 15 * 60 * 1000; // 15분 전 알림
-
-    const candidates = events.filter((ev) => {
-      if (
-        !ev?.start ||
-        (typeof ev.start === "string" && !ev.start.includes("T"))
-      ) {
-        return false;
+  const events = await (async () => {
+    try {
+      const raw = await kv.hgetall("events");
+      return raw
+        ? Object.values(raw)
+            .map((v) => (typeof v === "string" ? JSON.parse(v) : v))
+            .filter(Boolean)
+        : [];
+    } catch (e) {
+      if (String(e?.message || e).includes("WRONGTYPE")) {
+        await kv.del("events");
+        return [];
       }
+      throw e;
+    }
+  })();
 
-      // ✅ 수정: ev.start 문자열에 KST(+09:00)를 명시하여 Date 객체 생성
-      // 이렇게 하면 서버 환경(UTC)에 상관없이 항상 정확한 KST 시간으로 인식됩니다.
-      const startKstDate = new Date(ev.start + "+09:00");
-      if (isNaN(startKstDate.getTime())) return false;
+  const nowUtc = new Date();
+  const windowMs = 3 * 60 * 1000;
+  const targetMs = 15 * 60 * 1000;
 
-      // ✅ 수정: 이벤트의 UTC 타임스탬프와 현재 UTC 타임스탬프를 직접 비교
-      const diff = startKstDate.getTime() - nowUtc.getTime();
+  const candidates = events.filter((ev) => {
+    if (!ev?.start || (typeof ev.start === "string" && !ev.start.includes("T")))
+      return false;
+    const startKstDate = new Date(ev.start + "+09:00");
+    if (isNaN(startKstDate.getTime())) return false;
+    const diff = startKstDate.getTime() - nowUtc.getTime();
+    return Math.abs(diff - targetMs) <= windowMs;
+  });
 
-      // 15분 전후 1분 내에 해당하는지 확인
-      return Math.abs(diff - targetMs) <= windowMs;
+  if (candidates.length === 0) {
+    console.log("[Events] No events in the notification window.");
+    return 0;
+  }
+
+  let sentCount = 0;
+  for (const ev of candidates) {
+    const uniqueNotificationId = `${ev.id || ev.ID}@${ev.start}`;
+    const dedupKey = `reminder-sent:${uniqueNotificationId}`;
+    if (await kv.get(dedupKey)) continue; // 중복 방지
+    await kv.set(dedupKey, "1", { ex: 60 * 30 });
+
+    const startTimeKst = new Date(ev.start + "+09:00");
+    const timeStringKst = startTimeKst.toLocaleTimeString("ko-KR", {
+      timeZone: "Asia/Seoul",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     });
 
-    if (!candidates.length) {
-      return res.status(200).json({ sent: 0, note: "no events in window" });
-    }
+    const result = await admin.messaging().sendEachForMulticast({
+      tokens: optedInTokens,
+      webpush: {
+        notification: {
+          title: `🗓️ 곧 시작: ${ev.title || "이벤트"}`,
+          body: `${timeStringKst} 시작 (15분 전)`,
+          icon: "/icon-192.png",
+          tag: `event-${uniqueNotificationId}`,
+        },
+        headers: { TTL: "900" },
+        fcmOptions: { link: "/notice.html" },
+      },
+    });
+    sentCount += result.successCount;
+  }
+  console.log(`[Events] Sent ${sentCount} calendar reminders.`);
+  return sentCount;
+}
 
-    // Vercel KV에서 토큰 정보 읽기
-    const allTokens = await readTokensFromKV();
-    const targets = allTokens
-      .filter((t) => t.calendarOptIn)
+// --- 새 공지 알림 처리 로직 ---
+async function handleNoticeChecks(optedInTokens) {
+  if (optedInTokens.length === 0) {
+    console.log("[Notices] No users opted in for notifications.");
+    return 0;
+  }
+
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    },
+    scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+  });
+  const sheets = google.sheets({ version: "v4", auth });
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${NOTICE_SHEET_TITLE}!A:Z`,
+  });
+
+  const rows = res.data.values;
+  if (!rows || rows.length < 2) return 0;
+
+  const headers = rows[0];
+  const notices = rows.slice(1).map((row) => {
+    const notice = {};
+    headers.forEach((header, i) => {
+      notice[header] = row[i] || "";
+    });
+    return notice;
+  });
+
+  const latestNotice = notices.sort(
+    (a, b) => parseInt(b.ID) - parseInt(a.ID)
+  )[0];
+  if (!latestNotice) return 0;
+
+  const latestNoticeId = parseInt(latestNotice.ID);
+  const lastSentNoticeId = (await kv.get(LAST_NOTICE_ID_KEY)) || 0;
+
+  if (latestNoticeId > lastSentNoticeId) {
+    console.log(
+      `[Notices] New notice found! ID: ${latestNoticeId}. Sending notifications...`
+    );
+
+    const result = await admin.messaging().sendEachForMulticast({
+      tokens: optedInTokens,
+      notification: {
+        title: `📢 새 공지: ${latestNotice.Title}`,
+        body: latestNotice.Content.split("\\n")[0],
+      },
+      webpush: {
+        fcmOptions: { link: "/notice.html" },
+        headers: { TTL: "86400" },
+      },
+    });
+
+    await kv.set(LAST_NOTICE_ID_KEY, latestNoticeId);
+    console.log(`[Notices] Sent ${result.successCount} new notice alerts.`);
+    return result.successCount;
+  }
+  return 0;
+}
+
+// --- 메인 핸들러 ---
+export default async function handler(req, res) {
+  try {
+    // 1. 딱 한 번만 모든 토큰 정보를 가져와 알림에 동의한 사용자만 필터링합니다.
+    const allTokensData = await readTokensFromKV();
+    const optedInTokens = allTokensData
+      .filter((t) => t.alarmOptIn)
       .map((t) => t.token);
 
-    if (!targets.length) {
-      return res.status(200).json({ sent: 0, note: "no opt-in tokens" });
+    if (optedInTokens.length === 0) {
+      console.log(
+        "No users opted in for any notifications. Cron job finished."
+      );
+      return res
+        .status(200)
+        .json({ success: true, message: "No opted-in users." });
     }
 
+    // 2. Firebase Admin SDK 초기화
     ensureAdmin();
 
-    let sentCount = 0,
-      skipped = 0;
-    for (const ev of candidates) {
-      // ✅ 수정: 중복 방지 키에 이벤트의 '시작 시간'을 포함하여 생성
-      const uniqueNotificationId = `${ev.id || ev.ID}@${ev.start}`;
-      const dedupKey = `reminder-sent:${uniqueNotificationId}`;
+    // 3. 각 작업을 비동기적으로 동시에 실행합니다.
+    const [noticeResult, eventResult] = await Promise.all([
+      handleNoticeChecks(optedInTokens).catch((e) => {
+        console.error("Error in handleNoticeChecks:", e);
+        return 0;
+      }),
+      handleEventReminders(optedInTokens).catch((e) => {
+        console.error("Error in handleEventReminders:", e);
+        return 0;
+      }),
+    ]);
 
-      const setOk = await kv.set(dedupKey, "1", { ex: 60 * 30, nx: true });
-      if (setOk !== "OK") {
-        skipped++;
-        continue;
-      }
-
-      // 알림 메시지에 표시될 시간도 정확한 KST 기준으로 포맷팅
-      const startTimeKst = new Date(ev.start + "+09:00");
-      const timeStringKst = startTimeKst.toLocaleTimeString("ko-KR", {
-        timeZone: "Asia/Seoul",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-
-      const result = await admin.messaging().sendEachForMulticast({
-        tokens: targets,
-        webpush: {
-          notification: {
-            title: `🗓️ 곧 시작: ${ev.title || "이벤트"}`,
-            body: `${timeStringKst} 시작 (15분 전)`,
-            icon: "/icon-192.png",
-            tag: `event-${uniqueNotificationId}`, // 태그도 고유한 값으로 변경
-          },
-          headers: { TTL: "900" },
-          fcmOptions: { link: "/notice.html" },
-        },
-      });
-
-      sentCount += result.successCount;
-    }
-
-    return res
-      .status(200)
-      .json({ sent: sentCount, skipped, candidates: candidates.length });
-  } catch (e) {
-    console.error("[event-reminders]", e);
-    return res.status(500).json({ error: e.message });
+    res.status(200).json({
+      success: true,
+      sent_notices: noticeResult,
+      sent_events: eventResult,
+    });
+  } catch (error) {
+    console.error("[Unified Cron Job Error]", error);
+    res.status(500).json({ error: error.message });
   }
 }
