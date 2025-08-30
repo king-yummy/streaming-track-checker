@@ -94,34 +94,33 @@ export default async function handler(req, res) {
     let sentCount = 0,
       skipped = 0;
     for (const ev of candidates) {
-      const id = ev.id || ev.ID || `${ev.title || "이벤트"}@${ev.start}`;
-      const dedupKey = `reminder-sent:${id}`;
+      // ✅ 수정: 중복 방지 키에 이벤트의 '시작 시간'을 포함하여 생성
+      const uniqueNotificationId = `${ev.id || ev.ID}@${ev.start}`;
+      const dedupKey = `reminder-sent:${uniqueNotificationId}`;
+
       const setOk = await kv.set(dedupKey, "1", { ex: 60 * 30, nx: true });
       if (setOk !== "OK") {
         skipped++;
         continue;
       }
 
-      // ✅ 수정: 서버 시간대와 무관하게 항상 KST로 시간을 포맷팅하는 로직
+      // 알림 메시지에 표시될 시간도 정확한 KST 기준으로 포맷팅
       const startTimeKst = new Date(ev.start + "+09:00");
-
-      // toLocaleString을 사용해 KST 시간(HH:mm) 문자열을 직접 생성
       const timeStringKst = startTimeKst.toLocaleTimeString("ko-KR", {
         timeZone: "Asia/Seoul",
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
       });
-      // timeStringKst는 "15:40"과 같은 형태가 됨
 
       const result = await admin.messaging().sendEachForMulticast({
         tokens: targets,
         webpush: {
           notification: {
             title: `🗓️ 곧 시작: ${ev.title || "이벤트"}`,
-            body: `${timeStringKst} 시작 (15분 전)`, // 정확한 KST 시간이 여기에 표시됨
+            body: `${timeStringKst} 시작 (15분 전)`,
             icon: "/icon-192.png",
-            tag: `event-${id}`,
+            tag: `event-${uniqueNotificationId}`, // 태그도 고유한 값으로 변경
           },
           headers: { TTL: "900" },
           fcmOptions: { link: "/notice.html" },
