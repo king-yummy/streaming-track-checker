@@ -80,7 +80,7 @@
         </div>
       </section>
 
-      <section id="notice-section" class="mb-8">
+      <section id="notice-section" class="mb-8 p-4 bg-white rounded-xl shadow">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold">📢 공지사항</h3>
         </div>
@@ -121,7 +121,7 @@
         </div>
       </section>
 
-      <section id="calendar-section">
+      <section id="calendar-section" class="p-4 bg-white rounded-xl shadow">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold">🗓️ 공유 캘린더</h3>
         </div>
@@ -160,6 +160,50 @@
     </main>
 
     <div
+      id="date-picker-modal-overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-[120] hidden"
+    ></div>
+    <div
+      id="date-picker-modal-panel"
+      class="fixed bottom-0 inset-x-0 z-[130] bg-white rounded-t-2xl p-6 shadow-xl transform transition-transform translate-y-full"
+      style="transition: transform 0.3s ease-in-out"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold">날짜 선택</h3>
+        <button
+          id="close-date-picker-btn"
+          class="text-gray-400 hover:text-gray-700 text-2xl"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="flex gap-4 mb-6">
+        <select
+          id="year-select"
+          class="w-full p-3 border border-gray-300 rounded-md bg-white text-center text-lg"
+        ></select>
+        <select
+          id="month-select"
+          class="w-full p-3 border border-gray-300 rounded-md bg-white text-center text-lg"
+        ></select>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <button
+          id="cancel-date-btn"
+          class="w-full py-3 rounded-md bg-gray-200 text-gray-800 font-semibold"
+        >
+          취소
+        </button>
+        <button
+          id="confirm-date-btn"
+          class="w-full py-3 rounded-md bg-blue-500 text-white font-semibold"
+        >
+          확인
+        </button>
+      </div>
+    </div>
+
+    <div
       id="edit-modal-overlay"
       class="fixed inset-0 bg-black bg-opacity-50 z-[110] hidden"
     ></div>
@@ -182,7 +226,7 @@
               &times;
             </button>
           </div>
-          <div class="space-y-3">
+          <div class="space-y-4">
             <div>
               <label
                 for="modal-event-title"
@@ -193,98 +237,77 @@
                 type="text"
                 id="modal-event-title"
                 placeholder="일정 내용을 입력하세요"
-                class="w-full p-2 border rounded-md text-sm"
+                class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label
-                  for="modal-event-date"
-                  class="block text-sm font-medium text-gray-700 mb-1"
-                  >시작일</label
-                >
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >시작일시</label
+              >
+              <div class="flex items-center gap-2">
                 <input
                   type="date"
                   id="modal-event-date"
-                  class="w-full p-2 border rounded-md text-sm"
+                  class="flex-grow p-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
-              </div>
-              <div>
-                <label
-                  for="modal-event-hour"
-                  class="block text-sm font-medium text-gray-700 mb-1"
-                  >시간</label
-                >
-                <div class="flex items-center gap-1">
-                  <select
-                    id="modal-event-ampm"
-                    class="w-full p-2 border rounded-md text-sm bg-white"
-                  ></select>
-                  <select
-                    id="modal-event-hour"
-                    class="w-full p-2 border rounded-md text-sm bg-white"
-                  ></select>
-                  <select
-                    id="modal-event-minute"
-                    class="w-full p-2 border rounded-md text-sm bg-white"
-                  ></select>
-                </div>
+                <select
+                  id="modal-event-ampm"
+                  class="p-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                ></select>
+                <select
+                  id="modal-event-hour"
+                  class="p-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                ></select>
+                <select
+                  id="modal-event-minute"
+                  class="p-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                ></select>
               </div>
             </div>
-            <div
-              id="end-time-container"
-              class="hidden grid grid-cols-2 gap-2 pt-2 border-t"
-            >
-              <div>
-                <label
-                  for="modal-end-date"
-                  class="block text-sm font-medium text-gray-700 mb-1"
-                  >종료일</label
-                >
+
+            <div id="end-time-container" class="hidden space-y-2 pt-2 border-t">
+              <label class="block text-sm font-medium text-gray-700"
+                >종료일시</label
+              >
+              <div class="flex items-center gap-2">
                 <input
                   type="date"
                   id="modal-end-date"
-                  class="w-full p-2 border rounded-md text-sm"
+                  class="flex-grow p-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
-              </div>
-              <div>
-                <label
-                  for="modal-end-hour"
-                  class="block text-sm font-medium text-gray-700 mb-1"
-                  >시간</label
-                >
-                <div class="flex items-center gap-1">
-                  <select
-                    id="modal-end-ampm"
-                    class="w-full p-2 border rounded-md text-sm bg-white"
-                  ></select>
-                  <select
-                    id="modal-end-hour"
-                    class="w-full p-2 border rounded-md text-sm bg-white"
-                  ></select>
-                  <select
-                    id="modal-end-minute"
-                    class="w-full p-2 border rounded-md text-sm bg-white"
-                  ></select>
-                </div>
+                <select
+                  id="modal-end-ampm"
+                  class="p-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                ></select>
+                <select
+                  id="modal-end-hour"
+                  class="p-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                ></select>
+                <select
+                  id="modal-end-minute"
+                  class="p-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                ></select>
               </div>
             </div>
+
             <button
               id="add-end-time-btn"
               class="w-full text-sm text-blue-600 hover:underline py-1"
             >
               + 종료일시 추가
             </button>
+
             <div class="flex justify-end space-x-2 pt-3">
               <button
                 id="cancel-edit-btn"
-                class="py-2 px-4 rounded-md bg-gray-200 text-gray-800 text-sm font-semibold"
+                class="py-2 px-4 rounded-md bg-gray-200 text-gray-800 text-sm font-semibold hover:bg-gray-300"
               >
                 취소
               </button>
               <button
                 id="save-event-btn"
-                class="py-2 px-4 rounded-md bg-blue-500 text-white text-sm font-semibold"
+                class="py-2 px-4 rounded-md bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600"
               >
                 저장
               </button>

@@ -313,6 +313,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const date = new Date(dateStr);
       openDailyEventsModal(date, getEventsOnDate(calendar, date));
     },
+    // ▼▼▼▼▼ 이 부분만 새로 추가해주세요! ▼▼▼▼▼
+    viewDidMount: function () {
+      attachTitleClickListener();
+    },
+    // ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
   });
 
   calendar.render();
@@ -400,4 +405,91 @@ document.addEventListener("DOMContentLoaded", function () {
     closeDailyEventsModal();
     calendar.refetchEvents();
   }
+
+  // --- 날짜 선택 팝업창 관련 코드 ---
+
+  const datePickerModalOverlay = document.getElementById(
+    "date-picker-modal-overlay"
+  );
+  const datePickerModalPanel = document.getElementById(
+    "date-picker-modal-panel"
+  );
+  const closeDatePickerBtn = document.getElementById("close-date-picker-btn");
+  const cancelDateBtn = document.getElementById("cancel-date-btn");
+  const yearSelect = document.getElementById("year-select");
+  const monthSelect = document.getElementById("month-select");
+  const confirmDateBtn = document.getElementById("confirm-date-btn");
+
+  /**
+   * 캘린더 제목(예: 2025년 8월)에 클릭 이벤트를 연결하는 함수 (수정된 버전)
+   */
+  function attachTitleClickListener() {
+    const titleEl = document.querySelector(".fc-toolbar-title");
+
+    // 요소가 존재하고, 아직 클릭 이벤트가 등록되지 않았을 경우에만 실행
+    if (titleEl && !titleEl.dataset.listenerAttached) {
+      titleEl.style.cursor = "pointer"; // 마우스 커서를 손가락 모양으로 변경
+      titleEl.addEventListener("click", openDatePicker);
+
+      // 이벤트가 중복으로 등록되는 것을 방지하기 위해 표시를 남김
+      titleEl.dataset.listenerAttached = "true";
+    }
+  }
+
+  /**
+   * 팝업창에 현재 캘린더의 연도와 월을 채워넣는 함수
+   */
+  function populateDatePicker() {
+    const currentDate = calendar.view.currentStart;
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+    yearSelect.innerHTML = ""; // 기존 옵션 초기화
+    // 현재 연도 기준 -5년부터 +5년까지 선택지를 만듭니다.
+    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+      const option = new Option(i + "년", i);
+      if (i === currentYear) option.selected = true; // 현재 연도를 기본으로 선택
+      yearSelect.add(option);
+    }
+
+    monthSelect.innerHTML = ""; // 기존 옵션 초기화
+    for (let i = 1; i <= 12; i++) {
+      const option = new Option(i + "월", i);
+      if (i === currentMonth) option.selected = true; // 현재 월을 기본으로 선택
+      monthSelect.add(option);
+    }
+  }
+
+  /**
+   * 팝업창을 여는 함수
+   */
+  function openDatePicker() {
+    populateDatePicker(); // 팝업창을 열 때마다 현재 날짜로 내용 업데이트
+    datePickerModalOverlay.classList.remove("hidden");
+    datePickerModalPanel.classList.remove("translate-y-full");
+  }
+
+  /**
+   * 팝업창을 닫는 함수
+   */
+  function closeDatePicker() {
+    datePickerModalOverlay.classList.add("hidden");
+    datePickerModalPanel.classList.add("translate-y-full");
+  }
+
+  // 팝업창의 버튼들과 배경에 닫기 기능을 연결합니다.
+  closeDatePickerBtn.addEventListener("click", closeDatePicker);
+  cancelDateBtn.addEventListener("click", closeDatePicker);
+  datePickerModalOverlay.addEventListener("click", closeDatePicker);
+
+  // '확인' 버튼을 눌렀을 때의 동작
+  confirmDateBtn.addEventListener("click", () => {
+    const year = yearSelect.value;
+    const month = monthSelect.value;
+    const day = "01"; // 항상 해당 월의 1일로 이동
+
+    // FullCalendar 라이브러리의 기능(gotoDate)을 사용해 캘린더를 해당 날짜로 이동시킵니다.
+    calendar.gotoDate(`${year}-${String(month).padStart(2, "0")}-${day}`);
+    closeDatePicker(); // 날짜 이동 후 팝업창 닫기
+  });
 });

@@ -351,3 +351,80 @@
 .alert-box ul li {
   margin: 0.4rem 0;
 }
+
+/* ---------------------------------- */
+/* 캘린더 디자인 개선         */
+/* ---------------------------------- */
+
+#calendar {
+  --fc-border-color: #e5e7eb; /* light gray for borders */
+  --fc-daygrid-event-dot-width: 6px;
+  --fc-today-bg-color: rgba(239, 246, 255, 0.8); /* very light blue for today */
+}
+
+/* 캘린더 전체 폰트 및 배경 */
+.fc {
+  font-size: 0.8rem;
+  background-color: #fff;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+}
+
+/* 헤더 (요일) 스타일 */
+.fc .fc-col-header-cell-cushion {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  padding: 0.5rem 0;
+}
+
+/* 날짜 숫자 스타일 */
+.fc .fc-daygrid-day-number {
+  font-size: 0.7rem;
+  padding: 0.4rem 0.5rem;
+  color: #374151;
+}
+
+/* 일요일 날짜 빨간색 */
+.fc-day-sun > a.fc-daygrid-day-number {
+  color: #ef4444;
+}
+
+/* 툴바 (이전/다음 버튼, 타이틀) */
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 1rem;
+}
+.fc .fc-toolbar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.fc .fc-button {
+  background-color: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  box-shadow: none;
+  transition: background-color 0.2s;
+}
+.fc .fc-button:hover {
+  background-color: #f3f4f6;
+}
+.fc .fc-button .fc-icon {
+  font-size: 1rem;
+}
+.fc .fc-addEventButton-button {
+  /* '+' 버튼 스타일 */
+  font-size: 1.5rem;
+  padding: 0 0.75rem;
+}
+
+/* 이벤트 스타일 */
+.fc-event {
+  background-color: #bfdbfe !important; /* light blue for events */
+  border: 1px solid #93c5fd !important;
+  color: #1e40af !important; /* dark blue text */
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
