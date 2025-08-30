@@ -1,5 +1,3 @@
-// js/calendar.js
-
 document.addEventListener("DOMContentLoaded", function () {
   const calendarEl = document.getElementById("calendar");
 
@@ -14,11 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const saveEventBtn = document.getElementById("save-event-btn");
   const titleInput = document.getElementById("modal-event-title");
   const dateInput = document.getElementById("modal-event-date");
-  const timeInput = document.getElementById("modal-event-time");
   const addEndTimeBtn = document.getElementById("add-end-time-btn");
   const endTimeContainer = document.getElementById("end-time-container");
   const endDateInput = document.getElementById("modal-end-date");
-  const endTimeInput = document.getElementById("modal-end-time");
   const dailyEventsModalOverlay = document.getElementById(
     "daily-events-modal-overlay"
   );
@@ -33,7 +29,69 @@ document.addEventListener("DOMContentLoaded", function () {
     "close-daily-events-modal-btn"
   );
 
+  // [수정] 3개로 분리된 시간 드롭다운 요소
+  const timeAmPmInput = document.getElementById("modal-event-ampm");
+  const timeHourInput = document.getElementById("modal-event-hour");
+  const timeMinuteInput = document.getElementById("modal-event-minute");
+  const endTimeAmPmInput = document.getElementById("modal-end-ampm");
+  const endTimeHourInput = document.getElementById("modal-end-hour");
+  const endTimeMinuteInput = document.getElementById("modal-end-minute");
+
   let currentEditingEventId = null;
+
+  // [추가] 시간 관련 드롭다운 메뉴를 채우는 함수
+  function populateTimeDropdowns() {
+    timeAmPmInput.innerHTML =
+      '<option value="AM">오전</option><option value="PM">오후</option>';
+    endTimeAmPmInput.innerHTML =
+      '<option value="AM">오전</option><option value="PM">오후</option>';
+
+    let hourOptions = "";
+    for (let i = 1; i <= 12; i++) {
+      const hour = String(i).padStart(2, "0");
+      hourOptions += `<option value="${hour}">${hour}</option>`;
+    }
+    timeHourInput.innerHTML = hourOptions;
+    endTimeHourInput.innerHTML = hourOptions;
+
+    let minuteOptions = "";
+    for (let i = 0; i < 60; i += 5) {
+      const minute = String(i).padStart(2, "0");
+      minuteOptions += `<option value="${minute}">${minute}</option>`;
+    }
+    timeMinuteInput.innerHTML = minuteOptions;
+    endTimeMinuteInput.innerHTML = minuteOptions;
+  }
+
+  populateTimeDropdowns();
+
+  // [추가] 12시간제(오전/오후) -> 24시간제 변환 함수
+  function convert12to24(ampm, hourStr, minuteStr) {
+    let hour = parseInt(hourStr, 10);
+    if (ampm === "PM" && hour < 12) {
+      hour += 12;
+    }
+    if (ampm === "AM" && hour === 12) {
+      hour = 0; // 자정 (오전 12시)
+    }
+    return `${String(hour).padStart(2, "0")}:${minuteStr}`;
+  }
+
+  // [추가] 24시간제 -> 12시간제(오전/오후) 변환 함수
+  function convert24to12(time24) {
+    const [hour24, minute] = time24.split(":").map((n) => parseInt(n, 10));
+    const ampm = hour24 >= 12 ? "PM" : "AM";
+    let hour12 = hour24 % 12;
+    if (hour12 === 0) {
+      hour12 = 12; // 자정, 정오
+    }
+    const roundedMinute = Math.floor(minute / 5) * 5;
+    return {
+      ampm,
+      hour: String(hour12).padStart(2, "0"),
+      minute: String(roundedMinute).padStart(2, "0"),
+    };
+  }
 
   const openEditModal = (dateStr, event = null) => {
     currentEditingEventId = event ? event.id : null;
@@ -41,34 +99,41 @@ document.addEventListener("DOMContentLoaded", function () {
     addEndTimeBtn.textContent = "+ 종료일시 추가";
 
     if (event) {
+      // 수정
       editModalTitle.textContent = "일정 수정";
-
-      // FullCalendar 이벤트 객체의 문자열을 활용 (타임존 변환 X)
-      const startStr = event.startStr; // "YYYY-MM-DDTHH:mm:ss" 형태
       titleInput.value = event.title;
-      dateInput.value = startStr.slice(0, 10);
-      timeInput.value = startStr.slice(11, 16);
+
+      const [datePart, timePart] = event.startStr.slice(0, 16).split("T");
+      const { ampm, hour, minute } = convert24to12(timePart);
+      dateInput.value = datePart;
+      timeAmPmInput.value = ampm;
+      timeHourInput.value = hour;
+      timeMinuteInput.value = minute;
 
       if (event.end) {
-        const endStr = event.endStr;
         endTimeContainer.classList.remove("hidden");
         addEndTimeBtn.textContent = "- 종료일시 제거";
-        endDateInput.value = endStr.slice(0, 10);
-        endTimeInput.value = endStr.slice(11, 16);
+        const [endDatePart, endTimePart] = event.endStr.slice(0, 16).split("T");
+        const endConverted = convert24to12(endTimePart);
+        endDateInput.value = endDatePart;
+        endTimeAmPmInput.value = endConverted.ampm;
+        endTimeHourInput.value = endConverted.hour;
+        endTimeMinuteInput.value = endConverted.minute;
       } else {
-        endTimeContainer.classList.add("hidden");
-        addEndTimeBtn.textContent = "+ 종료일시 추가";
         endDateInput.value = "";
-        endTimeInput.value = "10:00";
       }
     } else {
       // 추가
       editModalTitle.textContent = "새 일정 추가";
-      dateInput.value = dateStr;
-      timeInput.value = "09:00";
       titleInput.value = "";
+      dateInput.value = dateStr;
+      timeAmPmInput.value = "AM";
+      timeHourInput.value = "09";
+      timeMinuteInput.value = "00";
       endDateInput.value = "";
-      endTimeInput.value = "10:00";
+      endTimeAmPmInput.value = "AM";
+      endTimeHourInput.value = "10";
+      endTimeMinuteInput.value = "00";
     }
     editModalOverlay.classList.remove("hidden");
     editModalPanel.classList.remove("hidden");
@@ -79,11 +144,10 @@ document.addEventListener("DOMContentLoaded", function () {
     editModalPanel.classList.add("hidden");
   };
 
-  // body로 포털시킨 메뉴 정리
   const cleanUpPortalMenus = () => {
     document.querySelectorAll(".kebab-menu-options").forEach((menu) => {
       if (menu.parentElement === document.body) {
-        menu.remove(); // 모달 재오픈 시 중복 잔재 제거
+        menu.remove();
       } else {
         menu.classList.add("hidden");
       }
@@ -101,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "ko-KR",
       dateOptions
     );
-    dailyEventsList.innerHTML = ""; // 기존 내용 초기화
+    dailyEventsList.innerHTML = "";
 
     const closeAllMenus = () => {
       document
@@ -143,56 +207,41 @@ document.addEventListener("DOMContentLoaded", function () {
         const kebabButton = item.querySelector(".kebab-menu > button");
         const menuOptions = item.querySelector(".kebab-menu-options");
 
-        // 메뉴 버튼 클릭 시: body로 포털 + fixed 배치
         kebabButton.addEventListener("click", (e) => {
-          e.stopPropagation(); // 이벤트 버블링 방지
+          e.stopPropagation();
 
           const wasHidden = menuOptions.classList.contains("hidden");
-
-          // 다른 메뉴 먼저 닫기
           closeAllMenus();
           if (!wasHidden) return;
 
-          // 처음 열 때 body로 이동(포털)
           if (!menuOptions.__movedToBody) {
             document.body.appendChild(menuOptions);
             menuOptions.__movedToBody = true;
           }
 
-          // 보이기 전에 위치 계산을 위해 우선 노출
           menuOptions.classList.remove("hidden");
-
-          // 고정 배치 + 충분한 z-index + 여백 초기화
           menuOptions.style.position = "fixed";
           menuOptions.style.zIndex = 9999;
           menuOptions.style.marginTop = "0";
           menuOptions.style.marginBottom = "0";
-          // 기존 absolute 배치 속성 무효화를 위해 초기화
           menuOptions.style.right = "auto";
           menuOptions.style.left = "0px";
           menuOptions.style.top = "0px";
           menuOptions.style.bottom = "auto";
 
-          // 버튼 위치
           const b = kebabButton.getBoundingClientRect();
-
-          // 메뉴 실제 크기
           const mw = menuOptions.offsetWidth || 120;
           const mh = menuOptions.offsetHeight || 74;
 
-          // 기본 위치: 버튼 아래쪽, 오른쪽 정렬
           let left = Math.max(8, b.right - mw);
           let top = b.bottom + 6;
 
-          // 화면 하단 넘치면 위로 뒤집기
           if (top + mh > window.innerHeight) {
             top = b.top - mh - 6;
           }
-          // 화면 오른쪽 넘치면 보정
           if (left + mw > window.innerWidth) {
             left = window.innerWidth - mw - 8;
           }
-          // 화면 왼쪽 넘치면 보정
           if (left < 8) left = 8;
 
           menuOptions.style.left = `${left}px`;
@@ -219,17 +268,14 @@ document.addEventListener("DOMContentLoaded", function () {
     return calendar.getEvents().filter((event) => {
       const start = event.start;
       const end = event.end ? new Date(event.end.getTime() - 1) : start;
-
       const clickedDay = new Date(clickedDate).setHours(0, 0, 0, 0);
       const startDay = new Date(start).setHours(0, 0, 0, 0);
       const endDay = new Date(end).setHours(0, 0, 0, 0);
-
       return clickedDay >= startDay && clickedDay <= endDay;
     });
   }
 
   const closeDailyEventsModal = () => {
-    // 모달 닫힐 때 떠 있는 메뉴 정리
     cleanUpPortalMenus();
     dailyEventsModalOverlay.classList.add("hidden");
     dailyEventsModalPanel.classList.add("hidden");
@@ -238,11 +284,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
     height: "auto",
-    locale: "ko", // 한국어 적용
+    locale: "ko",
     titleFormat: {
-      // 제목 포맷 변경
       year: "numeric",
-      month: "short", // 8월 형태
+      month: "short",
     },
     headerToolbar: {
       left: "prev,next today",
@@ -287,27 +332,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   saveEventBtn.addEventListener("click", async () => {
     const title = titleInput.value.trim();
-    const start = `${dateInput.value}T${timeInput.value}`;
-    let end = null;
-    if (
-      !endTimeContainer.classList.contains("hidden") &&
-      endDateInput.value &&
-      endTimeInput.value
-    ) {
-      end = `${endDateInput.value}T${endTimeInput.value}`;
+    if (!title || !dateInput.value) {
+      return alert("내용과 시작일은 필수입니다.");
     }
 
-    if (!title || !dateInput.value || !timeInput.value) {
-      return alert("내용, 시작일, 시간은 필수입니다.");
+    // [수정] 3개 드롭다운에서 24시간제 시간 문자열 생성
+    const startTime24 = convert12to24(
+      timeAmPmInput.value,
+      timeHourInput.value,
+      timeMinuteInput.value
+    );
+    const start = `${dateInput.value}T${startTime24}`;
+
+    let end = null;
+    if (!endTimeContainer.classList.contains("hidden") && endDateInput.value) {
+      const endTime24 = convert12to24(
+        endTimeAmPmInput.value,
+        endTimeHourInput.value,
+        endTimeMinuteInput.value
+      );
+      end = `${endDateInput.value}T${endTime24}`;
     }
 
     const eventData = { id: currentEditingEventId, title, start, end };
 
     if (currentEditingEventId) {
-      // ID가 있으면 수정
       await updateEvent(eventData);
     } else {
-      // ID가 없으면 추가
       await addEvent(eventData);
     }
 
@@ -315,7 +366,6 @@ document.addEventListener("DOMContentLoaded", function () {
     calendar.refetchEvents();
   });
 
-  // --- API 통신 함수 ---
   async function apiRequest(method, body) {
     try {
       const response = await fetch("/api/events", {
@@ -334,21 +384,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // 일정 추가 함수
   async function addEvent(eventData) {
     const { title, start, end } = eventData;
     const [date, startTime] = start.split("T");
     const [endDate, endTime] = end ? end.split("T") : [null, null];
-
     await apiRequest("POST", { title, date, startTime, endDate, endTime });
   }
 
-  // 일정 수정 함수
   async function updateEvent(eventData) {
     await apiRequest("PUT", eventData);
   }
 
-  // 일정 삭제 함수
   async function deleteEvent(eventId) {
     await apiRequest("DELETE", { id: eventId });
     closeDailyEventsModal();

@@ -52,7 +52,8 @@ export default async function handler(req, res) {
     const events = await getAllEvents();
     const nowUtc = new Date(); // 서버의 현재 시간 (UTC)
 
-    const windowMs = 60 * 1000; // 1분 윈도우
+    // [수정] 1분 -> 3분 윈도우로 변경
+    const windowMs = 3 * 60 * 1000;
     const targetMs = 15 * 60 * 1000; // 15분 전 알림
 
     const candidates = events.filter((ev) => {

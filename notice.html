@@ -161,16 +161,24 @@
               </div>
               <div>
                 <label
-                  for="modal-event-time"
+                  for="modal-event-hour"
                   class="block text-sm font-medium text-gray-700 mb-1"
                   >시간</label
                 >
-                <input
-                  type="time"
-                  id="modal-event-time"
-                  value="09:00"
-                  class="w-full p-2 border rounded-md text-sm"
-                />
+                <div class="flex items-center gap-1">
+                  <select
+                    id="modal-event-ampm"
+                    class="w-full p-2 border rounded-md text-sm bg-white"
+                  ></select>
+                  <select
+                    id="modal-event-hour"
+                    class="w-full p-2 border rounded-md text-sm bg-white"
+                  ></select>
+                  <select
+                    id="modal-event-minute"
+                    class="w-full p-2 border rounded-md text-sm bg-white"
+                  ></select>
+                </div>
               </div>
             </div>
             <div
@@ -191,16 +199,24 @@
               </div>
               <div>
                 <label
-                  for="modal-end-time"
+                  for="modal-end-hour"
                   class="block text-sm font-medium text-gray-700 mb-1"
                   >시간</label
                 >
-                <input
-                  type="time"
-                  id="modal-end-time"
-                  value="10:00"
-                  class="w-full p-2 border rounded-md text-sm"
-                />
+                <div class="flex items-center gap-1">
+                  <select
+                    id="modal-end-ampm"
+                    class="w-full p-2 border rounded-md text-sm bg-white"
+                  ></select>
+                  <select
+                    id="modal-end-hour"
+                    class="w-full p-2 border rounded-md text-sm bg-white"
+                  ></select>
+                  <select
+                    id="modal-end-minute"
+                    class="w-full p-2 border rounded-md text-sm bg-white"
+                  ></select>
+                </div>
               </div>
             </div>
             <button
@@ -227,7 +243,6 @@
         </div>
       </div>
     </div>
-
     <div
       id="daily-events-modal-overlay"
       class="fixed inset-0 bg-black bg-opacity-50 z-[110] hidden"
