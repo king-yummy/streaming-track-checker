@@ -27,6 +27,59 @@ const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 let currentToken = "";
 
+// ▼▼▼▼▼ [신규] 브라우저에 알림 권한을 요청하는 함수 ▼▼▼▼▼
+/**
+ * 브라우저에 알림 권한을 명시적으로 요청하고 서버에 토큰을 저장합니다.
+ * @returns {Promise<string|null>} 성공 시 FCM 토큰, 실패 시 null 반환
+ */
+export async function requestNotificationPermission() {
+  let swReg;
+  try {
+    swReg = await navigator.serviceWorker.ready;
+  } catch (e) {
+    console.error("[알림] 서비스워커 준비 실패:", e);
+    alert("알림 기능을 초기화하는 데 실패했습니다.");
+    return null;
+  }
+
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      alert(
+        "알림이 허용되지 않았습니다. 알림을 받으려면 브라우저 설정에서 권한을 변경해주세요."
+      );
+      return null;
+    }
+  } catch (e) {
+    console.error("[알림] 권한 요청 중 오류:", e);
+    return null;
+  }
+
+  try {
+    const token = await getToken(messaging, {
+      vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: swReg,
+    });
+    if (token) {
+      currentToken = token;
+      await fetch("/api/save-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: currentToken, alarmOptIn: true }),
+      });
+      console.log("[알림] 권한 획득 및 토큰 저장 성공:", currentToken);
+      const alarmToggle = document.getElementById("alarm-toggle");
+      if (alarmToggle) alarmToggle.checked = true;
+      return token;
+    }
+    return null;
+  } catch (err) {
+    console.error("[알림] FCM 토큰 획득 실패:", err);
+    return null;
+  }
+}
+// ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
+
 /**
  * 알림 설정을 서버에 저장하는 함수
  */

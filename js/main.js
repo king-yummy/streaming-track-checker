@@ -4,12 +4,12 @@ import { loadStreamingList, loadTodoListData, loadNoticeList } from "./api.js";
 import {
   initializeAllEventListeners,
   initializeNotificationSystem,
+  requestNotificationPermission, // 새로 만든 함수 import
 } from "./events.js";
 import { setSchedule, setAllTodoData } from "./state.js";
 import {
   initializeStreamingUI,
   renderTodoList,
-  renderNoticeList,
   checkNewNotices,
 } from "./ui.js";
 
@@ -32,6 +32,56 @@ function resetTodoListAtMidnight() {
 }
 
 /**
+ * [신규] 필요한 경우 알림 허용 유도 팝업을 표시하는 함수
+ */
+function showNotificationPromptIfNeeded() {
+  /* ▼▼▼▼▼ 테스트를 위해 이 조건문을 잠시 주석 처리합니다! ▼▼▼▼▼
+    나중에 배포 전에는 반드시 이 주석을 풀어주세요.
+  */
+  /*
+  if (
+    !('Notification' in window) ||
+    Notification.permission !== "default" ||
+    localStorage.getItem("notificationPromptDismissed") === "true"
+  ) {
+    return;
+  }
+  */
+
+  const overlay = document.getElementById("notification-prompt-overlay");
+  const panel = document.getElementById("notification-prompt-panel");
+  const allowBtn = document.getElementById("allow-notifications-btn");
+  const denyBtn = document.getElementById("deny-notifications-btn");
+
+  if (!overlay || !panel || !allowBtn || !denyBtn) return;
+
+  // 모달 보이기
+  overlay.classList.remove("hidden");
+  panel.classList.remove("hidden");
+
+  // '알림 받기' 버튼 클릭 시
+  allowBtn.addEventListener("click", async () => {
+    await requestNotificationPermission(); // 실제 권한 요청 함수 호출
+    localStorage.setItem("notificationPromptDismissed", "true");
+    overlay.classList.add("hidden");
+    panel.classList.add("hidden");
+    // ▼▼▼▼▼ [수정] 이 부분을 추가합니다 ▼▼▼▼▼
+    if (token) {
+      // 사용자가 성공적으로 권한을 허용했을 때만
+      window.location.href = "notice.html"; // notice.html 페이지로 이동
+    }
+    // ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
+  });
+
+  // '나중에' 버튼 클릭 시
+  denyBtn.addEventListener("click", () => {
+    localStorage.setItem("notificationPromptDismissed", "true"); // 다시 보지 않도록 저장
+    overlay.classList.add("hidden");
+    panel.classList.add("hidden");
+  });
+}
+
+/**
  * 앱이 처음 로드될 때 실행되는 기본 로직
  */
 document.addEventListener("DOMContentLoaded", () => {
@@ -45,20 +95,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadingScreen = document.getElementById("loading-screen");
     const mainContent = document.getElementById("main-content");
 
-    // 새로운 공지가 있는지 확인해서 📢 아이콘에 점 표시
     loadNoticeList().then(checkNewNotices);
 
-    // ▼▼▼▼▼ [추가!] 슈퍼팬 링크 목록 미리 불러와서 캐싱하기 ▼▼▼▼▼
     fetch("/api/superfan")
       .then((res) => res.json())
       .then((links) => {
         sessionStorage.setItem("superfanLinks", JSON.stringify(links));
       })
       .catch((err) => console.error("슈퍼팬 링크 미리 로딩 실패:", err));
-    // ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
 
     if (sessionStorage.getItem("isInitialized")) {
-      // 캐시된 데이터로 화면 빠르게 로드
       const cachedSchedule = JSON.parse(
         sessionStorage.getItem("streamingSchedule")
       );
@@ -75,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (loadingScreen) loadingScreen.style.display = "none";
       if (mainContent) mainContent.classList.remove("invisible");
     } else {
-      // 모든 데이터 새로 로드
       async function loadAllPrimaryData() {
         await Promise.all([loadStreamingList(), loadTodoListData()]);
         sessionStorage.setItem("isInitialized", "true");
@@ -84,22 +129,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       loadAllPrimaryData();
     }
+
+    // ▼▼▼▼▼ [수정] 알림 팝업 함수 호출 추가 ▼▼▼▼▼
+    showNotificationPromptIfNeeded();
   }
   // 2. 공지 & 캘린더 페이지 (notice.html)일 경우
   else if (path.endsWith("notice.html")) {
-    // 알림 토글 스위치 관련 기능을 실행하는 함수를 호출합니다.
     initializeNotificationSystem();
-
-    const cachedNotices = sessionStorage.getItem("noticeData");
-    if (cachedNotices) {
-      const noticeData = JSON.parse(cachedNotices);
+    loadNoticeList().then((noticeData) => {
       renderNoticeList(noticeData, 1);
-    } else {
-      loadNoticeList().then((noticeData) => {
-        sessionStorage.setItem("noticeData", JSON.stringify(noticeData));
-        renderNoticeList(noticeData, 1);
-      });
-    }
+    });
   }
 });
 
