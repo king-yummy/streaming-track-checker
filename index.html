@@ -64,6 +64,22 @@
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
   >
+    <script>
+      // AdSense 설정용: URL에 ?adsense_preview=true가 있으면 숨겨진 광고 컨테이너를 강제로 표시합니다.
+      if (
+        new URLSearchParams(window.location.search).get("adsense_preview") ===
+        "true"
+      ) {
+        document.addEventListener("DOMContentLoaded", () => {
+          const adContainers = document.querySelectorAll(
+            'section[id^="ad-container-"]'
+          );
+          adContainers.forEach((container) => {
+            container.style.display = "flex";
+          });
+        });
+      }
+    </script>
     <div id="loading-screen">
       <img
         src="bg_asia.png"
