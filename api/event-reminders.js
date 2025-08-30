@@ -104,6 +104,8 @@ export default async function handler(req, res) {
 
       // ✅ 수정: 알림 메시지에 표시될 시간도 정확한 KST 기준으로 포맷팅
       const startTimeKst = new Date(ev.start + "+09:00");
+
+      // ✅ .getUTCHours()를 .getHours()로 변경하여 KST 기준 시간을 가져옴
       const hh = String(startTimeKst.getHours()).padStart(2, "0");
       const mm = String(startTimeKst.getMinutes()).padStart(2, "0");
 
