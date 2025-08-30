@@ -115,13 +115,17 @@ async function handleNoticeChecks(optedInTokens) {
     return 0;
   }
 
+  // [수정] 인증 정보 불러오는 방식 변경
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+
   const auth = new google.auth.GoogleAuth({
     credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      client_email: serviceAccount.client_email,
+      private_key: serviceAccount.private_key,
     },
     scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
   });
+
   const sheets = google.sheets({ version: "v4", auth });
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
