@@ -27,22 +27,6 @@
     </style>
   </head>
   <body class="font-sans bg-gray-50">
-    <script>
-      // AdSense 설정용: URL에 ?adsense_preview=true가 있으면 숨겨진 광고 컨테이너를 강제로 표시합니다.
-      if (
-        new URLSearchParams(window.location.search).get("adsense_preview") ===
-        "true"
-      ) {
-        document.addEventListener("DOMContentLoaded", () => {
-          const adContainers = document.querySelectorAll(
-            'section[id^="ad-container-"]'
-          );
-          adContainers.forEach((container) => {
-            container.style.display = "flex";
-          });
-        });
-      }
-    </script>
     <header class="w-full bg-white shadow-sm sticky top-0 z-10">
       <div
         class="max-w-xl mx-auto p-4 relative flex justify-center items-center"
@@ -111,9 +95,10 @@
         id="ad-container-1"
         class="my-4 p-4 bg-white rounded-2xl shadow"
         style="
-          display: none;
+          visibility: hidden;
           min-height: 120px;
           max-height: 160px;
+          display: flex;
           flex-direction: column;
           justify-content: center;
         "
@@ -126,10 +111,9 @@
             class="adsbygoogle"
             style="display: block"
             data-ad-client="ca-pub-9063401338616510"
-            data-ad-slot="광고단위_ID"
+            data-ad-slot="3718792037"
             data-ad-format="auto"
             data-full-width-responsive="true"
-            data-ad-callback="adCallback"
           ></ins>
           <script>
             (adsbygoogle = window.adsbygoogle || []).push({});
@@ -148,9 +132,10 @@
         id="ad-container-2"
         class="my-4 p-4 bg-white rounded-2xl shadow"
         style="
-          display: none;
+          visibility: hidden;
           min-height: 120px;
           max-height: 160px;
+          display: flex;
           flex-direction: column;
           justify-content: center;
         "
@@ -163,10 +148,9 @@
             class="adsbygoogle"
             style="display: block"
             data-ad-client="ca-pub-9063401338616510"
-            data-ad-slot="광고단위_ID"
+            data-ad-slot="3718792037"
             data-ad-format="auto"
             data-full-width-responsive="true"
-            data-ad-callback="adCallback"
           ></ins>
           <script>
             (adsbygoogle = window.adsbygoogle || []).push({});
@@ -341,15 +325,22 @@
     <script src="js/calendar.js"></script>
 
     <script>
-      function adCallback(ad) {
-        if (ad.is_empty) {
-          return;
-        }
-        const adContainer = ad.el.closest('section[id^="ad-container-"]');
-        if (adContainer) {
-          adContainer.style.display = "flex";
-        }
+      function revealAdWhenFilled(containerId) {
+        const box = document.getElementById(containerId);
+        if (!box) return;
+        const tick = setInterval(() => {
+          const filled = box.querySelector("ins.adsbygoogle iframe");
+          if (filled) {
+            box.style.visibility = "visible";
+            clearInterval(tick);
+          }
+        }, 300);
+        setTimeout(() => clearInterval(tick), 10000);
       }
+      document.addEventListener("DOMContentLoaded", () => {
+        revealAdWhenFilled("ad-container-1");
+        revealAdWhenFilled("ad-container-2");
+      });
     </script>
   </body>
 </html>
