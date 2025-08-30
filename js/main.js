@@ -1,4 +1,4 @@
-// js/main.js (최종 배포용 - 모든 사용자에게 1회 표시)
+// js/main.js (최종 배포용 - 모든 버튼 클릭 시 페이지 이동)
 
 import { loadStreamingList, loadTodoListData, loadNoticeList } from "./api.js";
 import {
@@ -27,16 +27,10 @@ function resetTodoListAtMidnight() {
   }
 }
 
-/**
- * 필요한 경우 알림 허용 유도 팝업을 표시하는 함수 (수정됨)
- */
 function showNotificationPromptIfNeeded() {
-  // ▼▼▼▼▼ [수정] 새로운 버전의 팝업 확인 로직 ▼▼▼▼▼
-  // 이전에 팝업을 봤는지 여부와 상관없이, 'v2' 팝업을 본 적이 없다면 띄웁니다.
   if (localStorage.getItem("notificationPrompt_v2_shown") === "true") {
     return;
   }
-  // ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲
 
   const overlay = document.getElementById("notification-prompt-overlay");
   const panel = document.getElementById("notification-prompt-panel");
@@ -50,19 +44,22 @@ function showNotificationPromptIfNeeded() {
 
   allowBtn.addEventListener("click", async () => {
     const token = await requestNotificationPermission();
-    localStorage.setItem("notificationPrompt_v2_shown", "true"); // 새 버전 확인 기록 저장
+    localStorage.setItem("notificationPrompt_v2_shown", "true");
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
 
-    if (token) {
-      window.location.href = "notice.html";
-    }
+    // '알림 받기'를 누르면 무조건 페이지 이동
+    window.location.href = "notice.html";
   });
 
   denyBtn.addEventListener("click", () => {
-    localStorage.setItem("notificationPrompt_v2_shown", "true"); // 새 버전 확인 기록 저장
+    localStorage.setItem("notificationPrompt_v2_shown", "true");
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
+
+    // ▼▼▼▼▼ [수정] '관심없어요'를 눌러도 페이지 이동하도록 코드 추가 ▼▼▼▼▼
+    window.location.href = "notice.html";
+    // ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
   });
 }
 
