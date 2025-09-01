@@ -32,6 +32,23 @@ async function readTokensFromKV() {
   }
 }
 
+// --- [수정] 알림 전송 로직 (500개씩 분할) ---
+async function sendNotificationsInChunks(tokens, payload) {
+  let successCount = 0;
+  const chunkSize = 500;
+  for (let i = 0; i < tokens.length; i += chunkSize) {
+    const chunk = tokens.slice(i, i + chunkSize);
+    if (chunk.length > 0) {
+      const result = await admin.messaging().sendEachForMulticast({
+        ...payload,
+        tokens: chunk,
+      });
+      successCount += result.successCount;
+    }
+  }
+  return successCount;
+}
+
 // --- 캘린더 이벤트 알림 처리 로직 ---
 async function handleEventReminders(optedInTokens) {
   if (optedInTokens.length === 0) {
@@ -74,7 +91,7 @@ async function handleEventReminders(optedInTokens) {
     return 0;
   }
 
-  let sentCount = 0;
+  let totalSentCount = 0;
   for (const ev of candidates) {
     const uniqueNotificationId = `${ev.id || ev.ID}@${ev.start}`;
     const dedupKey = `reminder-sent:${uniqueNotificationId}`;
@@ -89,8 +106,8 @@ async function handleEventReminders(optedInTokens) {
       hour12: false,
     });
 
-    const result = await admin.messaging().sendEachForMulticast({
-      tokens: optedInTokens,
+    // [수정] 분할 전송 함수 사용
+    const sentCount = await sendNotificationsInChunks(optedInTokens, {
       webpush: {
         notification: {
           title: `🗓️ 곧 시작: ${ev.title || "이벤트"}`,
@@ -102,10 +119,10 @@ async function handleEventReminders(optedInTokens) {
         fcmOptions: { link: "/notice.html" },
       },
     });
-    sentCount += result.successCount;
+    totalSentCount += sentCount;
   }
-  console.log(`[Events] Sent ${sentCount} calendar reminders.`);
-  return sentCount;
+  console.log(`[Events] Sent ${totalSentCount} calendar reminders.`);
+  return totalSentCount;
 }
 
 // --- 새 공지 알림 처리 로직 ---
@@ -115,7 +132,7 @@ async function handleNoticeChecks(optedInTokens) {
     return 0;
   }
 
-  // [수정] 인증 정보 불러오는 방식 변경
+  // 인증 정보 불러오는 방식 변경
   const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
 
   const auth = new google.auth.GoogleAuth({
@@ -157,8 +174,8 @@ async function handleNoticeChecks(optedInTokens) {
       `[Notices] New notice found! ID: ${latestNoticeId}. Sending notifications...`
     );
 
-    const result = await admin.messaging().sendEachForMulticast({
-      tokens: optedInTokens,
+    // [수정] 분할 전송 함수 사용
+    const sentCount = await sendNotificationsInChunks(optedInTokens, {
       notification: {
         title: `📢 새 공지: ${latestNotice.Title}`,
         body: latestNotice.Content.split("\\n")[0],
@@ -170,8 +187,8 @@ async function handleNoticeChecks(optedInTokens) {
     });
 
     await kv.set(LAST_NOTICE_ID_KEY, latestNoticeId);
-    console.log(`[Notices] Sent ${result.successCount} new notice alerts.`);
-    return result.successCount;
+    console.log(`[Notices] Sent ${sentCount} new notice alerts.`);
+    return sentCount;
   }
   return 0;
 }
