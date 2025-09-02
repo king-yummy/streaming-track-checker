@@ -407,14 +407,34 @@ export function initializeAllEventListeners() {
     modalOverlay.classList.add("hidden");
     modalPanel.classList.add("hidden");
   }
-  if (registerBtn) registerBtn.addEventListener("click", openModal);
+
+  // [수정] 링크 등록 버튼 클릭 시 횟수 검사
+  if (registerBtn) {
+    registerBtn.addEventListener("click", () => {
+      const currentClickCount = parseInt(
+        localStorage.getItem("superfanClickCount") || "0"
+      );
+      if (currentClickCount < 619) {
+        alert(
+          `품앗이 링크를 619회 이상 클릭해야 내 링크를 등록할 수 있습니다.\n\n현재 클릭 수: ${currentClickCount}회`
+        );
+        return;
+      }
+      openModal();
+    });
+  }
+
   if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
   if (modalOverlay) modalOverlay.addEventListener("click", closeModal);
 
-  // 링크 등록 로직
+  // [수정] 링크 등록 로직에 클릭 횟수 포함
   if (submitBtn) {
     submitBtn.addEventListener("click", async () => {
       const url = urlInput.value.trim();
+      const currentClickCount = parseInt(
+        localStorage.getItem("superfanClickCount") || "0"
+      );
+
       if (!url) {
         feedback.textContent = "🔗 링크를 입력해주세요.";
         feedback.className = "text-xs pt-1 text-red-500 text-center";
@@ -426,7 +446,7 @@ export function initializeAllEventListeners() {
         const res = await fetch("/api/superfan", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url }),
+          body: JSON.stringify({ url, clickCount: currentClickCount }),
         });
         const result = await res.json();
         if (!res.ok) throw new Error(result.error);
