@@ -10,10 +10,10 @@ export default async function handler(req, res) {
       const { url, clickCount } = req.body;
 
       // [수정] 서버 측에서 클릭 횟수 검증 (클라이언트 조작 방지)
-      if (clickCount === undefined || Number(clickCount) < 619) {
+      if (clickCount === undefined || Number(clickCount) < 2000) {
         return res
           .status(403)
-          .json({ error: "링크를 등록하려면 619회 이상 클릭해야 합니다." });
+          .json({ error: "링크를 등록하려면 2000회 이상 클릭해야 합니다." });
       }
 
       if (!url || !url.startsWith("http")) {

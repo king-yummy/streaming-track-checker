@@ -414,9 +414,9 @@ export function initializeAllEventListeners() {
       const currentClickCount = parseInt(
         localStorage.getItem("superfanClickCount") || "0"
       );
-      if (currentClickCount < 619) {
+      if (currentClickCount < 2000) {
         alert(
-          `품앗이 링크를 619회 이상 클릭해야 내 링크를 등록할 수 있습니다.\n\n현재 클릭 수: ${currentClickCount}회`
+          `품앗이 링크를 2000회 이상 클릭해야 내 링크를 등록할 수 있습니다.\n\n현재 클릭 수: ${currentClickCount}회`
         );
         return;
       }
