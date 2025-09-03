@@ -63,6 +63,48 @@ function showNotificationPromptIfNeeded() {
   });
 }
 
+/**
+ * [신규] 슈퍼팬 관련 긴급 공지 팝업을 띄우는 함수
+ */
+function showUrgentNoticePopup() {
+  // 사용자가 '다시 보지 않기'를 선택했는지 확인
+  if (localStorage.getItem("urgentNotice_superfan_dismissed") === "true") {
+    return;
+  }
+
+  const overlay = document.getElementById("urgent-notice-overlay");
+  const panel = document.getElementById("urgent-notice-panel");
+  const closeBtn = document.getElementById("close-urgent-notice-btn");
+  const dismissBtn = document.getElementById("dismiss-urgent-notice-btn");
+
+  if (!overlay || !panel || !closeBtn || !dismissBtn) {
+    console.error("긴급 공지 팝업 요소를 찾을 수 없습니다.");
+    return;
+  }
+
+  // 팝업 숨기기 함수
+  const hidePopup = () => {
+    overlay.classList.add("hidden");
+    panel.classList.add("hidden");
+  };
+
+  // 팝업 보이기
+  overlay.classList.remove("hidden");
+  panel.classList.remove("hidden");
+
+  // 'X' 버튼 클릭 시 (현재 세션에서만 닫기)
+  closeBtn.addEventListener("click", hidePopup);
+
+  // 팝업 바깥 영역 클릭 시 (현재 세션에서만 닫기)
+  overlay.addEventListener("click", hidePopup);
+
+  // '다시 보지 않기' 버튼 클릭 시 (영구적으로 닫기)
+  dismissBtn.addEventListener("click", () => {
+    localStorage.setItem("urgentNotice_superfan_dismissed", "true");
+    hidePopup();
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   resetTodoListAtMidnight();
   initializeAllEventListeners();
@@ -101,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       loadAllPrimaryData();
     }
+    showUrgentNoticePopup(); // 긴급 공지 팝업 호출
     showNotificationPromptIfNeeded();
   } else if (path.endsWith("notice.html")) {
     initializeNotificationSystem();
