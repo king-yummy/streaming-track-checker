@@ -26,7 +26,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("config", "G-GYGLSJRN79");
       function getUserID() {
         let userID = localStorage.getItem("plli_user_id");
         if (!userID) {
@@ -533,7 +532,26 @@
         </div>
       </div>
       </div>
-
+    
+    <div id="urgent-notice-overlay" class="fixed inset-0 bg-black bg-opacity-70 z-[110] hidden"></div>
+    <div id="urgent-notice-panel" class="fixed inset-0 z-[120] p-4 flex items-center justify-center hidden">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl transform transition-all relative">
+            <button id="close-urgent-notice-btn" class="absolute top-2 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4 text-center text-red-600">긴급 공지!!</h3>
+                <div class="mb-4">
+                    <img src="superfan_notice.png" alt="슈퍼팬 공지" class="w-full h-auto rounded-lg border">
+                </div>
+                <p class="text-sm text-gray-800 mb-5 leading-relaxed text-center">
+                    슈퍼팬 링크 클릭할 때 슈퍼팬 페이지가 아닌 홈 화면이 나온다면,<br>
+                    클릭을 멈추고 <strong class="text-blue-600">시크릿 모드</strong>나 <strong class="text-blue-600">PC</strong>로 이용해주세요!!!
+                </p>
+                <button id="dismiss-urgent-notice-btn" class="w-full py-2.5 px-4 rounded-lg bg-gray-700 text-white font-semibold hover:bg-gray-800">
+                    확인했습니다 (다시 보지 않기)
+                </button>
+            </div>
+        </div>
+    </div>
     <script type="module" src="js/main.js"></script>
     <script src="./js/pw.js"></script>
 
