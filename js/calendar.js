@@ -297,15 +297,27 @@ document.addEventListener("DOMContentLoaded", function () {
     customButtons: {
       addEventButton: {
         text: "+",
-        click: () => openEditModal(new Date().toISOString().slice(0, 10)),
+        click: () => {
+          // GA 이벤트 추가: 새 이벤트 추가 버튼 클릭
+          gtag("event", "calendar_add_event_click");
+          openEditModal(new Date().toISOString().slice(0, 10));
+        },
       },
     },
     events: "/api/events",
     displayEventTime: false,
     dateClick: function (info) {
+      // GA 이벤트 추가: 날짜 클릭
+      gtag("event", "calendar_date_click", {
+        clicked_date: info.dateStr,
+      });
       openDailyEventsModal(info.date, getEventsOnDate(calendar, info.date));
     },
     eventClick: function (info) {
+      // GA 이벤트 추가: 이벤트 클릭
+      gtag("event", "calendar_event_click", {
+        event_title: info.event.title,
+      });
       info.jsEvent.preventDefault();
       const dayCell = info.el.closest(".fc-daygrid-day");
       const dateStr =
@@ -362,8 +374,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const eventData = { id: currentEditingEventId, title, start, end };
 
     if (currentEditingEventId) {
+      // GA 이벤트 추가: 이벤트 수정
+      gtag("event", "calendar_update_event", {
+        event_title: title,
+      });
       await updateEvent(eventData);
     } else {
+      // GA 이벤트 추가: 새 이벤트 저장
+      gtag("event", "calendar_save_new_event", {
+        event_title: title,
+      });
       await addEvent(eventData);
     }
 
@@ -401,6 +421,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function deleteEvent(eventId) {
+    const eventToDelete = calendar.getEventById(eventId);
+    if (eventToDelete) {
+      // GA 이벤트 추가: 이벤트 삭제
+      gtag("event", "calendar_delete_event", {
+        event_title: eventToDelete.title,
+      });
+    }
     await apiRequest("DELETE", { id: eventId });
     closeDailyEventsModal();
     calendar.refetchEvents();

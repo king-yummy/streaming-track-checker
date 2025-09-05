@@ -61,6 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             </details>
         `;
+
+    // GA 이벤트 추가: 투표 가이드 펼쳐보기
+    element.querySelector("details").addEventListener("toggle", (event) => {
+      if (event.target.open) {
+        gtag("event", "view_vote_guide", {
+          guide_title: guide.title,
+          guide_app: guide.app,
+        });
+      }
+    });
     return element;
   }
 
@@ -79,6 +89,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   searchInput.addEventListener("input", (e) => {
     const searchTerm = e.target.value.toLowerCase().trim();
+
+    // GA 이벤트 추가: 가이드 검색
+    gtag("event", "search_vote_guide", {
+      search_term: searchTerm,
+    });
 
     const filterGuides = (guides) => {
       if (!searchTerm) return guides;

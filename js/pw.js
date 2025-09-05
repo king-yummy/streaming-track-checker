@@ -32,9 +32,20 @@ async function copyPasswordForUser() {
 
     feedbackDiv.textContent = "✔️ 비밀번호 복사 완료!";
     feedbackDiv.className = "text-xs pt-1 text-green-600";
+
+    // GA 이벤트 추가: 비밀번호 복사 성공
+    gtag("event", "pw_copy_success", {
+      user_name: username,
+    });
   } catch (error) {
     feedbackDiv.textContent = `❌ ${error.message}`;
     feedbackDiv.className = "text-xs pt-1 text-red-500";
+
+    // GA 이벤트 추가: 비밀번호 복사 실패
+    gtag("event", "pw_copy_failed", {
+      user_name: username,
+      error_message: error.message,
+    });
   } finally {
     // 작업 완료 후, 버튼 다시 활성화
     copyButton.disabled = false;
