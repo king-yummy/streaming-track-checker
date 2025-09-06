@@ -377,7 +377,7 @@ export function initializeAllEventListeners() {
     });
   }
 
-  // ▼▼▼▼▼ 슈퍼팬 관련 로직 (이 부분을 통째로 교체해주세요) ▼▼▼▼▼
+  // ▼▼▼▼▼ 슈퍼팬 관련 로직 (GA 태그 추가됨) ▼▼▼▼▼
   const clickCountSpan = document.getElementById("superfan-click-count");
   let clickCount = parseInt(localStorage.getItem("superfanClickCount") || "0");
   let clickedLinks = JSON.parse(
@@ -393,10 +393,8 @@ export function initializeAllEventListeners() {
   const urlInput = document.getElementById("superfan-url-input");
   const feedback = document.getElementById("superfan-feedback");
 
-  // 페이지 로드 시 클릭 횟수 표시
   if (clickCountSpan) clickCountSpan.textContent = clickCount;
 
-  // 모달 열고 닫기
   function openModal() {
     modalOverlay.classList.remove("hidden");
     modalPanel.classList.remove("hidden");
@@ -408,12 +406,15 @@ export function initializeAllEventListeners() {
     modalPanel.classList.add("hidden");
   }
 
-  // [수정] 링크 등록 버튼 클릭 시 횟수 검사
   if (registerBtn) {
     registerBtn.addEventListener("click", () => {
       const currentClickCount = parseInt(
         localStorage.getItem("superfanClickCount") || "0"
       );
+      gtag("event", "click_register_superfan_link_button", {
+        user_id: userID,
+        current_click_count: currentClickCount,
+      });
       if (currentClickCount < 2000) {
         alert(
           `품앗이 링크를 2000회 이상 클릭해야 내 링크를 등록할 수 있습니다.\n\n현재 클릭 수: ${currentClickCount}회`
@@ -427,7 +428,6 @@ export function initializeAllEventListeners() {
   if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
   if (modalOverlay) modalOverlay.addEventListener("click", closeModal);
 
-  // [수정] 링크 등록 로직에 클릭 횟수 포함
   if (submitBtn) {
     submitBtn.addEventListener("click", async () => {
       const url = urlInput.value.trim();
@@ -451,7 +451,6 @@ export function initializeAllEventListeners() {
         const result = await res.json();
         if (!res.ok) throw new Error(result.error);
 
-        // [개선] 새 링크 등록 시, 로컬 캐시에도 바로 추가
         const cachedLinks = JSON.parse(
           sessionStorage.getItem("superfanLinks") || "[]"
         );
@@ -462,10 +461,18 @@ export function initializeAllEventListeners() {
 
         feedback.textContent = "✅ 등록 완료!";
         feedback.className = "text-xs pt-1 text-green-600 text-center";
+        gtag("event", "superfan_link_submission_success", {
+          user_id: userID,
+          submitted_url: url,
+        });
         setTimeout(closeModal, 1200);
       } catch (err) {
         feedback.textContent = `❌ ${err.message}`;
         feedback.className = "text-xs pt-1 text-red-500 text-center";
+        gtag("event", "superfan_link_submission_failed", {
+          user_id: userID,
+          error_message: err.message,
+        });
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = "등록하기";
@@ -473,28 +480,27 @@ export function initializeAllEventListeners() {
     });
   }
 
-  // 도와주기 버튼 로직
   if (helpBtn) {
     helpBtn.addEventListener("click", async () => {
-      helpBtn.disabled = true; // 중복 클릭 방지
+      helpBtn.disabled = true;
+      gtag("event", "click_help_superfan_button", {
+        user_id: userID,
+        current_click_count: clickCount,
+      });
       try {
-        // 1. 우선 로컬 캐시에서 링크 목록 가져오기
         let allLinks = JSON.parse(
           sessionStorage.getItem("superfanLinks") || "[]"
         );
         let unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
 
-        // 2. 만약 안 누른 링크가 없다면, 서버에 새로 요청해서 목록 갱신
         if (unclicked.length === 0) {
           const res = await fetch("/api/superfan");
           if (!res.ok) throw new Error("링크 목록을 새로고침하지 못했어요.");
-
           allLinks = await res.json();
-          sessionStorage.setItem("superfanLinks", JSON.stringify(allLinks)); // 캐시 갱신
+          sessionStorage.setItem("superfanLinks", JSON.stringify(allLinks));
           unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
         }
 
-        // 3. 갱신 후에도 안 누른 링크가 없다면, 최종 메시지 표시
         if (unclicked.length === 0) {
           alert(
             "모든 링크를 다 누르셨어요! 🎉 새로운 링크가 등록되면 다시 도와주세요."
@@ -502,7 +508,6 @@ export function initializeAllEventListeners() {
           return;
         }
 
-        // 4. 안 누른 링크가 있다면, 랜덤으로 하나 열기
         const next = unclicked[Math.floor(Math.random() * unclicked.length)];
         window.open(next, "_blank");
 
@@ -517,7 +522,7 @@ export function initializeAllEventListeners() {
       } catch (err) {
         alert(`에러: ${err.message}`);
       } finally {
-        helpBtn.disabled = false; // 버튼 다시 활성화
+        helpBtn.disabled = false;
       }
     });
   }
