@@ -69,6 +69,9 @@ function showNotificationPromptIfNeeded() {
 function showUrgentNoticePopup() {
   // 사용자가 '다시 보지 않기'를 선택했는지 확인
   if (localStorage.getItem("urgentNotice_superfan_dismissed") === "true") {
+    // ▼▼▼▼▼ [수정] 긴급 공지를 이미 본 사람에게는 바로 알림 팝업을 띄웁니다. ▼▼▼▼▼
+    showNotificationPromptIfNeeded();
+    // ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲
     return;
   }
 
@@ -79,6 +82,9 @@ function showUrgentNoticePopup() {
 
   if (!overlay || !panel || !closeBtn || !dismissBtn) {
     console.error("긴급 공지 팝업 요소를 찾을 수 없습니다.");
+    // ▼▼▼▼▼ [수정] 긴급 공지 팝업 요소가 없어도 알림 팝업은 시도합니다. ▼▼▼▼▼
+    showNotificationPromptIfNeeded();
+    // ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲
     return;
   }
 
@@ -86,19 +92,22 @@ function showUrgentNoticePopup() {
   const hidePopup = () => {
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
+    // ▼▼▼▼▼ [수정] 긴급 공지 팝업이 닫힌 직후, 알림 팝업을 띄웁니다. ▼▼▼▼▼
+    showNotificationPromptIfNeeded();
+    // ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲
   };
 
   // 팝업 보이기
   overlay.classList.remove("hidden");
   panel.classList.remove("hidden");
 
-  // 'X' 버튼 클릭 시 (현재 세션에서만 닫기)
+  // 'X' 버튼 클릭 시
   closeBtn.addEventListener("click", hidePopup);
 
-  // 팝업 바깥 영역 클릭 시 (현재 세션에서만 닫기)
+  // 팝업 바깥 영역 클릭 시
   overlay.addEventListener("click", hidePopup);
 
-  // '다시 보지 않기' 버튼 클릭 시 (영구적으로 닫기)
+  // '다시 보지 않기' 버튼 클릭 시
   dismissBtn.addEventListener("click", () => {
     localStorage.setItem("urgentNotice_superfan_dismissed", "true");
     hidePopup();
@@ -144,7 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loadAllPrimaryData();
     }
     showUrgentNoticePopup(); // 긴급 공지 팝업 호출
-    showNotificationPromptIfNeeded();
   } else if (path.endsWith("notice.html")) {
     initializeNotificationSystem();
     loadNoticeList().then((noticeData) => {
