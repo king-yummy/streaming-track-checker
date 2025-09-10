@@ -27,10 +27,10 @@ const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 let currentToken = "";
 
-// ▼▼▼▼▼ [신규] 브라우저에 알림 권한을 요청하는 함수 ▼▼▼▼▼
+// ▼▼▼ 브라우저에 알림 권한 요청 및 토큰 저장 ▼▼▼
 /**
  * 브라우저에 알림 권한을 명시적으로 요청하고 서버에 토큰을 저장합니다.
- * @returns {Promise<string|null>} 성공 시 FCM 토큰, 실패 시 null 반환
+ * @returns {Promise<string|null>} 성공 시 FCM 토큰, 실패 시 null
  */
 export async function requestNotificationPermission() {
   let swReg;
@@ -78,10 +78,10 @@ export async function requestNotificationPermission() {
     return null;
   }
 }
-// ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
+// ▲▲▲ 여기까지 ▲▲▲
 
 /**
- * 알림 설정을 서버에 저장하는 함수
+ * 알림 설정을 서버에 저장
  */
 async function saveNotificationSettings() {
   if (!currentToken) {
@@ -104,7 +104,7 @@ async function saveNotificationSettings() {
 }
 
 /**
- * 알림 시스템 전체를 초기화하고 이벤트 리스너를 설정하는 함수 (통합 버전)
+ * 알림 시스템 초기화 (통합)
  */
 export async function initializeNotificationSystem() {
   const alarmToggle = document.getElementById("alarm-toggle");
@@ -146,7 +146,7 @@ export async function initializeNotificationSystem() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token: currentToken,
-          alarmOptIn: alarmToggle.checked, // 통합된 값 전송
+          alarmOptIn: alarmToggle.checked, // 통합 값 전송
         }),
       });
     } catch (e) {
@@ -163,7 +163,7 @@ export async function initializeNotificationSystem() {
           `/api/save-token?token=${encodeURIComponent(token)}`
         );
         if (res.ok) {
-          const { alarmOptIn = false } = await res.json(); // 통합된 값 수신
+          const { alarmOptIn = false } = await res.json();
           alarmToggle.checked = !!alarmOptIn;
         }
       }
@@ -196,10 +196,7 @@ export async function initializeNotificationSystem() {
   });
 }
 
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-// 추가/수정 끝
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
+// --------- TODO 리스너들 ---------
 export function addTodoEventListeners() {
   const userID = getUserID();
   document.querySelectorAll(".accordion-header").forEach((header) => {
@@ -216,6 +213,7 @@ export function addTodoEventListeners() {
       }
     });
   });
+
   document.querySelectorAll(".item-check").forEach((checkbox) => {
     checkbox.addEventListener("change", (e) => {
       const id = e.target.dataset.id;
@@ -245,6 +243,7 @@ export function addTodoEventListeners() {
       groupTitleSpan.classList.toggle("item-done", isAllChecked);
     });
   });
+
   document.querySelectorAll(".group-check").forEach((groupCheckbox) => {
     groupCheckbox.addEventListener("change", (e) => {
       const groupId = e.target.dataset.groupId;
@@ -267,6 +266,7 @@ export function addTodoEventListeners() {
       });
     });
   });
+
   document.querySelectorAll(".tip-button, .reward-button").forEach((button) => {
     button.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -377,15 +377,12 @@ export function initializeAllEventListeners() {
     });
   }
 
-  // ▼▼▼▼▼ 슈퍼팬 관련 로직 (GA 태그 추가됨) ▼▼▼▼▼
+  // ▼▼▼ 슈퍼팬 관련 로직 ▼▼▼
   const clickCountSpan = document.getElementById("superfan-click-count");
   const boosterCountSpan = document.getElementById("booster-count");
   const participantCountSpan = document.getElementById("participant-count");
 
   let clickCount = parseInt(localStorage.getItem("superfanClickCount") || "0");
-  let clickedLinks = JSON.parse(
-    localStorage.getItem("superfanClickedLinks") || "[]"
-  );
 
   const helpBtn = document.getElementById("help-superfan-btn");
   const registerBtn = document.getElementById("register-superfan-link-btn");
@@ -398,7 +395,7 @@ export function initializeAllEventListeners() {
 
   if (clickCountSpan) clickCountSpan.textContent = clickCount;
 
-  // 서버에서 전체 통계 데이터 가져와서 화면 업데이트
+  // 통계 UI 업데이트
   async function updateSuperfanStats() {
     try {
       const res = await fetch("/api/superfan-stats");
@@ -407,13 +404,13 @@ export function initializeAllEventListeners() {
         if (participantCountSpan)
           participantCountSpan.textContent = `${participants}명 참여 중!`;
         if (boosterCountSpan)
-          boosterCountSpan.textContent = `플리 부스터 ${boosterCount}회`;
+          boosterCountSpan.textContent = `🚀 부스터 ${boosterCount}회`;
       }
     } catch (error) {
       console.error("슈퍼팬 통계 로딩 실패:", error);
     }
   }
-  updateSuperfanStats(); // 페이지 로드 시 최초 실행
+  updateSuperfanStats();
 
   function openModal() {
     modalOverlay.classList.remove("hidden");
@@ -500,96 +497,101 @@ export function initializeAllEventListeners() {
     });
   }
 
+  // ======== 광클 친화: helpBtn 핸들러 (유일) ========
   if (helpBtn) {
-    helpBtn.addEventListener("click", async (event) => {
-      // 새 탭에서 열기(Ctrl+Click, Cmd+Click, 마우스 휠 클릭)가 아니면 기본 동작을 막습니다.
-      if (!event.ctrlKey && !event.metaKey && event.button !== 1) {
-        event.preventDefault();
-      }
+    let nextUrl = null;
 
-      helpBtn.disabled = true;
-      gtag("event", "click_help_superfan_button", {
-        user_id: userID,
-        current_click_count: clickCount,
-      });
+    // 제스처 직전: 네이티브 새 탭 동작용 href/target 세팅
+    helpBtn.addEventListener(
+      "mousedown",
+      (e) => {
+        const pickNextUrlSync = () => {
+          let all = JSON.parse(sessionStorage.getItem("superfanLinks") || "[]");
+          let clicked = JSON.parse(
+            localStorage.getItem("superfanClickedLinks") || "[]"
+          );
+          let unclicked = all.filter((u) => !clicked.includes(u));
 
-      try {
-        const token = await getToken(messaging, { vapidKey: VAPID_KEY });
-        if (token) {
-          const res = await fetch("/api/superfan-stats", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token }),
-          });
-          if (res.ok) {
-            updateSuperfanStats();
+          if (unclicked.length === 0 && all.length > 0) {
+            alert(
+              "모든 링크를 다 눌렀어요! 리스트를 갱신하고 다시 시작합니다! 🎉"
+            );
+            localStorage.setItem("superfanClickedLinks", "[]");
+            // 서버에서 최신 링크 목록을 다시 가져오도록 유도 (다음 클릭 시)
+            sessionStorage.removeItem("superfanLinks");
+            return null;
+          }
+          if (unclicked.length === 0) {
+            return null;
+          }
+          return unclicked[Math.floor(Math.random() * unclicked.length)];
+        };
+
+        nextUrl = pickNextUrlSync();
+
+        if (e.button === 1 || e.ctrlKey || e.metaKey) {
+          if (nextUrl) {
+            helpBtn.href = nextUrl;
+          } else {
+            e.preventDefault();
+            alert(
+              "현재 열 수 있는 링크가 없습니다. 잠시 후 다시 시도해주세요."
+            );
           }
         }
-      } catch (err) {
-        console.error("FCM 토큰 가져오기 또는 부스터 기록 실패:", err);
+      },
+      false
+    );
+
+    // 좌클릭 및 기타 클릭 처리
+    helpBtn.addEventListener("click", async (e) => {
+      // 기본 동작(href 이동)을 막고 우리가 제어
+      e.preventDefault();
+
+      if (!nextUrl) {
+        // mousedown에서 링크를 못찾았을 경우(예: 리스트 초기화) 다시 한 번 시도
+        nextUrl = await pickNextUrlSync();
+        if (!nextUrl) return; // 그래도 없으면 종료
       }
 
-      try {
-        let allLinks = JSON.parse(
-          sessionStorage.getItem("superfanLinks") || "[]"
-        );
-        let unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
+      // 사용자 제스처 안에서 새 탭 열기
+      window.open(nextUrl, "_blank", "noopener,noreferrer");
 
-        if (unclicked.length === 0) {
-          clickedLinks = [];
-          localStorage.setItem("superfanClickedLinks", "[]");
-          helpBtn.textContent = "리스트 갱신중..";
-          const res = await fetch("/api/superfan");
-          if (!res.ok) throw new Error("링크 목록을 새로고침하지 못했어요.");
-          allLinks = await res.json();
-          sessionStorage.setItem("superfanLinks", JSON.stringify(allLinks));
-          unclicked = allLinks;
-          alert(
-            "모든 링크를 다 눌렀어요! 리스트를 갱신했으니 다시 시작해주세요! 🎉"
-          );
-          helpBtn.innerHTML = `링크 클릭 <span id="superfan-click-count">${clickCount}</span>회`;
-          return;
+      // 열고 난 뒤, 비동기로 나머지 작업 처리
+      queueMicrotask(async () => {
+        let clicked = JSON.parse(
+          localStorage.getItem("superfanClickedLinks") || "[]"
+        );
+        if (!clicked.includes(nextUrl)) {
+          clicked.push(nextUrl);
+          localStorage.setItem("superfanClickedLinks", JSON.stringify(clicked));
         }
 
-        const next = unclicked[Math.floor(Math.random() * unclicked.length)];
-
-        // [수정] 링크를 여는 방식 변경
-        const tempLink = document.createElement("a");
-        tempLink.href = next;
-        tempLink.target = "_blank";
-        tempLink.rel = "noopener noreferrer";
-
-        // 새 탭에서 열기(Ctrl+Click 등)가 아니면 직접 클릭 이벤트를 발생시킵니다.
-        if (!event.ctrlKey && !event.metaKey && event.button !== 1) {
-          document.body.appendChild(tempLink);
-          tempLink.click();
-          document.body.removeChild(tempLink);
-        } else {
-          // Ctrl+Click 등을 위해 가상의 링크를 만들어 클릭을 위임합니다.
-          const clickEvent = new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-            view: window,
-            ctrlKey: true, // 강제로 ctrlKey를 활성화하여 새 탭 동작 유도
-          });
-          tempLink.dispatchEvent(clickEvent);
-        }
-
-        clickedLinks.push(next);
-        localStorage.setItem(
-          "superfanClickedLinks",
-          JSON.stringify(clickedLinks)
-        );
-        clickCount++;
+        clickCount =
+          parseInt(localStorage.getItem("superfanClickCount") || "0", 10) + 1;
         localStorage.setItem("superfanClickCount", clickCount);
-
         if (clickCountSpan) clickCountSpan.textContent = clickCount;
-      } catch (err) {
-        alert(`에러: ${err.message}`);
-      } finally {
-        helpBtn.disabled = false;
-      }
+
+        gtag("event", "click_help_superfan_button", {
+          user_id: userID,
+          current_click_count: clickCount,
+        });
+
+        try {
+          const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+          if (token) {
+            await fetch("/api/superfan-stats", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token }),
+            });
+            updateSuperfanStats();
+          }
+        } catch (err) {
+          console.warn("부스터 횟수 업데이트 실패:", err);
+        }
+      });
     });
   }
-  // ▲▲▲▲▲ 슈퍼팬 관련 로직 끝 ▲▲▲▲▲
+  // ▲▲▲ 슈퍼팬 로직 끝 ▲▲▲
 }
