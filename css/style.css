@@ -445,3 +445,49 @@
 .fc {
   padding: 0.5rem 0.25rem; /* 기존 0.5rem에서 좌우만 0.25rem으로 변경 */
 }
+
+/* ==========[ 부스터 모드 디자인 개선 ]========== */
+#superfan-section {
+  background: linear-gradient(135deg, #1e293b, #3c096c, #5a189a);
+  animation: booster-background 10s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes booster-background {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.booster-info {
+  font-weight: 600;
+  margin-top: 0.75rem;
+  padding: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+}
+
+.booster-text {
+  display: inline-block;
+  font-weight: 800; /* Extra-bold */
+  font-size: 0.8rem; /* Slightly larger */
+  color: #fef08a; /* Bright yellow */
+  text-shadow: 0 0 6px #facc15;
+}
+
+#help-superfan-btn {
+  background-color: #fde047; /* yellow-300 */
+  color: #78350f; /* amber-800 */
+  font-weight: 800;
+  box-shadow: 0 2px 10px rgba(253, 224, 71, 0.4);
+}
+
+#help-superfan-btn:hover {
+  background-color: #fef08a; /* yellow-200 */
+}

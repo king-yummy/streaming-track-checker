@@ -379,6 +379,9 @@ export function initializeAllEventListeners() {
 
   // ▼▼▼▼▼ 슈퍼팬 관련 로직 (GA 태그 추가됨) ▼▼▼▼▼
   const clickCountSpan = document.getElementById("superfan-click-count");
+  const boosterCountSpan = document.getElementById("booster-count");
+  const participantCountSpan = document.getElementById("participant-count");
+
   let clickCount = parseInt(localStorage.getItem("superfanClickCount") || "0");
   let clickedLinks = JSON.parse(
     localStorage.getItem("superfanClickedLinks") || "[]"
@@ -394,6 +397,23 @@ export function initializeAllEventListeners() {
   const feedback = document.getElementById("superfan-feedback");
 
   if (clickCountSpan) clickCountSpan.textContent = clickCount;
+
+  // 서버에서 전체 통계 데이터 가져와서 화면 업데이트
+  async function updateSuperfanStats() {
+    try {
+      const res = await fetch("/api/superfan-stats");
+      if (res.ok) {
+        const { participants, boosterCount } = await res.json();
+        if (participantCountSpan)
+          participantCountSpan.textContent = `${participants}명 참여 중!`;
+        if (boosterCountSpan)
+          boosterCountSpan.textContent = `플리 부스터 ${boosterCount}회`;
+      }
+    } catch (error) {
+      console.error("슈퍼팬 통계 로딩 실패:", error);
+    }
+  }
+  updateSuperfanStats(); // 페이지 로드 시 최초 실행
 
   function openModal() {
     modalOverlay.classList.remove("hidden");
@@ -487,6 +507,25 @@ export function initializeAllEventListeners() {
         user_id: userID,
         current_click_count: clickCount,
       });
+
+      // FCM 토큰을 가져와서 서버에 부스터 클릭 기록을 남깁니다.
+      try {
+        const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+        if (token) {
+          const res = await fetch("/api/superfan-stats", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token }),
+          });
+          if (res.ok) {
+            // POST 요청 성공 후, 전체 통계를 다시 불러와 화면을 갱신합니다.
+            updateSuperfanStats();
+          }
+        }
+      } catch (err) {
+        console.error("FCM 토큰 가져오기 또는 부스터 기록 실패:", err);
+      }
+
       try {
         let allLinks = JSON.parse(
           sessionStorage.getItem("superfanLinks") || "[]"
@@ -494,16 +533,18 @@ export function initializeAllEventListeners() {
         let unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
 
         if (unclicked.length === 0) {
+          clickedLinks = [];
+          localStorage.setItem("superfanClickedLinks", "[]");
           const res = await fetch("/api/superfan");
           if (!res.ok) throw new Error("링크 목록을 새로고침하지 못했어요.");
           allLinks = await res.json();
           sessionStorage.setItem("superfanLinks", JSON.stringify(allLinks));
-          unclicked = allLinks.filter((l) => !clickedLinks.includes(l));
+          unclicked = allLinks;
         }
 
         if (unclicked.length === 0) {
           alert(
-            "모든 링크를 다 누르셨어요! 🎉 새로운 링크가 등록되면 다시 도와주세요."
+            "등록된 링크가 아직 없어요! 새로운 링크가 등록되면 다시 도와주세요."
           );
           return;
         }
@@ -518,6 +559,7 @@ export function initializeAllEventListeners() {
         );
         clickCount++;
         localStorage.setItem("superfanClickCount", clickCount);
+
         if (clickCountSpan) clickCountSpan.textContent = clickCount;
       } catch (err) {
         alert(`에러: ${err.message}`);
