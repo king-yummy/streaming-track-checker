@@ -501,14 +501,18 @@ export function initializeAllEventListeners() {
   }
 
   if (helpBtn) {
-    helpBtn.addEventListener("click", async () => {
+    helpBtn.addEventListener("click", async (event) => {
+      // 새 탭에서 열기(Ctrl+Click, Cmd+Click, 마우스 휠 클릭)가 아니면 기본 동작을 막습니다.
+      if (!event.ctrlKey && !event.metaKey && event.button !== 1) {
+        event.preventDefault();
+      }
+
       helpBtn.disabled = true;
       gtag("event", "click_help_superfan_button", {
         user_id: userID,
         current_click_count: clickCount,
       });
 
-      // FCM 토큰을 가져와서 서버에 부스터 클릭 기록을 남깁니다.
       try {
         const token = await getToken(messaging, { vapidKey: VAPID_KEY });
         if (token) {
@@ -518,7 +522,6 @@ export function initializeAllEventListeners() {
             body: JSON.stringify({ token }),
           });
           if (res.ok) {
-            // POST 요청 성공 후, 전체 통계를 다시 불러와 화면을 갱신합니다.
             updateSuperfanStats();
           }
         }
@@ -535,22 +538,42 @@ export function initializeAllEventListeners() {
         if (unclicked.length === 0) {
           clickedLinks = [];
           localStorage.setItem("superfanClickedLinks", "[]");
+          helpBtn.textContent = "리스트 갱신중..";
           const res = await fetch("/api/superfan");
           if (!res.ok) throw new Error("링크 목록을 새로고침하지 못했어요.");
           allLinks = await res.json();
           sessionStorage.setItem("superfanLinks", JSON.stringify(allLinks));
           unclicked = allLinks;
-        }
-
-        if (unclicked.length === 0) {
           alert(
-            "등록된 링크가 아직 없어요! 새로운 링크가 등록되면 다시 도와주세요."
+            "모든 링크를 다 눌렀어요! 리스트를 갱신했으니 다시 시작해주세요! 🎉"
           );
+          helpBtn.innerHTML = `링크 클릭 <span id="superfan-click-count">${clickCount}</span>회`;
           return;
         }
 
         const next = unclicked[Math.floor(Math.random() * unclicked.length)];
-        window.open(next, "_blank");
+
+        // [수정] 링크를 여는 방식 변경
+        const tempLink = document.createElement("a");
+        tempLink.href = next;
+        tempLink.target = "_blank";
+        tempLink.rel = "noopener noreferrer";
+
+        // 새 탭에서 열기(Ctrl+Click 등)가 아니면 직접 클릭 이벤트를 발생시킵니다.
+        if (!event.ctrlKey && !event.metaKey && event.button !== 1) {
+          document.body.appendChild(tempLink);
+          tempLink.click();
+          document.body.removeChild(tempLink);
+        } else {
+          // Ctrl+Click 등을 위해 가상의 링크를 만들어 클릭을 위임합니다.
+          const clickEvent = new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            ctrlKey: true, // 강제로 ctrlKey를 활성화하여 새 탭 동작 유도
+          });
+          tempLink.dispatchEvent(clickEvent);
+        }
 
         clickedLinks.push(next);
         localStorage.setItem(
