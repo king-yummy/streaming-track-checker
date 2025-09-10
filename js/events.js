@@ -578,8 +578,20 @@ export function initializeAllEventListeners() {
         });
 
         try {
-          const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+          // 기존에 발급된 토큰이 있으면 그걸 먼저 재사용
+          let token = currentToken;
+
+          // 없으면 동일 SW 컨텍스트로만 getToken → 유령 토큰 방지
+          if (!token) {
+            const swReg = await navigator.serviceWorker.ready;
+            token = await getToken(messaging, {
+              vapidKey: VAPID_KEY,
+              serviceWorkerRegistration: swReg,
+            });
+          }
+
           if (token) {
+            currentToken = token; // 재사용 위해 보관
             await fetch("/api/superfan-stats", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
