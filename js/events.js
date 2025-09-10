@@ -404,7 +404,7 @@ export function initializeAllEventListeners() {
         if (participantCountSpan)
           participantCountSpan.textContent = `${participants}명 참여 중!`;
         if (boosterCountSpan)
-          boosterCountSpan.textContent = `🚀 부스터 ${boosterCount}회`;
+          boosterCountSpan.textContent = `플리 부스터 ${boosterCount}회`;
       }
     } catch (error) {
       console.error("슈퍼팬 통계 로딩 실패:", error);
