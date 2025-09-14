@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       loadAllPrimaryData();
     }
-    showUrgentNoticePopup(); // 긴급 공지 팝업 호출
+    // showUrgentNoticePopup(); // 긴급 공지 팝업 호출
   } else if (path.endsWith("notice.html")) {
     initializeNotificationSystem();
     loadNoticeList().then((noticeData) => {
