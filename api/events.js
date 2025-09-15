@@ -10,7 +10,11 @@ export default async function handler(request, response) {
       // 일정 조회 (GET)
       case "GET":
         const eventHash = await kv.hgetall("events");
-        const events = eventHash ? Object.values(eventHash) : [];
+        let events = eventHash ? Object.values(eventHash) : [];
+
+        // 시작 시간을 기준으로 오름차순 정렬
+        events.sort((a, b) => new Date(a.start) - new Date(b.start));
+
         return response.status(200).json(events);
 
       // 일정 추가 (POST)
@@ -39,11 +43,9 @@ export default async function handler(request, response) {
           end: updatedEnd,
         } = request.body;
         if (!idToUpdate || !updatedTitle || !updatedStart) {
-          return response
-            .status(400)
-            .json({
-              error: "ID, title, and start time are required for update.",
-            });
+          return response.status(400).json({
+            error: "ID, title, and start time are required for update.",
+          });
         }
         const updatedEvent = {
           id: idToUpdate,

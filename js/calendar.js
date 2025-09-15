@@ -167,6 +167,9 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     dailyEventsList.innerHTML = "";
 
+    // 이벤트를 시작 시간 순서대로 정렬합니다.
+    events.sort((a, b) => new Date(a.start) - new Date(b.start));
+
     const closeAllMenus = () => {
       document
         .querySelectorAll(".kebab-menu-options")
