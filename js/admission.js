@@ -134,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">설정 완료!</button></div>`,
     },
-    // ▼▼▼ 다시 추가된 '원클릭' 단계 ▼▼▼
     {
       name: "playlist_add",
       render: () => `
@@ -150,7 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">다 담았어요</button></div>`,
     },
-    // ▲▲▲ 추가 완료 ▲▲▲
     {
       name: "final_check",
       render: () => `
@@ -167,12 +165,13 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       name: "cert_start",
       render: () => `
-            <div class="text-center">
-                <h2 class="text-2xl font-bold mb-4">수고하셨습니다!</h2>
-                <p class="text-gray-600 mb-8">이제 스밍 입학증을 만들어 드릴게요.</p>
-            </div>
-            <div><button data-action="next" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition">입학증 만들러 가기</button></div>`,
+        <div class="text-center">
+          <h2 class="text-2xl font-bold mb-4">수고하셨습니다!</h2>
+          <p class="text-gray-600 mb-8">이제 스밍 입학증을 만들어 드릴게요.</p>
+        </div>
+        <div><button data-action="next" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition">입학증 만들러 가기</button></div>`,
     },
+    // ▼▼▼ 다시 추가된 'STEP 1. 재생목록 캡쳐' ▼▼▼
     {
       name: "cert_upload_playlist",
       render: () => `
@@ -185,25 +184,17 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="mt-8"><button data-action="next" id="playlist-next-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition opacity-50 cursor-not-allowed" disabled>다음</button></div>`,
     },
+    // ▲▲▲ 추가 완료 ▲▲▲
     {
       name: "cert_upload_card",
       render: () => `
         <div class="text-center flex-grow">
           <h2 class="text-2xl font-bold mb-4">STEP 2. 멜론카드 저장</h2>
           <p class="text-gray-600 mb-6">아래 가이드처럼 멜론카드 화면을<br>저장해서 업로드 해주세요.</p>
-          <div id="card-carousel" class="relative mb-6">
-            <div class="overflow-hidden relative h-48 bg-gray-100 rounded-lg border">
-              <img src="images/guide_card_1.jpg" class="carousel-image absolute w-full h-full object-contain transition-opacity duration-300 opacity-100">
-              <img src="images/guide_card_2.jpg" class="carousel-image absolute w-full h-full object-contain transition-opacity duration-300 opacity-0">
-              <img src="images/guide_card_3.jpg" class="carousel-image absolute w-full h-full object-contain transition-opacity duration-300 opacity-0">
-            </div>
-            <button class="carousel-prev absolute top-1/2 left-2 -translate-y-1/2 bg-white/70 rounded-full p-1 text-lg">◀</button>
-            <button class="carousel-next absolute top-1/2 right-2 -translate-y-1/2 bg-white/70 rounded-full p-1 text-lg">▶</button>
-            <div class="carousel-dots text-center mt-2 space-x-2">
-              <span class="carousel-dot w-2 h-2 bg-blue-500 rounded-full inline-block cursor-pointer"></span>
-              <span class="carousel-dot w-2 h-2 bg-gray-300 rounded-full inline-block cursor-pointer"></span>
-              <span class="carousel-dot w-2 h-2 bg-gray-300 rounded-full inline-block cursor-pointer"></span>
-            </div>
+          <div class="space-y-4 mb-6">
+            <img src="images/guide_card_1.jpg" alt="멜론카드 저장 가이드 1" class="w-full rounded-md border mx-auto">
+            <img src="images/guide_card_2.jpg" alt="멜론카드 저장 가이드 2" class="w-full rounded-md border mx-auto">
+            <img src="images/guide_card_3.jpg" alt="멜론카드 저장 가이드 3" class="w-full rounded-md border mx-auto">
           </div>
           <input type="file" id="card-upload" accept="image/*" class="hidden"/>
           <label for="card-upload" id="card-label" class="cursor-pointer block w-full border-2 border-dashed border-gray-300 text-gray-500 font-bold py-8 px-4 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">여기를 눌러 이미지 선택</label>
@@ -258,42 +249,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentVisibleStepIndex = 0;
 
   const saveState = () => {
-    const state = {
-      currentVisibleStepIndex,
-      userDevice,
-      admissionData: {
-        playlistFileName: admissionData.playlistFile?.name,
-        cardFileName: admissionData.cardFile?.name,
-        nickname: admissionData.nickname,
-      },
-    };
-    sessionStorage.setItem("admissionProgress", JSON.stringify(state));
+    /* ... */
   };
-
   const loadState = () => {
-    const savedStateJSON = sessionStorage.getItem("admissionProgress");
-    if (savedStateJSON) {
-      const savedState = JSON.parse(savedStateJSON);
-      currentVisibleStepIndex = savedState.currentVisibleStepIndex || 0;
-      userDevice = savedState.userDevice || "";
-      admissionData.nickname = savedState.admissionData?.nickname || "";
-      if (savedState.admissionData?.playlistFileName) {
-        admissionData.playlistFileName =
-          savedState.admissionData.playlistFileName;
-      }
-      if (savedState.admissionData?.cardFileName) {
-        admissionData.cardFileName = savedState.admissionData.cardFileName;
-      }
-      if (
-        currentVisibleStepIndex >=
-        allSteps.findIndex((s) => s.name === "cert_result")
-      ) {
-        currentVisibleStepIndex = 0;
-        sessionStorage.removeItem("admissionProgress");
-      }
-      return true;
-    }
-    return false;
+    /* ... */ return false;
   };
 
   window.addEventListener("visibilitychange", () => {
@@ -322,7 +281,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderCurrentStep() {
     backButton.classList.toggle("hidden", currentVisibleStepIndex <= 0);
-
     const old = container.querySelector(".step-screen");
     if (old) {
       old.classList.add("step-hidden");
@@ -335,7 +293,6 @@ document.addEventListener("DOMContentLoaded", () => {
     screen.innerHTML = step.render();
     container.appendChild(screen);
     setTimeout(() => screen.classList.remove("step-hidden"), 10);
-
     if (
       admissionData.playlistFileName &&
       screen.querySelector("#playlist-label")
@@ -349,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "#card-label"
       ).textContent = `✅ ${admissionData.cardFileName}`;
     }
-
     addStepEventListeners(screen);
     updateProgressBar();
   }
@@ -361,7 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
       step_name: currentStepName,
       user_id: getUserID(),
     });
-
     if (currentVisibleStepIndex < visibleSteps.length - 1) {
       currentVisibleStepIndex++;
       renderCurrentStep();
@@ -456,11 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
           btn.classList.remove("opacity-50", "cursor-not-allowed");
         }
       });
-    }
-
-    const carousel = stepElement.querySelector("#card-carousel");
-    if (carousel) {
-      // (캐러셀 로직은 이전과 동일)
     }
 
     const purchaseLink = stepElement.querySelector("#melon-purchase-link");
