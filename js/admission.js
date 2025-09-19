@@ -570,8 +570,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const tempCtx = tempCanvas.getContext("2d");
     tempCanvas.width = originalImage.width;
     tempCanvas.height = originalImage.height;
+
+    // 원본 이미지 그리기
     tempCtx.drawImage(originalImage, 0, 0);
 
+    // 워터마크 스타일 설정
     const fontSize = Math.max(36, Math.floor(originalImage.width / 10));
     tempCtx.font = `bold ${fontSize}px Pretendard`;
     tempCtx.fillStyle = "rgba(255,255,255,0.25)";
@@ -580,15 +583,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tempCtx.save();
     tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-    tempCtx.rotate(-Math.PI / 6);
+    tempCtx.rotate(-Math.PI / 6); // 텍스트 기울기
 
-    const stepX = fontSize * 4;
-    const stepY = fontSize * 4;
-    for (let x = -tempCanvas.width; x < tempCanvas.width; x += stepX) {
-      for (let y = -tempCanvas.height; y < tempCanvas.height; y += stepY) {
+    // ▼▼▼ Y 간격(stepY)을 줄여서 줄 간격을 촘촘하게 수정 ▼▼▼
+    const stepX = fontSize * 2.5; // 가로 간격
+    const stepY = fontSize * 1.2; // 세로 줄 간격 (숫자를 줄여서 더 촘촘하게)
+
+    // 그리는 범위는 넉넉하게 설정
+    for (let x = -tempCanvas.width; x < tempCanvas.width * 2; x += stepX) {
+      for (let y = -tempCanvas.height; y < tempCanvas.height * 2; y += stepY) {
         tempCtx.fillText(text, x, y);
       }
     }
+    // ▲▲▲ 수정 완료 ▲▲▲
+
     tempCtx.restore();
 
     const blob = await new Promise((resolve) => tempCanvas.toBlob(resolve));
