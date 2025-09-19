@@ -134,6 +134,23 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">설정 완료!</button></div>`,
     },
+    // ▼▼▼ 다시 추가된 '원클릭' 단계 ▼▼▼
+    {
+      name: "playlist_add",
+      render: () => `
+        <div class="text-center">
+          <h2 class="text-2xl font-bold mb-4">스밍리스트 원클릭 담기</h2>
+          <p class="text-gray-600 mb-6">아래 링크 4개를 순서대로 모두 클릭하면<br>플레이리스트가 자동으로 완성됩니다.</p>
+          <div class="grid grid-cols-2 gap-3">
+              <a href="https://tinyurl.com/4hkbdx8c" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
+              <a href="https://tinyurl.com/2ft4u95u" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
+              <a href="https://tinyurl.com/4s8w5ezd" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
+              <a href="https://tinyurl.com/nhzj28kj" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+          </div>
+        </div>
+        <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">다 담았어요</button></div>`,
+    },
+    // ▲▲▲ 추가 완료 ▲▲▲
     {
       name: "final_check",
       render: () => `
