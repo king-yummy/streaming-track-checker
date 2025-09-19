@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       render: () => `
         <div class="text-center">
           <h2 class="text-2xl font-bold mb-2">멜론 스밍, 처음이신가요?</h2>
-          <p class="text-gray-600 mb-8">입학처만 따라오시면 5분 안에 입학 완료!</p>
+          <p class="text-gray-600 mb-8">입학처만 따라오시면 5분 안에 입학 완료!<br>입학 인증서 받고 이벤트 참여해보세요❤️</p>
         </div>
         <div><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">시작하기</button></div>`,
     },
