@@ -491,3 +491,51 @@
 #help-superfan-btn:hover {
   background-color: #fef08a; /* yellow-200 */
 }
+
+/* ==========[ 슈퍼팬 부스터 섹션 스타일 ]========== */
+#superfan-section {
+  background: linear-gradient(135deg, #4c1d95, #5b21b6, #7c3aed);
+  background-size: 200% 200%;
+  animation: booster-background 8s ease infinite;
+}
+
+@keyframes booster-background {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 버튼 하이라이트 애니메이션 */
+.btn-shine {
+  position: relative;
+  isolation: isolate;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  transform: skewX(-20deg) translateX(-150%);
+  animation: plli-shine 2.6s infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+@keyframes plli-shine {
+  0% {
+    transform: skewX(-20deg) translateX(-150%);
+  }
+  100% {
+    transform: skewX(-20deg) translateX(150%);
+  }
+}

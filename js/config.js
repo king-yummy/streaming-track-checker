@@ -7,6 +7,7 @@ export const GOOGLE_SHEETS_API_KEY = "AIzaSyC1ChqA2Nc_ry82lMjsqPaR93B_FywoDOY";
 export const STREAMING_SHEET_TITLE = "StreamingList";
 export const TODO_SHEET_TITLE = "TodoList";
 export const NOTICE_SHEET_TITLE = "notice";
+export const SUPERFAN_SHEET_TITLE = "SuperfanLink";
 
 // 스밍 리스트 관련 변수
 export const START_AT_MS = new Date("2025-06-16T00:00:00+09:00").getTime();
