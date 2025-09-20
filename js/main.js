@@ -208,6 +208,7 @@ function updateSuperfanUI() {
     superfanButton.disabled = true;
     if (statusLight) statusLight.title = "모든 링크에 참여했습니다.";
     setSuperfanStatus("done");
+    gtag("event", "superfan_all_links_completed", { user_id: getUserID() });
   } else if (allSuperfanLinks.length > 0) {
     superfanButton.textContent = "🚀 슈퍼PLLI팬 부스터";
     superfanButton.disabled = false;
@@ -254,6 +255,7 @@ async function handleSuperfanClick() {
 /** 슈퍼팬 기능 초기화 */
 async function initializeSuperfanFeature() {
   if (!document.getElementById("superfan-section")) return; // 관련 섹션이 없으면 실행 안함
+  gtag("event", "superfan_feature_loaded", { user_id: getUserID() });
 
   loadClickedLinks();
   allSuperfanLinks = await loadSuperfanLinks();
