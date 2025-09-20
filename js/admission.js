@@ -240,6 +240,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 </p>
               </div>
             </div>
+            
+            <section
+              id="ad-container-result"
+              class="my-4 p-4 bg-white rounded-2xl shadow"
+            >
+              <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+                ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+              </h3>
+              <div style="text-align: center">
+                <ins
+                  class="adsbygoogle"
+                  style="display: block"
+                  data-ad-client="ca-pub-9063401338616510"
+                  data-ad-slot="3718792037"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"
+                ></ins>
+                <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+              </div>
+            </section>
+            
           </div>
         </div>`,
     },
@@ -578,22 +601,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const fontSize = Math.max(36, Math.floor(originalImage.width / 10));
     tempCtx.font = `bold ${fontSize}px Pretendard`;
     tempCtx.fillStyle = "rgba(255,255,255,0.25)";
-    tempCtx.textAlign = "center";
+    tempCtx.textAlign = "left"; // 텍스트 정렬을 왼쪽으로 변경
     tempCtx.textBaseline = "middle";
 
     tempCtx.save();
     tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
     tempCtx.rotate(-Math.PI / 6); // 텍스트 기울기
 
-    // ▼▼▼ Y 간격(stepY)을 줄여서 줄 간격을 촘촘하게 수정 ▼▼▼
-    const stepX = fontSize * 2.5; // 가로 간격
-    const stepY = fontSize * 1.2; // 세로 줄 간격 (숫자를 줄여서 더 촘촘하게)
+    const singleTextWidth = tempCtx.measureText(text).width;
+    const repeatCount = Math.ceil(
+      (tempCanvas.width + tempCanvas.height) / singleTextWidth
+    );
+    const lineOfText = text.repeat(repeatCount * 2);
 
-    // 그리는 범위는 넉넉하게 설정
-    for (let x = -tempCanvas.width; x < tempCanvas.width * 2; x += stepX) {
-      for (let y = -tempCanvas.height; y < tempCanvas.height * 2; y += stepY) {
-        tempCtx.fillText(text, x, y);
-      }
+    // ▼▼▼ 세로 줄 간격을 더 촘촘하게 수정 ▼▼▼
+    const stepY = fontSize * 1.2;
+
+    for (let y = -tempCanvas.height; y < tempCanvas.height; y += stepY) {
+      const x = -tempCanvas.width - (y % (singleTextWidth * 2));
+      tempCtx.fillText(lineOfText, x, y);
     }
     // ▲▲▲ 수정 완료 ▲▲▲
 
