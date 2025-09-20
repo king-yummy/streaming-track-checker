@@ -257,9 +257,6 @@ document.addEventListener("DOMContentLoaded", () => {
                   data-ad-format="auto"
                   data-full-width-responsive="true"
                 ></ins>
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
               </div>
             </section>
             
@@ -549,6 +546,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
       resultContent.classList.remove("hidden");
+
+      // 광고를 요청하는 코드를 이곳에 추가합니다.
+      (adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
       gtag("event", "admission_generate_error", {
         error_message: err.message,
