@@ -172,7 +172,6 @@
         </div>
       </section>
 
-      <!-- 슈퍼팬 섹션 -->
       <section
         id="superfan-section"
         class="relative w-full max-w-md mt-4 mb-2 overflow-hidden rounded-2xl text-white bg-gradient-to-br from-amber-400 via-rose-400 to-indigo-500 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ring-1 ring-white/20"
@@ -258,7 +257,6 @@
         </div>
       </section>
 
-      <!-- 광고 컨테이너 1 -->
       <section
         id="ad-container-1"
         class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
@@ -289,9 +287,6 @@
         </div>
       </section>
     </div>
-  </body>
-</html>
-      <!-- 대시보드 -->
       <section
         id="dashboard"
         class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow flex flex-col items-center space-y-3"
@@ -318,7 +313,6 @@
         </div>
       </section>
 
-      <!-- 광고 컨테이너 2 -->
       <section
         id="ad-container-2"
         class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
@@ -349,7 +343,6 @@
         </div>
       </section>
 
-      <!-- footer -->
       <footer
         class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2"
       >
@@ -456,12 +449,11 @@
       </footer>
     </div>
 
-    <!-- 공지 모달 -->
     <div id="notice-modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[130] hidden"></div>
     <div id="notice-modal-panel" class="fixed inset-0 z-[140] p-4 flex items-center justify-center hidden">
       <div class="w-full max-w-md bg-white rounded-2xl shadow-xl transform transition-all relative">
            <button id="close-notice-modal-btn" class="absolute top-2 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
-          <div class="p-6 prose max-w-none">
+          <div class="p-6">
               <h3 class="text-2xl font-extrabold text-center text-red-600 mb-4 animate-bounce">
                 🚨 [뮤니버스 엠픽 투표팀 모집] 🚨
               </h3>
@@ -469,23 +461,27 @@
                 숨바꼭질로 “실물상” 받을 마지막 기회!<br>
                 🔥 화력을 태워야합니다🔥
               </p>
-              <ul class="space-y-1">
-  <li>📌 <strong>해당 투표:</strong> 쇼! 음악중심 917회 STAGE M PICK</li>
-  <li>🔗 <strong>URL:</strong> <a href="..." target="_blank">https://www.muniverse.io/votehome</a></li>
-  <li>⏰ <strong>활동 기간:</strong> ~ 2025년 9월 25일 11시</li>
-</ul>
+              <ul class="space-y-1 mt-4">
+                <li>📌 <strong>해당 투표:</strong> 쇼! 음악중심 917회 STAGE M PICK</li>
+                <li>🔗 <strong>URL:</strong> <a href="https://www.muniverse.io/votehome" target="_blank" class="text-blue-600 hover:underline">https://www.muniverse.io/votehome</a></li>
+                <li>⏰ <strong>활동 기간:</strong> ~ 2025년 9월 25일 11시</li>
+              </ul>
 
-              <p>📌입장코드: LIT1101</p>
+              <p class="mt-4">📌입장코드: LIT1101</p>
               <p>📌카카오프로필 입장 후 이름은 순서대로 번호(숫자)로 바꿔주세요!</p>
               <img src="https://i.imgur.com/JBvJGSe.jpg" alt="투표 현황" class="w-full rounded-md my-2 border">
               <p>충분히 뒤집을 수 있는 상황입니다.</p>
               <p class="text-center font-bold text-lg text-rose-600">
                 우리 애들한테 트로피 한번 안겨줍시다!!!!!!!<br>많은 지원 부탁드립니다 🙏
               </p>
+               <div class="grid grid-cols-1 sm:grid-cols-1 gap-3 mt-4">
+                  <a href="https://open.kakao.com/o/ghXyRKTh" target="_blank" class="block w-full text-center bg-yellow-400 text-black font-bold py-3 px-4 rounded-lg hover:bg-yellow-500 transition">
+                      🤝 계정 생성팀 지원
+                  </a>
+              </div>
           </div>
       </div>
     </div>
-    <!-- bottom nav -->
     <nav
       id="bottom-nav"
       class="fixed bottom-0 inset-x-0 z-[95] w-full max-w-md mx-auto"
@@ -503,7 +499,6 @@
       </button>
     </nav>
 
-    <!-- todolist bottom sheet -->
     <div
       id="todolist-overlay"
       class="fixed inset-0 bg-black bg-opacity-50 z-[90] hidden"
@@ -529,7 +524,6 @@
       </div>
     </div>
 
-    <!-- details modal -->
     <div
       id="details-modal-overlay"
       class="fixed inset-0 bg-black bg-opacity-60 z-[110] hidden"
@@ -558,7 +552,6 @@
       </div>
     </div>
 
-    <!-- 긴급 공지 관련 -->
     <div id="urgent-notice-overlay" class="fixed inset-0 bg-black bg-opacity-70 z-[110] hidden"></div>
     <div id="urgent-notice-panel" class="fixed inset-0 z-[120] p-4 flex items-center justify-center hidden">
         <div class="w-full max-w-md bg-white rounded-2xl shadow-xl transform transition-all relative">
@@ -579,26 +572,6 @@
         </div>
     </div>
 
-    <!-- 긴급 버튼 전용 모달 -->
-    <div id="emergency-modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[110] hidden"></div>
-    <div id="emergency-modal-panel" class="fixed inset-0 z-[120] p-4 flex items-center justify-center hidden">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl transform transition-all relative">
-            <button id="close-emergency-modal-btn" class="absolute top-2 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
-            <div class="p-6">
-                <h3 class="text-xl font-bold mb-4 text-center text-red-600">긴급 공지</h3>
-                <div class="space-y-4">
-                    <button id="notice-button" class="block w-full text-center bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">
-                        [공지]
-                    </button>
-                    <a href="https://open.kakao.com/o/ghXyRKTh" target="_blank" class="block w-full text-center bg-yellow-400 text-black font-bold py-3 px-4 rounded-lg hover:bg-yellow-500 transition">
-                        [생성방 지원]
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- script -->
     <script type="module" src="js/main.js"></script>
     <script src="./js/pw.js"></script>
     <script>
@@ -622,31 +595,12 @@
         revealAdWhenFilled("ad-container-4");
         
         const emergencyButton = document.getElementById('emergency-button');
-        const emergencyModalOverlay = document.getElementById('emergency-modal-overlay');
-        const emergencyModalPanel = document.getElementById('emergency-modal-panel');
-        const closeEmergencyModalBtn = document.getElementById('close-emergency-modal-btn');
-
-        const noticeButton = document.getElementById('notice-button');
         const noticeModalOverlay = document.getElementById('notice-modal-overlay');
         const noticeModalPanel = document.getElementById('notice-modal-panel');
         const closeNoticeModalBtn = document.getElementById('close-notice-modal-btn');
 
         emergencyButton.addEventListener('click', () => {
             gtag('event', 'click_emergency_button', { 'user_id': getUserID() });
-            emergencyModalOverlay.classList.remove('hidden');
-            emergencyModalPanel.classList.remove('hidden');
-        });
-
-        const closeEmergencyModal = () => {
-            emergencyModalOverlay.classList.add('hidden');
-            emergencyModalPanel.classList.add('hidden');
-        }
-
-        closeEmergencyModalBtn.addEventListener('click', closeEmergencyModal);
-        emergencyModalOverlay.addEventListener('click', closeEmergencyModal);
-
-        noticeButton.addEventListener('click', () => {
-            closeEmergencyModal();
             noticeModalOverlay.classList.remove('hidden');
             noticeModalPanel.classList.remove('hidden');
         });
