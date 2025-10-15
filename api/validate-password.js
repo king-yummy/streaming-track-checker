@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       return res
         .status(404)
         .json({
-          message: `현재 시간(KST ${date} ${kstHour}:${kstMinute})에 해당하는 비밀번호가 없습니다.`,
+          message: `현재 시간(${date} ${kstHour}:${kstMinute})에 해당하는 비밀번호가 없습니다.`,
         });
       // ▲▲▲▲▲ 수정 끝 ▲▲▲▲▲
     }
