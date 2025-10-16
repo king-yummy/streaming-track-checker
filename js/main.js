@@ -33,14 +33,16 @@ function isStandalone() {
 }
 
 function openMnetExternally(url) {
-  // iOS PWA(standalone) 환경에서는 새 탭이 막히므로 같은 탭으로 이동
   if (isiOS() && isStandalone()) {
     window.location.href = url;
     return;
   }
-
-  // 👇 크롬 등 일반 브라우저에서도 그냥 같은 탭으로 이동
-  window.location.href = url;
+  setTimeout(() => {
+    const newWindow = window.open(url, "_blank");
+    if (!newWindow) {
+      window.location.href = url;
+    }
+  }, 50);
 }
 
 function openMnetAndroid(url) {
