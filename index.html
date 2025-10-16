@@ -13,11 +13,6 @@
     />
     <script
       async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9063401338616510"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      async
       src="https://www.googletagmanager.com/gtag/js?id=G-GYGLSJRN79"
     ></script>
     <script>
@@ -26,6 +21,10 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
+      gtag('config', 'G-GYGLSJRN79', {
+        transport_type: 'beacon'
+        // SPA 라우팅이면 send_page_view: false 로 두고 라우팅마다 page_view 수동 전송
+      });
 
       function getUserID() {
         let userID = localStorage.getItem("plli_user_id");
@@ -43,6 +42,12 @@
         return userID;
       }
     </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9063401338616510"
+      crossorigin="anonymous"
+    ></script>
+    
     <meta name="theme-color" content="#dbeafe" />
     <meta name="google-adsense-account" content="ca-pub-9063401338616510" />
     <link
@@ -593,20 +598,22 @@
         const noticeModalPanel = document.getElementById('notice-modal-panel');
         const closeNoticeModalBtn = document.getElementById('close-notice-modal-btn');
 
-        emergencyButton.addEventListener('click', () => {
-            gtag('event', 'click_emergency_button', { 'user_id': getUserID() });
-            noticeModalOverlay.classList.remove('hidden');
-            noticeModalPanel.classList.remove('hidden');
-        });
+        if (emergencyButton && noticeModalOverlay && noticeModalPanel) {
+    emergencyButton.addEventListener('click', () => {
+      gtag('event', 'click_emergency_button', { user_id: getUserID() });
+      noticeModalOverlay.classList.remove('hidden');
+      noticeModalPanel.classList.remove('hidden');
+    });
+  }
 
-        const closeNoticeModal = () => {
-            noticeModalOverlay.classList.add('hidden');
-            noticeModalPanel.classList.add('hidden');
-        }
+  const closeNoticeModal = () => {
+    if (noticeModalOverlay) noticeModalOverlay.classList.add('hidden');
+    if (noticeModalPanel) noticeModalPanel.classList.add('hidden');
+  };
 
-        closeNoticeModalBtn.addEventListener('click', closeNoticeModal);
-        noticeModalOverlay.addEventListener('click', closeNoticeModal);
-      });
+  if (closeNoticeModalBtn) closeNoticeModalBtn.addEventListener('click', closeNoticeModal);
+  if (noticeModalOverlay)  noticeModalOverlay.addEventListener('click', closeNoticeModal);
+});
     </script>
   </body>
 </html>
