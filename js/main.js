@@ -26,26 +26,24 @@ function isiOS() {
   return /iP(hone|ad|od)/i.test(navigator.userAgent);
 }
 function isStandalone() {
-  return window.matchMedia?.("(display-mode: standalone)").matches || navigator.standalone;
+  return (
+    window.matchMedia?.("(display-mode: standalone)").matches ||
+    navigator.standalone
+  );
 }
 
 // --- Mnet 외부 오픈 ---
 function openMnetExternally(url) {
-  // ✅ iOS PWA(standalone)에서는 새 탭이 막히므로 같은 탭으로 바로 이동
+  // iOS PWA(standalone) 환경에서는 새 탭이 막히므로 같은 탭으로 이동
   if (isiOS() && isStandalone()) {
     window.location.href = url;
     return;
   }
-
-  // 그 외(일반 사파리/데스크톱/안드로이드 웹 등)는 새 탭 허용
-  const a = document.createElement("a");
-  a.href = url;
-  a.target = "_blank";
-  // 절대 'noreferrer' 넣지 말 것! Referer 필요 → 'noopener'만
-  a.rel = "noopener";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  // 그 외 환경에서는 window.open을 사용해 새 탭을 열고, 실패하면 현재 탭으로 이동
+  const newWindow = window.open(url, "_blank", "noopener");
+  if (!newWindow) {
+    window.location.href = url;
+  }
 }
 
 function openMnetAndroid(url) {
