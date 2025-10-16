@@ -22,8 +22,17 @@ import {
 const MNET_HOSTS = ["share.mnetplus.world", "mnetplus.world"];
 
 function openMnetExternally(url) {
-  // iOS PWA(WebView)도 클릭 제스처 안이면 window.open 허용됨
-  window.open(url, "_blank", "noopener"); // 절대 'noreferrer' 쓰지 말 것
+  // 동적으로 앵커 생성
+  const a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  // 절대 'noreferrer'를 넣지 말 것!  'noopener'만 지정
+  a.rel = "noopener";
+  // DOM에 추가 후 클릭
+  document.body.appendChild(a);
+  a.click();
+  // 클릭 후 제거
+  document.body.removeChild(a);
 }
 
 function openMnetAndroid(url) {
