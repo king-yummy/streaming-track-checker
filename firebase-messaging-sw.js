@@ -5,43 +5,47 @@ importScripts(
   "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"
 );
 
-// ================== 강제 캐시/버전 관리 ==================
-const SW_VERSION = "2025-10-17-01"; // ← 배포할 때마다 값 바꾸기
-
-// 설치 즉시 대기 없이 활성화
+// ================== 강제 리셋 (이번 배포에서 각 클라이언트 1회만) ==================
 self.addEventListener("install", () => self.skipWaiting());
 
-// 활성화 시: 모든 기존 캐시 삭제 + 제어권 획득
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      // 1) 모든 캐시 삭제(화이트리스트가 필요하면 여기서 분기)
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => caches.delete(k)));
+      // 캐시리셋이 이미 끝났는지 표시하는 마커 캐시
+      const MARK_CACHE = "oneoff_reset_marker";
+      const MARK_URL = "/__oneoff_reset_done__";
 
-      // 2) 모든 클라이언트(탭) 제어
+      const markCache = await caches.open(MARK_CACHE);
+      const already = await markCache.match(MARK_URL);
+
+      if (!already) {
+        // 1) 모든 기존 캐시 삭제(화이트리스트 필요하면 여기서 분기)
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+
+        // 2) 마커 기록 → 다음 활성화부턴 삭제 안 함
+        await markCache.put(MARK_URL, new Response("1", { status: 200 }));
+      }
+
+      // 3) 페이지 제어
       await self.clients.claim();
 
-      // 3) 새 SW 활성화 통지(선택)
+      // 4) (선택) 새 SW 적용 알림
       const clients = await self.clients.matchAll({
         type: "window",
         includeUncontrolled: true,
       });
-      clients.forEach((c) =>
-        c.postMessage({ type: "SW_ACTIVATED", version: SW_VERSION })
-      );
+      clients.forEach((c) => c.postMessage({ type: "SW_ACTIVATED" }));
     })()
   );
 });
 
-// 대기중인 SW를 즉시 올리기 위한 메시지 핸들러(선택)
+// 대기중인 SW 즉시 올리기(선택)
 self.addEventListener("message", (e) => {
   if (e.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 // ================== Firebase Messaging ==================
-const swSelf = self;
-
 firebase.initializeApp({
   apiKey: "AIzaSyDam42H9W_iouj0rkMZDDzSWsrmx8BlVkQ",
   authDomain: "plli-checker.firebaseapp.com",
@@ -58,26 +62,28 @@ messaging.onBackgroundMessage((_payload) => {
 });
 
 // 알림 클릭 시 기존 탭 포커싱 또는 새 창
-swSelf.addEventListener("notificationclick", (event) => {
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const targetUrl = event.notification.data?.fcmOptions?.link;
   const urlToOpen = targetUrl
-    ? new URL(targetUrl, swSelf.location.origin).href
+    ? new URL(targetUrl, self.location.origin).href
     : "/";
 
   event.waitUntil(
-    swSelf.clients
-      .matchAll({ type: "window", includeUncontrolled: true })
-      .then((clientsArr) => {
-        const focused = clientsArr.some((wc) =>
-          wc.url === urlToOpen ? (wc.focus(), true) : false
-        );
-        if (!focused) {
-          return swSelf.clients
-            .openWindow(urlToOpen)
-            .then((wc) => (wc ? wc.focus() : null));
+    (async () => {
+      const clientsArr = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+      for (const wc of clientsArr) {
+        if (wc.url === urlToOpen) {
+          await wc.focus();
+          return;
         }
-      })
+      }
+      const opened = await self.clients.openWindow(urlToOpen);
+      if (opened) await opened.focus();
+    })()
   );
 });
 
@@ -93,7 +99,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // (선택) 자체 페이지(navigate)는 캐시 관여 안 하고 통과
+  // 내부 navigate도 별도 캐싱 없이 통과(필요시 여기서 앱쉘 전략 추가)
   if (
     event.request.mode === "navigate" &&
     url.origin === self.location.origin
@@ -101,5 +107,5 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 나머지 요청들은 여기서 별도 캐싱 미적용(그대로 통과)
+  // 나머지 요청은 그대로 통과(캐싱 미적용)
 });
