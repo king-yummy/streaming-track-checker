@@ -21,17 +21,33 @@ import {
 // ==== Mnetplus 외부 오픈 유틸 ====
 const MNET_HOSTS = ["share.mnetplus.world", "mnetplus.world"];
 
+// --- iOS / PWA 감지 유틸 ---
+function isiOS() {
+  return /iP(hone|ad|od)/i.test(navigator.userAgent);
+}
+function isStandalone() {
+  return (
+    window.matchMedia?.("(display-mode: standalone)").matches ||
+    navigator.standalone
+  );
+}
+
+// --- Mnet 외부 오픈 ---
 function openMnetExternally(url) {
-  // 동적으로 앵커 생성
+  // ✅ iOS PWA(standalone)에서는 새 탭이 막히므로 같은 탭으로 바로 이동
+  if (isiOS() && isStandalone()) {
+    window.location.href = url;
+    return;
+  }
+
+  // 그 외(일반 사파리/데스크톱/안드로이드 웹 등)는 새 탭 허용
   const a = document.createElement("a");
   a.href = url;
   a.target = "_blank";
-  // 절대 'noreferrer'를 넣지 말 것!  'noopener'만 지정
+  // 절대 'noreferrer' 넣지 말 것! Referer 필요 → 'noopener'만
   a.rel = "noopener";
-  // DOM에 추가 후 클릭
   document.body.appendChild(a);
   a.click();
-  // 클릭 후 제거
   document.body.removeChild(a);
 }
 
