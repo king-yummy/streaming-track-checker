@@ -26,10 +26,7 @@ function isiOS() {
   return /iP(hone|ad|od)/i.test(navigator.userAgent);
 }
 function isStandalone() {
-  return (
-    window.matchMedia?.("(display-mode: standalone)").matches ||
-    navigator.standalone
-  );
+  return window.matchMedia?.("(display-mode: standalone)").matches || navigator.standalone;
 }
 
 // --- Mnet 외부 오픈 ---
