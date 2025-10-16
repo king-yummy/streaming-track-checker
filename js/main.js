@@ -1,4 +1,4 @@
-// js/main.js (최종 배포용 - 모든 버튼 클릭 시 페이지 이동)
+// js/main.js (최종 배포용 - Mnetplus 외부 오픈 & Superfan 섹션 완전 복원)
 
 import {
   loadStreamingList,
@@ -17,6 +17,42 @@ import {
   renderTodoList,
   checkNewNotices,
 } from "./ui.js";
+
+// ==== Mnetplus 외부 오픈 유틸 ====
+const MNET_HOSTS = ["share.mnetplus.world", "mnetplus.world"];
+
+function openMnetExternally(url) {
+  // iOS PWA(WebView)도 클릭 제스처 안이면 window.open 허용됨
+  window.open(url, "_blank", "noopener"); // 절대 'noreferrer' 쓰지 말 것
+}
+
+function openMnetAndroid(url) {
+  // 패키지명 확인 필요. 기본값:
+  const pkg = "com.cjenm.mnetplus";
+  const intentUrl =
+    "intent://" +
+    url.replace(/^https?:\/\//, "") +
+    "#Intent;scheme=https;package=" +
+    pkg +
+    ";S.browser_fallback_url=" +
+    encodeURIComponent(url) +
+    ";end";
+  location.href = intentUrl;
+}
+
+// 엠넷 링크는 항상 외부(앱/브라우저)로 열기: 전역 클릭 위임
+function handleMnetLinkClick(e) {
+  const a = e.target.closest?.("a[href]");
+  if (!a) return;
+  const u = new URL(a.href, location.href);
+  if (!MNET_HOSTS.includes(u.hostname)) return;
+  e.preventDefault();
+  if (/Android/i.test(navigator.userAgent)) {
+    openMnetAndroid(a.href);
+  } else {
+    openMnetExternally(a.href);
+  }
+}
 
 function resetTodoListAtMidnight() {
   const today = new Date().toLocaleDateString();
@@ -52,8 +88,6 @@ function showNotificationPromptIfNeeded() {
     localStorage.setItem("notificationPrompt_v2_shown", "true");
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
-
-    // '알림 받기'를 누르면 무조건 페이지 이동
     window.location.href = "notice.html";
   });
 
@@ -61,22 +95,13 @@ function showNotificationPromptIfNeeded() {
     localStorage.setItem("notificationPrompt_v2_shown", "true");
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
-
-    // ▼▼▼▼▼ [수정] '관심없어요'를 눌러도 페이지 이동하도록 코드 추가 ▼▼▼▼▼
     window.location.href = "notice.html";
-    // ▲▲▲▲▲ 여기까지 추가 ▲▲▲▲▲
   });
 }
 
-/**
- * [신규] 슈퍼팬 관련 긴급 공지 팝업을 띄우는 함수
- */
 function showUrgentNoticePopup() {
-  // 사용자가 '다시 보지 않기'를 선택했는지 확인
   if (localStorage.getItem("urgentNotice_superfan_dismissed") === "true") {
-    // ▼▼▼▼▼ [수정] 긴급 공지를 이미 본 사람에게는 바로 알림 팝업을 띄웁니다. ▼▼▼▼▼
     showNotificationPromptIfNeeded();
-    // ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲
     return;
   }
 
@@ -87,36 +112,32 @@ function showUrgentNoticePopup() {
 
   if (!overlay || !panel || !closeBtn || !dismissBtn) {
     console.error("긴급 공지 팝업 요소를 찾을 수 없습니다.");
-    // ▼▼▼▼▼ [수정] 긴급 공지 팝업 요소가 없어도 알림 팝업은 시도합니다. ▼▼▼▼▼
     showNotificationPromptIfNeeded();
-    // ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲
     return;
   }
 
-  // 팝업 숨기기 함수
   const hidePopup = () => {
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
-    // ▼▼▼▼▼ [수정] 긴급 공지 팝업이 닫힌 직후, 알림 팝업을 띄웁니다. ▼▼▼▼▼
     showNotificationPromptIfNeeded();
-    // ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲
   };
 
-  // 팝업 보이기
   overlay.classList.remove("hidden");
   panel.classList.remove("hidden");
 
-  // 'X' 버튼 클릭 시
   closeBtn.addEventListener("click", hidePopup);
-
-  // 팝업 바깥 영역 클릭 시
   overlay.addEventListener("click", hidePopup);
-
-  // '다시 보지 않기' 버튼 클릭 시
   dismissBtn.addEventListener("click", () => {
     localStorage.setItem("urgentNotice_superfan_dismissed", "true");
     hidePopup();
   });
+}
+
+// ✅ Superfan 클릭 기록 초기화 (시트 변경 대응 — 초회 1회만 실행)
+const CURRENT_SUPERFAN_VERSION = "v2_choice"; // ← 배포할 때 버전명만 바꿔주면 됨
+if (localStorage.getItem("superfan_version") !== CURRENT_SUPERFAN_VERSION) {
+  localStorage.removeItem("superfan_clicked_links");
+  localStorage.setItem("superfan_version", CURRENT_SUPERFAN_VERSION);
 }
 
 // --- 슈퍼팬 기능 상태 변수 ---
@@ -130,14 +151,14 @@ const myClicksEl = document.getElementById("my-clicks");
 const totalLinksEl = document.getElementById("total-links");
 const statusLight = document.getElementById("superfan-status-light");
 
-// [NEW] 업그레이드 UI 요소(있으면 사용, 없으면 무시)
+// 업그레이드 UI 요소(있으면 사용)
 const statusLabel = document.getElementById("superfan-status-label");
 const statusPing = document.getElementById("superfan-status-ping");
 const myShareBar = document.getElementById("my-share-bar");
 const mySharePercent = document.getElementById("my-share-percent");
 const superfanCounter = document.getElementById("superfan-counter");
 
-// [NEW] 상태 라이트/라벨/핑 제어
+// 상태 표시 제어
 function setSuperfanStatus(mode) {
   if (!statusLight) return;
   statusLight.classList.remove(
@@ -162,7 +183,7 @@ function setSuperfanStatus(mode) {
   }
 }
 
-// [NEW] 진행바/퍼센트 갱신
+// 진행바/퍼센트 갱신
 function updateShareProgress() {
   const my =
     parseInt((myClicksEl?.textContent || "0").replace(/\D/g, ""), 10) || 0;
@@ -175,7 +196,7 @@ function updateShareProgress() {
     superfanCounter.textContent = `내 클릭수 / 현재 총 링크수: ${my} / ${total}`;
 }
 
-/** 클릭한 링크 목록을 브라우저 저장소에서 불러오기 */
+// 클릭 데이터 로드/저장
 function loadClickedLinks() {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
@@ -186,13 +207,11 @@ function loadClickedLinks() {
     }
   }
 }
-
-/** 클릭한 링크 목록을 브라우저 저장소에 저장하기 */
 function saveClickedLinks() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...clickedSuperfanLinks]));
 }
 
-/** UI 업데이트 (카운터, 버튼 상태) */
+// UI 갱신
 function updateSuperfanUI() {
   if (!myClicksEl || !totalLinksEl || !superfanButton) return;
 
@@ -204,13 +223,13 @@ function updateSuperfanUI() {
   );
 
   if (unclickedLinks.length === 0 && allSuperfanLinks.length > 0) {
-    superfanButton.textContent = "모든 링크 완료! ✅";
+    superfanButton.textContent = "All Boosts Done!";
     superfanButton.disabled = true;
     if (statusLight) statusLight.title = "모든 링크에 참여했습니다.";
     setSuperfanStatus("done");
     gtag("event", "superfan_all_links_completed", { user_id: getUserID() });
   } else if (allSuperfanLinks.length > 0) {
-    superfanButton.textContent = "🚀 슈퍼PLLI팬 부스터";
+    superfanButton.textContent = "Click Here to Boost!";
     superfanButton.disabled = false;
     if (statusLight) statusLight.title = "참여 가능";
     setSuperfanStatus("ready");
@@ -224,7 +243,7 @@ function updateSuperfanUI() {
   updateShareProgress();
 }
 
-/** 슈퍼팬 버튼 클릭 이벤트 핸들러 */
+// 슈퍼팬 버튼 클릭
 async function handleSuperfanClick() {
   gtag("event", "click_superfan_button", { user_id: getUserID() });
 
@@ -233,28 +252,35 @@ async function handleSuperfanClick() {
   );
 
   if (unclickedLinks.length === 0) {
-    alert(
-      "모든 링크에 참여해주셔서 감사합니다! 새로운 링크가 올라오면 다시 활성화됩니다."
-    );
+    alert("모든 링크 완료!");
     return;
   }
 
-  // 중복되지 않은 링크 중 하나를 랜덤으로 선택
   const randomIndex = Math.floor(Math.random() * unclickedLinks.length);
   const linkToOpen = unclickedLinks[randomIndex];
 
-  // 새 탭으로 링크 열기
-  window.open(linkToOpen, "_blank");
+  try {
+    const u = new URL(linkToOpen);
+    if (
+      MNET_HOSTS.includes(u.hostname) &&
+      /Android/i.test(navigator.userAgent)
+    ) {
+      openMnetAndroid(linkToOpen);
+    } else {
+      openMnetExternally(linkToOpen);
+    }
+  } catch {
+    openMnetExternally(linkToOpen);
+  }
 
-  // 클릭한 링크로 기록
   clickedSuperfanLinks.add(linkToOpen);
   saveClickedLinks();
   updateSuperfanUI();
 }
 
-/** 슈퍼팬 기능 초기화 */
+// 초기화
 async function initializeSuperfanFeature() {
-  if (!document.getElementById("superfan-section")) return; // 관련 섹션이 없으면 실행 안함
+  if (!document.getElementById("superfan-section")) return;
   gtag("event", "superfan_feature_loaded", { user_id: getUserID() });
 
   loadClickedLinks();
@@ -263,8 +289,6 @@ async function initializeSuperfanFeature() {
 
   if (superfanButton) {
     superfanButton.addEventListener("click", handleSuperfanClick);
-
-    // [NEW] 버튼 마이크로 인터랙션
     superfanButton.addEventListener(
       "click",
       () => {
@@ -275,7 +299,6 @@ async function initializeSuperfanFeature() {
     );
   }
 
-  // [NEW] 숫자 변화 자동 반영(진행바/퍼센트)
   const obsCfg = { childList: true, characterData: true, subtree: true };
   if (myClicksEl)
     new MutationObserver(updateShareProgress).observe(myClicksEl, obsCfg);
@@ -284,12 +307,15 @@ async function initializeSuperfanFeature() {
   updateShareProgress();
 }
 
+// === 메인 초기화 ===
 document.addEventListener("DOMContentLoaded", () => {
   resetTodoListAtMidnight();
   initializeAllEventListeners();
+  document.addEventListener("click", handleMnetLinkClick); // ✅ 추가
+
   const path = window.location.pathname;
   if (path.endsWith("/") || path.endsWith("index.html")) {
-    initializeSuperfanFeature(); // 슈퍼팬 기능 초기화 함수 호출 추가
+    initializeSuperfanFeature();
     const loadingScreen = document.getElementById("loading-screen");
     const mainContent = document.getElementById("main-content");
     loadNoticeList().then(checkNewNotices);
@@ -299,6 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.setItem("superfanLinks", JSON.stringify(links));
       })
       .catch((err) => console.error("슈퍼팬 링크 미리 로딩 실패:", err));
+
     if (sessionStorage.getItem("isInitialized")) {
       const cachedSchedule = JSON.parse(
         sessionStorage.getItem("streamingSchedule")
@@ -323,7 +350,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       loadAllPrimaryData();
     }
-    showNotificationPromptIfNeeded(); // 알림 허용 팝업 직접 호출
+
+    showNotificationPromptIfNeeded();
   } else if (path.endsWith("notice.html")) {
     initializeNotificationSystem();
     loadNoticeList().then((noticeData) => {
@@ -332,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// === Service Worker 등록 ===
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker

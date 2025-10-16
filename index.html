@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PLLI 스밍/투표 체크</title>
+    <!-- ✅ 추가: Referrer 정책 (엠넷 리다이렉트 깨짐 방지) -->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" href="icon-512.png" />
@@ -172,9 +174,10 @@
       </section>
 
       <section
-    id="superfan-section"
-    class="relative w-full max-w-md mt-4 mb-2 overflow-hidden rounded-2xl text-white bg-gradient-to-br from-amber-400 via-rose-400 to-indigo-500 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ring-1 ring-white/20 hidden"
+  id="superfan-section"
+  class="relative w-full max-w-md mt-4 mb-2 overflow-hidden rounded-2xl text-white bg-gradient-to-br from-amber-400 via-rose-400 to-indigo-500 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ring-1 ring-white/20"
 >
+
         <div
           class="pointer-events-none absolute inset-0 opacity-25 bg-[radial-gradient(80%_60%_at_20%_0%,white,transparent_70%)]"
         ></div>
@@ -184,7 +187,7 @@
             <h2
               class="text-lg sm:text-xl font-extrabold tracking-tight drop-shadow"
             >
-              ✨ 슈퍼PLLI팬 품앗이
+              ✨ 슈퍼플리 품앗이
             </h2>
 
             <div class="flex items-center gap-2">

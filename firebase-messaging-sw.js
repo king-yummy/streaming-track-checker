@@ -55,3 +55,26 @@ swSelf.addEventListener("notificationclick", (event) => {
       })
   );
 });
+
+// ==== 외부 네비게이션 가로채지 않기 ====
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+
+  // 우리 도메인이 아닌 페이지 이동(navigate)은 가로채지 않음
+  if (
+    event.request.mode === "navigate" &&
+    url.origin !== self.location.origin
+  ) {
+    return; // respondWith 호출 안 함 → 브라우저 기본 동작
+  }
+
+  // 다른 fetch는 기존 로직 없으면 그냥 패스 (여기선 아무 것도 안 함)
+});
+
+// ==== 새 SW 즉시 활성화(선택 권장) ====
+self.addEventListener("install", () => {
+  self.skipWaiting();
+});
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
