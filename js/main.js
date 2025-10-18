@@ -401,55 +401,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const el = document.querySelector(".scroll-inner");
   if (!el) return;
 
-  // 터치: 내부 여유가 있으면 내부만, 끝에 닿으면 기본 동작 유지(=페이지로 체이닝)
-  let lastY = 0;
-  el.addEventListener(
-    "touchstart",
-    (e) => {
-      if (e.touches.length !== 1) return;
-      lastY = e.touches[0].clientY;
-    },
-    { passive: true }
-  );
+  // ✅ 관성 스크롤을 살리기 위해 preventDefault / 수동 scrollTop 조작 제거
+  //    브라우저에게 스크롤 제어를 완전히 맡기면 슝슝~ 자연스러워집니다.
 
-  el.addEventListener(
-    "touchmove",
-    (e) => {
-      if (e.touches.length !== 1) return;
-      const y = e.touches[0].clientY;
-      const dy = y - lastY;
-      lastY = y;
+  // 단순히 스크롤 상태만 감시(선택적)
+  const updateEdgeState = () => {
+    const atTop = el.scrollTop <= 0;
+    const atBottom =
+      Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+    el.classList.toggle("at-top", atTop);
+    el.classList.toggle("at-bottom", atBottom);
+  };
 
-      const atTop = el.scrollTop <= 0;
-      const atBottom =
-        Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+  el.addEventListener("scroll", updateEdgeState, { passive: true });
+  updateEdgeState();
 
-      // 엣지(최상/최하단)에서는 기본 동작 유지 → 바깥(페이지)로 자연스럽게 이어짐
-      if ((dy > 0 && atTop) || (dy < 0 && atBottom)) return;
-
-      // 내부에 여유가 있으면 내부 스크롤에만 집중
-      e.preventDefault();
-      el.scrollTop -= dy;
-    },
-    { passive: false }
-  );
-
-  // 데스크톱 휠/트랙패드도 동일한 원리
-  el.addEventListener(
-    "wheel",
-    (e) => {
-      const delta = e.deltaY;
-      const atTop = el.scrollTop <= 0;
-      const atBottom =
-        Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
-
-      if ((delta < 0 && !atTop) || (delta > 0 && !atBottom)) {
-        e.preventDefault();
-        el.scrollTop += delta;
-        return;
-      }
-      // 엣지에선 기본 동작 유지 → 페이지로 체이닝
-    },
-    { passive: false }
-  );
+  // ✨ 이제 터치나 휠 이벤트를 직접 제어하지 않습니다.
+  //     -> 브라우저가 자체 관성 스크롤 + 체이닝을 담당합니다.
 });

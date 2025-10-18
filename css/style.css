@@ -560,12 +560,12 @@
 
 /* 내부 스크롤 영역 */
 .scroll-inner {
-  max-height: 60vh; /* 필요시 반응형으로 68vh 등 조절 */
+  max-height: 60vh;
   overflow-y: auto;
-  overscroll-behavior-y: auto; /* ← 체이닝 허용! (contain 지움) */
-  -webkit-overflow-scrolling: touch; /* iOS 관성 스크롤 */
+  overscroll-behavior-y: auto; /* ← 체이닝 허용 */
+  -webkit-overflow-scrolling: touch; /* ← iOS 관성 스크롤 */
   touch-action: pan-y;
-  padding-right: 0.25rem; /* 스크롤바 여백 */
+  padding-right: 0.25rem;
 }
 
 /* 바깥 스크롤 시작 지대 (선택) */
