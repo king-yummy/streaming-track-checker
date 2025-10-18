@@ -121,16 +121,22 @@
         </a>
       </div>
 
-      <!-- ✨ 스밍리스트 섹션 -->
-<section class="w-full max-w-md mt-4">
-  
-  <!-- 내부 스크롤 카드 -->
+      <section class="w-full max-w-md mt-4">
+  <!-- 바깥 스크롤 시작용 엣지존 (위) -->
+  <div class="edge-zone" aria-hidden="true"></div>
+
   <div class="scroll-card rounded-2xl bg-white shadow p-2">
-    <div class="max-h-[60vh] sm:max-h-[68vh] overflow-y-auto overscroll-contain pr-1">
-      <ul id="playlist" class="space-y-2"></ul>
+    <div class="scroll-inner" tabindex="0" aria-label="스밍리스트 스크롤 영역">
+      <ul id="playlist" class="space-y-2">
+        <!-- li들 -->
+      </ul>
     </div>
   </div>
+
+  <!-- 바깥 스크롤 시작용 엣지존 (아래) -->
+  <div class="edge-zone" aria-hidden="true"></div>
 </section>
+
 
       <section
         class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow"

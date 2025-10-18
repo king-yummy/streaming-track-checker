@@ -392,3 +392,64 @@ if ("serviceWorker" in navigator) {
       });
   });
 }
+
+// === 스밍리스트 내부/외부 스크롤 핸드오프 (모바일/PC 공통) ===
+document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+  if (!(path.endsWith("/") || path.endsWith("index.html"))) return;
+
+  const el = document.querySelector(".scroll-inner");
+  if (!el) return;
+
+  // 터치: 내부 여유가 있으면 내부만, 끝에 닿으면 기본 동작 유지(=페이지로 체이닝)
+  let lastY = 0;
+  el.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.touches.length !== 1) return;
+      lastY = e.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  el.addEventListener(
+    "touchmove",
+    (e) => {
+      if (e.touches.length !== 1) return;
+      const y = e.touches[0].clientY;
+      const dy = y - lastY;
+      lastY = y;
+
+      const atTop = el.scrollTop <= 0;
+      const atBottom =
+        Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+
+      // 엣지(최상/최하단)에서는 기본 동작 유지 → 바깥(페이지)로 자연스럽게 이어짐
+      if ((dy > 0 && atTop) || (dy < 0 && atBottom)) return;
+
+      // 내부에 여유가 있으면 내부 스크롤에만 집중
+      e.preventDefault();
+      el.scrollTop -= dy;
+    },
+    { passive: false }
+  );
+
+  // 데스크톱 휠/트랙패드도 동일한 원리
+  el.addEventListener(
+    "wheel",
+    (e) => {
+      const delta = e.deltaY;
+      const atTop = el.scrollTop <= 0;
+      const atBottom =
+        Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+
+      if ((delta < 0 && !atTop) || (delta > 0 && !atBottom)) {
+        e.preventDefault();
+        el.scrollTop += delta;
+        return;
+      }
+      // 엣지에선 기본 동작 유지 → 페이지로 체이닝
+    },
+    { passive: false }
+  );
+});

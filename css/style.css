@@ -542,7 +542,7 @@
 
 /* ===== 스밍리스트 스크롤 카드 ===== */
 
-/* 위아래가 딱 끊겨 보이지 않도록 페이드 마스크 */
+/* 카드 페이드 마스크 (위아래가 딱 끊겨 보이지 않게) */
 .scroll-card {
   -webkit-mask-image: linear-gradient(
     transparent 0,
@@ -558,23 +558,33 @@
   );
 }
 
-/* iOS 부드러운 스크롤 */
-.scroll-card > div {
-  -webkit-overflow-scrolling: touch;
+/* 내부 스크롤 영역 */
+.scroll-inner {
+  max-height: 60vh; /* 필요시 반응형으로 68vh 등 조절 */
+  overflow-y: auto;
+  overscroll-behavior-y: auto; /* ← 체이닝 허용! (contain 지움) */
+  -webkit-overflow-scrolling: touch; /* iOS 관성 스크롤 */
+  touch-action: pan-y;
+  padding-right: 0.25rem; /* 스크롤바 여백 */
 }
 
-/* 스크롤바 커스텀 (지원 브라우저에서만 표시) */
-.scroll-card > div::-webkit-scrollbar {
+/* 바깥 스크롤 시작 지대 (선택) */
+.edge-zone {
+  height: 20px; /* 16~24px 추천 */
+}
+
+/* 스크롤바 커스텀 (지원 브라우저) */
+.scroll-inner::-webkit-scrollbar {
   width: 6px;
 }
-.scroll-card > div::-webkit-scrollbar-track {
+.scroll-inner::-webkit-scrollbar-track {
   background: #f3f4f6; /* gray-100 */
   border-radius: 9999px;
 }
-.scroll-card > div::-webkit-scrollbar-thumb {
+.scroll-inner::-webkit-scrollbar-thumb {
   background: #cbd5e1; /* slate-300 */
   border-radius: 9999px;
 }
-.scroll-card > div::-webkit-scrollbar-thumb:hover {
+.scroll-inner::-webkit-scrollbar-thumb:hover {
   background: #94a3b8; /* slate-400 */
 }
