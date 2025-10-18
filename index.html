@@ -121,9 +121,17 @@
         </a>
       </div>
 
-      <main class="w-full max-w-md space-y-2 overflow-auto mt-4">
-        <ul id="playlist" class="space-y-2"></ul>
-      </main>
+      <!-- ✨ 스밍리스트 섹션 -->
+<section class="w-full max-w-md mt-4">
+  
+  <!-- 내부 스크롤 카드 -->
+  <div class="scroll-card rounded-2xl bg-white shadow p-2">
+    <div class="max-h-[60vh] sm:max-h-[68vh] overflow-y-auto overscroll-contain pr-1">
+      <ul id="playlist" class="space-y-2"></ul>
+    </div>
+  </div>
+</section>
+
       <section
         class="w-full max-w-md mt-4 mb-2 p-4 bg-white rounded-2xl shadow"
       >
@@ -252,7 +260,7 @@
             </p>
 
             <p class="mt-2 text-[12px] opacity-85 leading-relaxed">
-              💡 엠넷 투표 페이지로 안 넘어간다면 크롬에서 접속해주세요.
+              💡 투표 페이지로 안 넘어간다면 크롬 (혹은 시크릿모드) 접속하기
             </p>
           </div>
         </div>
