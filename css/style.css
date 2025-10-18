@@ -560,7 +560,7 @@
 
 /* 내부 스크롤 영역 */
 .scroll-inner {
-  max-height: 60vh;
+  max-height: 53vh;
   overflow-y: auto;
   overscroll-behavior-y: auto; /* ← 체이닝 허용 */
   -webkit-overflow-scrolling: touch; /* ← iOS 관성 스크롤 */
