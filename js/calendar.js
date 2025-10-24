@@ -288,6 +288,8 @@ document.addEventListener("DOMContentLoaded", function () {
     initialView: "dayGridMonth",
     height: "auto",
     locale: "ko",
+    defaultTimedEventDuration: "00:05:00",
+    nextDayThreshold: "00:00:00",
     titleFormat: {
       year: "numeric",
       month: "short",
