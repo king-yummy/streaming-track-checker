@@ -373,6 +373,9 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       end = `${endDateInput.value}T${endTime24}`;
     }
+    if (end === null) {
+      end = start;
+    }
 
     const eventData = { id: currentEditingEventId, title, start, end };
 
