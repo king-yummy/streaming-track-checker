@@ -15,10 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
       name: "start",
       render: () => `
         <div class="text-center">
-          <h2 class="text-2xl font-bold mb-2">멜론 스밍, 처음이신가요?</h2>
-          <p class="text-gray-600 mb-8">입학처만 따라오시면 5분 안에 입학 완료!<br>입학 인증서 받고 이벤트 참여해보세요❤️</p>
+          <h2 class="text-2xl font-bold mb-4 leading-tight">멜론 스밍, 제대로 하고 있나요?</h2>
+<p class="text-gray-600 leading-relaxed text-center mb-10 px-4">
+  지금 스밍 방법을 다시 점검해보세요!<br />
+  스페셜 입학증은 <strong>11월 10일 오후 3시</strong>까지만<br />
+  발급 받을 수 있어요 💗
+</p>
+
+
         </div>
-        <div><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">시작하기</button></div>`,
+        <div><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">시작하기</button></div>`,
     },
     {
       name: "device_choice",
@@ -38,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <h2 class="text-2xl font-bold mb-4">멜론 앱 설치 및 가입</h2>
           <p class="text-gray-600 mb-8">스토어에서 멜론(Melon) 앱을 다운로드하고<br>회원가입을 완료해주세요.</p>
         </div>
-        <div><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">완료했어요</button></div>`,
+        <div><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">완료했어요</button></div>`,
     },
     {
       name: "purchase_pass",
@@ -57,7 +63,37 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           <img src="images/purchase.jpg" alt="이용권 구매 안내" class="w-full rounded-md my-4 border mx-auto">
         </div>
-        <div><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">구매했어요</button></div>`,
+        <div><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">구매했어요</button></div>`,
+    },
+    {
+      name: "settings_intro",
+      render: () => `
+    <div class="text-center px-6 pt-8">
+      <h2 class="text-2xl font-bold mb-6 leading-tight">
+        멜론 설정 시작하기 🎧
+      </h2>
+
+      <div class="text-gray-700 leading-relaxed max-w-md mx-auto space-y-6">
+        <p>
+          지금부터 진행되는 단계는 음총팀이 제시한<br />
+          스밍 가이드를 기반으로 제작되었어요.
+        </p>
+        <p>
+          다음 내용을 반드시 따라야 누락 없이 <br />
+          성적이 정확하게 반영됩니다.
+        </p>
+      </div>
+
+      <div class="mt-10">
+        <button
+          data-action="next"
+          class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition"
+        >
+          설정 시작하기
+        </button>
+      </div>
+    </div>
+  `,
     },
     {
       name: "settings_1",
@@ -69,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="text-gray-600 mb-6">먼저, 설정 화면으로 들어가주세요.</p>
           <img src="images/settings_1.jpg" alt="설정 화면 가이드" class="w-full rounded-md my-4 border mx-auto">
         </div>
-        <div><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">다음</button></div>`,
+        <div><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">다음</button></div>`,
     },
     {
       name: "settings_2_quality",
@@ -84,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="images/settings_quality_2.jpg" alt="곡 음질 가이드 2" class="w-full rounded-md border mx-auto">
           </div>
         </div>
-        <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">다음</button></div>`,
+        <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">다음</button></div>`,
     },
     {
       name: "settings_3_playlist",
@@ -99,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="images/settings_playlist_2.jpg" alt="재생목록 설정 가이드 2" class="w-full rounded-md border mx-auto">
           </div>
         </div>
-        <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">다음</button></div>`,
+        <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">다음</button></div>`,
     },
     {
       name: "settings_4_cache",
@@ -114,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="images/settings_cache_2.jpg" alt="캐시 설정 가이드 2" class="w-full rounded-md border mx-auto">
           </div>
         </div>
-        <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">${
+        <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">${
           userDevice === "android" ? "다음" : "설정 완료!"
         }</button></div>`,
     },
@@ -132,22 +168,54 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="images/settings_advanced_4.jpg" alt="고급 설정 4" class="w-full rounded-md border">
           </div>
         </div>
-        <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">설정 완료!</button></div>`,
+        <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">설정 완료!</button></div>`,
     },
     {
       name: "playlist_add",
       render: () => `
-        <div class="text-center">
-          <h2 class="text-2xl font-bold mb-4">스밍리스트 원클릭 담기</h2>
-          <p class="text-gray-600 mb-6">아래 링크 4개를 순서대로 모두 클릭하면<br>플레이리스트가 자동으로 완성됩니다.</p>
-          <div class="grid grid-cols-2 gap-3">
-              <a href="https://tinyurl.com/4hkbdx8c" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-              <a href="https://tinyurl.com/2ft4u95u" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-              <a href="https://tinyurl.com/4s8w5ezd" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-              <a href="https://tinyurl.com/nhzj28kj" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
-          </div>
-        </div>
-        <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">다 담았어요</button></div>`,
+    <div class="text-center">
+      <h2 class="text-2xl font-bold mb-4">스밍리스트 원클릭 담기</h2>
+      <p class="text-gray-600 mb-6">
+        아래 링크 4개를 순서대로 모두 클릭하면<br />
+        플레이리스트가 자동으로 완성됩니다.
+      </p>
+
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <a href="https://tinyurl.com/4hkbdx8c" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
+        <a href="https://tinyurl.com/2ft4u95u" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
+        <a href="https://tinyurl.com/4s8w5ezd" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
+        <a href="https://tinyurl.com/nhzj28kj" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+      </div>
+
+      <!-- 설명 박스 -->
+      <div class="text-left bg-pink-50 border border-pink-100 rounded-xl p-4 space-y-3">
+        <p class="text-sm font-semibold text-pink-700">
+          왜 원클릭으로 똑같이 담으라고 하나요?
+        </p>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          같은 목록을 <strong>정각에 맞춰 같은 타이밍</strong>에 여러 명이 돌리면
+          그 시점에 재생수가 한꺼번에 모여서 집계에 더 유리해요.
+        </p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• 곡이 같아야 하고</li>
+          <li>• 순서가 같아야 하고</li>
+          <li>• 가능한 비슷한 시간에 재생돼야 해요</li>
+        </ul>
+        <p class="text-xs text-gray-500">
+          직접 섞어서 돌리면 이 효과가 줄어들 수 있어요.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <button
+        data-action="next"
+        class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition"
+      >
+        다 담았어요
+      </button>
+    </div>
+  `,
     },
     {
       name: "final_check",
@@ -160,16 +228,24 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="images/check_volume.png" alt="음량 설정 확인" class="w-full rounded-md border mx-auto">
           </div>
         </div>
-        <div class="mt-8"><button data-action="next" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">모두 확인했어요</button></div>`,
+        <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">모두 확인했어요</button></div>`,
     },
     {
       name: "cert_start",
       render: () => `
-        <div class="text-center">
-          <h2 class="text-2xl font-bold mb-4">수고하셨습니다!</h2>
-          <p class="text-gray-600 mb-8">이제 스밍 입학증을 만들어 드릴게요.</p>
-        </div>
-        <div><button data-action="next" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition">입학증 만들러 가기</button></div>`,
+    <div class="text-center">
+      <h2 class="text-2xl font-bold mb-4">수고하셨습니다!</h2>
+      <p class="text-gray-600 mb-8">이제 스밍 입학증을 만들어 드릴게요.</p>
+    </div>
+    <div>
+      <button
+        data-action="next"
+        class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition"
+      >
+        입학증 만들러 가기
+      </button>
+    </div>
+  `,
     },
     // ▼▼▼ 다시 추가된 'STEP 1. 재생목록 캡쳐' ▼▼▼
     {
@@ -182,7 +258,8 @@ document.addEventListener("DOMContentLoaded", () => {
           <input type="file" id="playlist-upload" accept="image/*" class="hidden"/>
           <label for="playlist-upload" id="playlist-label" class="cursor-pointer block w-full border-2 border-dashed border-gray-300 text-gray-500 font-bold py-8 px-4 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">여기를 눌러 이미지 선택</label>
         </div>
-        <div class="mt-8"><button data-action="next" id="playlist-next-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition opacity-50 cursor-not-allowed" disabled>다음</button></div>`,
+        <div class="mt-8"><button data-action="next" id="playlist-next-btn" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition"
+>다음</button></div>`,
     },
     // ▲▲▲ 추가 완료 ▲▲▲
     {
@@ -199,7 +276,15 @@ document.addEventListener("DOMContentLoaded", () => {
           <input type="file" id="card-upload" accept="image/*" class="hidden"/>
           <label for="card-upload" id="card-label" class="cursor-pointer block w-full border-2 border-dashed border-gray-300 text-gray-500 font-bold py-8 px-4 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">여기를 눌러 이미지 선택</label>
         </div>
-        <div class="mt-8"><button data-action="next" id="card-next-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition opacity-50 cursor-not-allowed" disabled>다음</button></div>`,
+        <div class="mt-8"><button
+  data-action="next"
+  id="card-next-btn"
+  class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg transition opacity-50 cursor-not-allowed"
+  disabled
+>
+  다음
+</button>
+</div>`,
     },
     {
       name: "cert_nickname",
@@ -209,59 +294,83 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="text-gray-600 mb-8">입학증에 워터마크로 사용할<br>플리 닉네임을 입력해주세요.</p>
           <input type="text" id="nickname-input" placeholder="여기에 닉네임 입력" class="w-full text-center text-lg p-3 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none transition"/>
         </div>
-        <div class="mt-8"><button data-action="generate" id="generate-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition opacity-50 cursor-not-allowed" disabled>입학증 생성하기</button></div>`,
+        <div class="mt-8"><button data-action="generate" id="generate-btn" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition"
+>입학증 생성하기</button></div>`,
     },
     {
       name: "cert_result",
       render: () => `
-        <div id="result-container" class="text-center flex flex-col items-center justify-center flex-grow">
-          <div id="loading-spinner" class="text-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p class="mt-4 text-gray-600">입학증을 만들고 있어요...</p>
-          </div>
-          <div id="result-content" class="hidden w-full">
-            <h3 class="text-xl font-bold mb-4">🎉 PLLI 스밍 입학을 축하합니다! 🎉</h3>
-            <canvas id="canvas" class="hidden"></canvas>
-            <img id="result-image" alt="PLLI 스밍 입학증" class="w-full max-w-sm rounded-lg shadow-md mx-auto border" />
-            <a id="download-btn" class="mt-4 inline-block w-full bg-green-500 text-white font-bold py-3 px-5 rounded-lg hover:bg-green-600 transition">입학증 저장하기</a>
-            <div class="mt-6 p-4 bg-gray-50 rounded-lg text-sm text-left space-y-3">
-              <div>
-                <p class="font-semibold text-gray-800">🎉 입학증 공유 이벤트</p>
-                <p class="text-gray-600 mt-1">X(트위터)에 아래 해시태그와 함께 입학증을 공유해주시면 추첨을 통해 기프티콘을 드려요!</p>
-                <div class="mt-2 flex items-center bg-white p-2 rounded-md border">
-                  <span id="hashtag" class="text-blue-600 font-mono flex-grow">#플리스밍입학증</span>
-                  <button id="copy-hashtag-btn" class="bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded hover:bg-gray-300">복사</button>
-                </div>
-              </div>
-              <div class="border-t pt-3">
-                <p class="font-semibold text-gray-800">X 계정이 없으신가요?</p>
-                <p class="text-gray-600 mt-1">
-                  <a href="https://open.kakao.com/o/sSSDWXyh" id="event-open-chat-link" target="_blank" class="text-blue-600 underline">개인 오픈채팅</a>으로 보내주시면 대신 올려드려요! 추첨 대상에도 똑같이 포함됩니다.
-                </p>
-              </div>
-            </div>
-            
-            <section
-              id="ad-container-result"
-              class="my-4 p-4 bg-white rounded-2xl shadow"
+    <div id="result-container" class="text-center flex flex-col items-center justify-center flex-grow">
+      <div id="loading-spinner" class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <p class="mt-4 text-gray-600">입학증을 만들고 있어요...</p>
+      </div>
+      <div id="result-content" class="hidden w-full">
+        <h3 class="text-xl font-bold mb-4">🎉 PLLI 스밍 입학을 축하합니다! 🎉</h3>
+        <canvas id="canvas" class="hidden"></canvas>
+        <img id="result-image" alt="PLLI 스밍 입학증" class="w-full max-w-sm rounded-lg shadow-md mx-auto border" />
+
+        <!-- 저장 버튼 -->
+        <a
+          id="download-btn"
+          class="mt-4 inline-block w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-5 rounded-xl hover:bg-[#f3a7c1] transition"
+        >
+          입학증 저장하기
+        </a>
+
+        <!-- 공유 + 가이드 한 덩어리 -->
+        <div class="mt-5 bg-white/70 backdrop-blur-sm border border-pink-100 rounded-2xl p-4 flex flex-col gap-3">
+          <!-- 상단 공유 버튼 2개 -->
+          <div class="flex gap-3">
+            <button
+              id="share-x-btn"
+              class="flex-1 flex items-center justify-center gap-2 bg-black text-white font-semibold py-3 rounded-xl hover:opacity-90 transition"
             >
-              <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
-                ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
-              </h3>
-              <div style="text-align: center">
-                <ins
-                  class="adsbygoogle"
-                  style="display: block"
-                  data-ad-client="ca-pub-9063401338616510"
-                  data-ad-slot="3718792037"
-                  data-ad-format="auto"
-                  data-full-width-responsive="true"
-                ></ins>
-              </div>
-            </section>
-            
+              <span class="text-sm">X에 올리기</span>
+            </button>
+
+            <button
+              id="copy-share-text-btn"
+              class="flex-1 flex items-center justify-center gap-2 bg-gray-100 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-200 transition"
+            >
+              <span class="text-sm">복사 후 공유</span>
+            </button>
           </div>
-        </div>`,
+
+          <!-- 하단 가이드 버튼 -->
+          <a
+            id="guide-link"
+            href="https://www.plavestream.com/ko/guide/newPlli-music-guide"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 w-full bg-[#FFE4EC] text-gray-800 font-medium py-3 px-5 rounded-xl hover:bg-[#ffd3e0] transition"
+            style="letter-spacing:-0.01em;"
+          >
+            음총팀 뉴플리 음원 가이드 보러가기
+          </a>
+        </div>
+
+        <section
+          id="ad-container-result"
+          class="my-4 p-4 bg-white rounded-2xl shadow"
+        >
+          <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+            ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+          </h3>
+          <div style="text-align: center">
+            <ins
+              class="adsbygoogle"
+              style="display: block"
+              data-ad-client="ca-pub-9063401338616510"
+              data-ad-slot="3718792037"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+          </div>
+        </section>
+      </div>
+    </div>
+  `,
     },
   ];
 
@@ -308,8 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const step = visibleSteps[currentVisibleStepIndex];
     const screen = document.createElement("div");
-    screen.className =
-      "step-screen w-full h-full flex flex-col justify-between step-hidden";
+    screen.className = "step-screen w-full flex flex-col gap-6 step-hidden";
     screen.innerHTML = step.render();
     container.appendChild(screen);
     setTimeout(() => screen.classList.remove("step-hidden"), 10);
@@ -464,6 +572,65 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     }
+
+    // 결과 화면 공유 버튼들
+    const shareXBtn = stepElement.querySelector("#share-x-btn");
+    if (shareXBtn) {
+      const pageUrl = "https://plli-checker.app"; // 실제 주소로
+      const shareText =
+        `스밍 입학 완료💙💜💗❤️🖤\n\n` +
+        `나도 만들기 👉 ${pageUrl}\n` +
+        `11/10(월) 오후 3시까지만 열린대요!\n\n` +
+        `#숨바꼭질_스밍입학증_미케`;
+
+      shareXBtn.addEventListener("click", () => {
+        // GA 이벤트
+        gtag("event", "admission_click_share_x", {
+          user_id: getUserID(),
+        });
+
+        window.open(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            shareText
+          )}`,
+          "_blank"
+        );
+      });
+    }
+
+    const copyShareBtn = stepElement.querySelector("#copy-share-text-btn");
+    if (copyShareBtn) {
+      const pageUrl = "https://plli-checker.app";
+      const shareText =
+        `스밍 입학 완료💙💜💗❤️🖤\n\n` +
+        `나도 만들기 👉 ${pageUrl}\n` +
+        `11/10(월) 오후 3시까지만 열린대요!\n\n` +
+        `#숨바꼭질_스밍입학증_미케`;
+
+      copyShareBtn.addEventListener("click", () => {
+        // GA 이벤트
+        gtag("event", "admission_click_share_copy", {
+          user_id: getUserID(),
+        });
+
+        navigator.clipboard.writeText(shareText).then(() => {
+          copyShareBtn.textContent = "복사했어요!";
+          setTimeout(() => {
+            copyShareBtn.textContent = "문구 복사";
+          }, 2000);
+        });
+      });
+    }
+
+    const guideLink = stepElement.querySelector("#guide-link");
+    if (guideLink) {
+      guideLink.addEventListener("click", () => {
+        // GA 이벤트
+        gtag("event", "admission_click_guide_link", {
+          user_id: getUserID(),
+        });
+      });
+    }
   }
 
   async function generateCertificate() {
@@ -472,16 +639,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!playlistFile || !cardFile || !nickname)
         throw new Error("이미지와 닉네임 정보가 올바르지 않습니다.");
 
-      const template = await loadImageFromSrc(
-        "images/certificate_template.png"
-      );
+      // 1) 새 템플릿 불러오기
+      const template = await loadImageFromSrc("images/templete_seek.png");
 
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
-      canvas.width = template.width;
-      canvas.height = template.height;
+      canvas.width = template.width; // 1500 예상
+      canvas.height = template.height; // 1000 예상
       ctx.drawImage(template, 0, 0);
 
+      // 2) 업로드 이미지들 불러오기 + 워터마크 입히기
       const [playlistImg, cardImg] = await Promise.all([
         loadImage(playlistFile),
         loadImage(cardFile),
@@ -491,51 +658,44 @@ document.addEventListener("DOMContentLoaded", () => {
         createWatermarkedImage(cardImg, nickname),
       ]);
 
-      const containerLeft = { x: 185, y: 269, width: 290, height: 520 };
-      const containerRight = { x: 555, y: 269, width: 340, height: 255 };
-
-      function fitWithinBox(imgW, imgH, maxW, maxH) {
-        const scale = Math.min(maxW / imgW, maxH / imgH);
-        return { w: Math.round(imgW * scale), h: Math.round(imgH * scale) };
-      }
-
-      const leftSize = fitWithinBox(
-        wmPlaylist.width,
-        wmPlaylist.height,
-        containerLeft.width * 0.85,
-        containerLeft.height * 0.85
-      );
-      const xLeft = containerLeft.x + (containerLeft.width - leftSize.w) / 2;
-      const yLeft = (canvas.height - leftSize.h) / 2;
-
-      const rightSize = fitWithinBox(
-        wmCard.width,
-        wmCard.height,
-        containerRight.width,
-        containerRight.height
-      );
-      const xRight =
-        containerRight.x + (containerRight.width - rightSize.w) / 2;
-      const yRight = yLeft;
-
+      // 3) 멜론 카드 이미지 배치 (x=770, y=100, 300x300 고정)
+      const cardBox = { x: 770, y: 100, size: 300 };
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
-      ctx.drawImage(wmPlaylist, xLeft, yLeft, leftSize.w, leftSize.h);
-      ctx.drawImage(wmCard, xRight, yRight, rightSize.w, rightSize.h);
+      ctx.drawImage(wmCard, cardBox.x, cardBox.y, cardBox.size, cardBox.size);
 
+      // 4) 재생목록 캡처 배치 (x=1120, y=100, width=300, height 비율유지)
+      const playlistBox = { x: 1120, y: 100, width: 300 };
+      const playlistScale = playlistBox.width / wmPlaylist.width;
+      const playlistHeight = wmPlaylist.height * playlistScale;
+      ctx.drawImage(
+        wmPlaylist,
+        playlistBox.x,
+        playlistBox.y,
+        playlistBox.width,
+        playlistHeight
+      );
+
+      // 5) 닉네임(이름) 그리기 - 중심 (500, 265), 8자 넘어가면 두 줄
+      drawCenteredName(ctx, nickname, 500, 265);
+
+      // 6) 날짜 찍기 - 중심 (400, 450)
       const now = new Date();
-      const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-      const dateString = `${kst.getFullYear()}-${String(
-        kst.getMonth() + 1
-      ).padStart(2, "0")}-${String(kst.getDate()).padStart(2, "0")}`;
-      ctx.font = "20px Pretendard";
-      ctx.fillStyle = "#444";
-      ctx.textAlign = "center";
-      ctx.fillText(dateString, canvas.width / 2, canvas.height - 40);
+      const dateString = `${now.getFullYear()}-${String(
+        now.getMonth() + 1
+      ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
-      const finalURL = canvas.toDataURL("image/png");
+      ctx.font =
+        'bold 20px "Noto Sans CJK KR", "Noto Sans CJK", "Pretendard", sans-serif';
+      ctx.fillStyle = "#000";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top"; // ← 이 줄 추가! y를 글자 위쪽으로 보게 함
+      ctx.fillText(dateString, 400, 450);
+
+      // 7) 화면에 보여주기
       document.getElementById("loading-spinner").classList.add("hidden");
       const resultContent = document.getElementById("result-content");
+      const finalURL = canvas.toDataURL("image/png");
       document.getElementById("result-image").src = finalURL;
       const downloadBtn = document.getElementById("download-btn");
       downloadBtn.href = finalURL;
@@ -546,19 +706,39 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
       resultContent.classList.remove("hidden");
-
-      // 광고를 요청하는 코드를 이곳에 추가합니다.
       (adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
       gtag("event", "admission_generate_error", {
         error_message: err.message,
         user_id: getUserID(),
       });
-      console.error("입학증 생성 실패:", err);
       alert(
         `오류가 발생하여 입학증을 만들 수 없습니다: ${err.message}\n\n페이지를 새로고침하고 다시 시도해주세요.`
       );
       window.location.reload();
+    }
+  }
+
+  // 닉네임 그리는 헬퍼
+  function drawCenteredName(ctx, text, centerX, centerY) {
+    const fontFamily =
+      '"Noto Sans CJK KR", "Noto Sans CJK", "Pretendard", sans-serif';
+    ctx.fillStyle = "#000";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+
+    if (text.length <= 8) {
+      ctx.font = `bold 40px ${fontFamily}`;
+      ctx.fillText(text, centerX, centerY);
+    } else {
+      // 8자 넘으면 두 줄
+      const firstLine = text.slice(0, 8);
+      const secondLine = text.slice(8);
+      ctx.font = `bold 38px ${fontFamily}`;
+      const lineHeight = 44;
+
+      ctx.fillText(firstLine, centerX, centerY); // 1줄
+      ctx.fillText(secondLine, centerX, centerY + lineHeight); // 2줄
     }
   }
 
@@ -594,19 +774,18 @@ document.addEventListener("DOMContentLoaded", () => {
     tempCanvas.width = originalImage.width;
     tempCanvas.height = originalImage.height;
 
-    // 원본 이미지 그리기
     tempCtx.drawImage(originalImage, 0, 0);
 
-    // 워터마크 스타일 설정
-    const fontSize = Math.max(36, Math.floor(originalImage.width / 10));
+    // 폰트는 아까처럼 절반으로 줄인 버전 기준
+    const fontSize = Math.max(18, Math.floor(originalImage.width / 20));
     tempCtx.font = `bold ${fontSize}px Pretendard`;
-    tempCtx.fillStyle = "rgba(255,255,255,0.25)";
-    tempCtx.textAlign = "left"; // 텍스트 정렬을 왼쪽으로 변경
+    tempCtx.fillStyle = "rgba(255, 255, 255, 0.22)"; // 더 연하게
+    tempCtx.textAlign = "left";
     tempCtx.textBaseline = "middle";
 
     tempCtx.save();
     tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-    tempCtx.rotate(-Math.PI / 6); // 텍스트 기울기
+    tempCtx.rotate(-Math.PI / 6);
 
     const singleTextWidth = tempCtx.measureText(text).width;
     const repeatCount = Math.ceil(
@@ -614,14 +793,19 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const lineOfText = text.repeat(repeatCount * 2);
 
-    // ▼▼▼ 세로 줄 간격을 더 촘촘하게 수정 ▼▼▼
-    const stepY = fontSize * 1.2;
+    // 간격 넓힘
+    const stepY = fontSize * 2.2;
 
-    for (let y = -tempCanvas.height; y < tempCanvas.height; y += stepY) {
+    for (
+      let i = 0, y = -tempCanvas.height;
+      y < tempCanvas.height;
+      i++, y += stepY
+    ) {
+      // 한 줄씩 건너뛰기 → 더 성글게
+      // if (i % 2 !== 0) continue;
       const x = -tempCanvas.width - (y % (singleTextWidth * 2));
       tempCtx.fillText(lineOfText, x, y);
     }
-    // ▲▲▲ 수정 완료 ▲▲▲
 
     tempCtx.restore();
 
@@ -630,6 +814,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 초기 실행
+
+  gtag("config", "G-GYGLSJRN79", {
+    user_id: getUserID(),
+  });
+
   gtag("event", "admission_page_view", { user_id: getUserID() });
   if (!loadState()) {
     setVisibleSteps();

@@ -46,21 +46,20 @@
     </script>
     <style>
       .step-screen {
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        position: absolute;
+        inset: 0; /* top:0; right:0; bottom:0; left:0 한 번에 */
+        width: 100%;
+        transition: opacity 0.25s ease-in-out;
+        padding: 1.5rem;
       }
+
       .step-hidden {
         opacity: 0;
-        transform: translateX(20px);
         pointer-events: none;
-        position: absolute;
       }
-      #admission-container img:not(.carousel-image) {
-        width: 70% !important;
-        max-width: 70% !important;
-        height: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+
+      #admission-container {
+        position: relative;
       }
     </style>
   </head>
@@ -112,15 +111,19 @@
       <div class="w-full bg-gray-200 h-1">
         <div
           id="progress-bar"
-          class="bg-blue-500 h-1"
-          style="width: 0%; transition: width 0.3s ease-in-out"
+          class="h-1"
+          style="
+            background-color: #febfce;
+            width: 0%;
+            transition: width 0.3s ease-in-out;
+          "
         ></div>
       </div>
     </header>
 
     <main
       id="admission-container"
-      class="w-full max-w-md mx-auto p-6 bg-white min-h-[calc(100vh-70px)] flex flex-col justify-between relative overflow-hidden"
+      class="w-full max-w-md mx-auto p-6 pt-10 bg-white min-h-[calc(100vh-70px)] flex flex-col gap-8 items-stretch text-center overflow-y-auto"
     ></main>
 
     <a
