@@ -425,6 +425,13 @@ document.addEventListener("DOMContentLoaded", () => {
     container.scrollTop = 0;
     window.scrollTo(0, 0);
 
+    // ✅ 여기서 이미지 80%로 줄이기
+    screen.querySelectorAll('img[src^="images/"]').forEach((img) => {
+      img.style.maxWidth = "80%";
+      img.style.marginLeft = "auto";
+      img.style.marginRight = "auto";
+    });
+
     if (
       admissionData.playlistFileName &&
       screen.querySelector("#playlist-label")
