@@ -421,6 +421,10 @@ document.addEventListener("DOMContentLoaded", () => {
     screen.innerHTML = step.render();
     container.appendChild(screen);
     setTimeout(() => screen.classList.remove("step-hidden"), 10);
+
+    container.scrollTop = 0;
+    window.scrollTo(0, 0);
+
     if (
       admissionData.playlistFileName &&
       screen.querySelector("#playlist-label")
