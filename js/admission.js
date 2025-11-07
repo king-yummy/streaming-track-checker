@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ? '<a href="https://www.melon.com/buy/pamphlet/all.htm" target="_blank" id="melon-purchase-link" class="text-blue-600 underline font-semibold mb-6 block">▶ 멜론 이용권 구매 페이지 바로가기</a>'
               : ""
           }
-          <img src="images/purchase.jpg" alt="이용권 구매 안내" class="w-full rounded-md my-4 border mx-auto">
+          <img src="images/purchase.png" alt="이용권 구매 안내" class="w-full rounded-md my-4 border mx-auto">
         </div>
         <div><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">구매했어요</button></div>`,
     },
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
             userDevice === "android" ? 5 : 4
           })</h2>
           <p class="text-gray-600 mb-6">먼저, 설정 화면으로 들어가주세요.</p>
-          <img src="images/settings_1.jpg" alt="설정 화면 가이드" class="w-full rounded-md my-4 border mx-auto">
+          <img src="images/settings_1.png" alt="설정 화면 가이드" class="w-full rounded-md my-4 border mx-auto">
         </div>
         <div><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">다음</button></div>`,
     },
@@ -116,8 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
           })</h2>
           <p class="text-gray-600 mb-6">곡 음질 설정을 확인해주세요.</p>
           <div class="space-y-4">
-            <img src="images/settings_quality_1.jpg" alt="곡 음질 가이드 1" class="w-full rounded-md border mx-auto">
-            <img src="images/settings_quality_2.jpg" alt="곡 음질 가이드 2" class="w-full rounded-md border mx-auto">
+            <img src="images/settings_quality_1.png" alt="곡 음질 가이드 1" class="w-full rounded-md border mx-auto">
+            <img src="images/settings_quality_2.png" alt="곡 음질 가이드 2" class="w-full rounded-md border mx-auto">
           </div>
         </div>
         <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">다음</button></div>`,
@@ -131,8 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
           })</h2>
           <p class="text-gray-600 mb-6">재생목록 설정을 확인해주세요.</p>
           <div class="space-y-4">
-            <img src="images/settings_playlist_1.jpg" alt="재생목록 설정 가이드 1" class="w-full rounded-md border mx-auto">
-            <img src="images/settings_playlist_2.jpg" alt="재생목록 설정 가이드 2" class="w-full rounded-md border mx-auto">
+            <img src="images/settings_playlist_1.png" alt="재생목록 설정 가이드 1" class="w-full rounded-md border mx-auto">
+            <img src="images/settings_playlist_2.png" alt="재생목록 설정 가이드 2" class="w-full rounded-md border mx-auto">
           </div>
         </div>
         <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">다음</button></div>`,
@@ -146,8 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
           })</h2>
           <p class="text-gray-600 mb-6">캐싱 적용은 꼭!! OFF 해주세요!</p>
           <div class="space-y-4">
-            <img src="images/settings_cache_1.jpg" alt="캐시 설정 가이드 1" class="w-full rounded-md border mx-auto">
-            <img src="images/settings_cache_2.jpg" alt="캐시 설정 가이드 2" class="w-full rounded-md border mx-auto">
+            <img src="images/settings_cache_1.png" alt="캐시 설정 가이드 1" class="w-full rounded-md border mx-auto">
+            <img src="images/settings_cache_2.png" alt="캐시 설정 가이드 2" class="w-full rounded-md border mx-auto">
           </div>
         </div>
         <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">${
@@ -162,10 +162,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <h2 class="text-2xl font-bold mb-4">멜론 필수 설정 (5/5)</h2>
           <p class="text-gray-600 mb-6">마지막으로 고급 설정을 확인해주세요.</p>
           <div class="space-y-4">
-            <img src="images/settings_advanced_1.jpg" alt="고급 설정 1" class="w-full rounded-md border">
-            <img src="images/settings_advanced_2.jpg" alt="고급 설정 2" class="w-full rounded-md border">
-            <img src="images/settings_advanced_3.jpg" alt="고급 설정 3" class="w-full rounded-md border">
-            <img src="images/settings_advanced_4.jpg" alt="고급 설정 4" class="w-full rounded-md border">
+            <img src="images/settings_advanced_1.png" alt="고급 설정 1" class="w-full rounded-md border">
+            <img src="images/settings_advanced_2.png" alt="고급 설정 2" class="w-full rounded-md border">
+            <img src="images/settings_advanced_3.png" alt="고급 설정 3" class="w-full rounded-md border">
+            <img src="images/settings_advanced_4.png" alt="고급 설정 4" class="w-full rounded-md border">
           </div>
         </div>
         <div class="mt-8"><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">설정 완료!</button></div>`,
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <h2 class="text-2xl font-bold mb-4">마지막 확인!</h2>
           <p class="text-gray-600 mb-6">스밍 시작 전, 꼭 확인해주세요!</p>
           <div class="space-y-4">
-            <img src="images/check_repeat.jpg" alt="재생 설정 확인" class="w-full rounded-md border mx-auto">
+            <img src="images/check_repeat.png" alt="재생 설정 확인" class="w-full rounded-md border mx-auto">
             <img src="images/check_volume.png" alt="음량 설정 확인" class="w-full rounded-md border mx-auto">
           </div>
         </div>
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="text-center flex-grow">
           <h2 class="text-2xl font-bold mb-4">STEP 1. 재생목록 캡쳐</h2>
           <p class="text-gray-600 mb-6">아래 가이드처럼 재생목록 전체가 보이게<br>캡쳐해서 업로드 해주세요.</p>
-          <img src="images/guide_playlist.jpg" alt="재생목록 캡쳐 가이드" class="w-full rounded-md border mx-auto mb-6">
+          <img src="images/guide_playlist.png" alt="재생목록 캡쳐 가이드" class="w-full rounded-md border mx-auto mb-6">
           <input type="file" id="playlist-upload" accept="image/*" class="hidden"/>
           <label for="playlist-upload" id="playlist-label" class="cursor-pointer block w-full border-2 border-dashed border-gray-300 text-gray-500 font-bold py-8 px-4 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">여기를 눌러 이미지 선택</label>
         </div>
@@ -269,9 +269,9 @@ document.addEventListener("DOMContentLoaded", () => {
           <h2 class="text-2xl font-bold mb-4">STEP 2. 멜론카드 저장</h2>
           <p class="text-gray-600 mb-6">아래 가이드처럼 멜론카드 화면을<br>저장해서 업로드 해주세요.</p>
           <div class="space-y-4 mb-6">
-            <img src="images/guide_card_1.jpg" alt="멜론카드 저장 가이드 1" class="w-full rounded-md border mx-auto">
-            <img src="images/guide_card_2.jpg" alt="멜론카드 저장 가이드 2" class="w-full rounded-md border mx-auto">
-            <img src="images/guide_card_3.jpg" alt="멜론카드 저장 가이드 3" class="w-full rounded-md border mx-auto">
+            <img src="images/guide_card_1.png" alt="멜론카드 저장 가이드 1" class="w-full rounded-md border mx-auto">
+            <img src="images/guide_card_2.png" alt="멜론카드 저장 가이드 2" class="w-full rounded-md border mx-auto">
+            <img src="images/guide_card_3.png" alt="멜론카드 저장 가이드 3" class="w-full rounded-md border mx-auto">
           </div>
           <input type="file" id="card-upload" accept="image/*" class="hidden"/>
           <label for="card-upload" id="card-label" class="cursor-pointer block w-full border-2 border-dashed border-gray-300 text-gray-500 font-bold py-8 px-4 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">여기를 눌러 이미지 선택</label>
