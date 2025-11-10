@@ -14,17 +14,27 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       name: "start",
       render: () => `
-        <div class="text-center">
-          <h2 class="text-2xl font-bold mb-4 leading-tight">멜론 스밍, 제대로 하고 있나요?</h2>
-<p class="text-gray-600 leading-relaxed text-center mb-10 px-4">
-  지금 스밍 방법을 다시 점검해보세요!<br />
-  스페셜 입학증은 <strong>11월 10일 오후 3시</strong>까지만<br />
-  발급 받을 수 있어요 💗
-</p>
-
-
-        </div>
-        <div><button data-action="next" class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">시작하기</button></div>`,
+    <div class="text-center">
+      <h2 class="text-2xl font-bold mb-4 leading-tight">플뿌우 스밍 시작할 준비 됐나요?</h2>
+      <p class="text-gray-600 leading-relaxed text-center mb-10 px-4">
+        
+        가이드 따라서 올바른 스밍법을 익히고<br />
+        뿌우 버전 스밍 입학증 받아보세요~
+      </p>
+    </div>
+    <div class="space-y-3">
+      <!-- 기존 순서를 따르는 버튼 -->
+      <button data-action="next"
+              class="w-full bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition">
+        저학년 플리! 가이드와 함께 입학증 만들어요
+      </button>
+      <!-- STEP 1로 바로 이동하는 버튼 -->
+      <button data-action="skip"
+              class="w-full bg-[#FFE4EC] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#ffd3e0] transition">
+        고학년 플리! 입학증만 빠르게 받을 수 있어요
+      </button>
+    </div>
+  `,
     },
     {
       name: "device_choice",
@@ -481,6 +491,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const nextBtn = stepElement.querySelector('button[data-action="next"]');
     if (nextBtn) nextBtn.addEventListener("click", goToNextStep);
 
+    // 새로운 'skip' 버튼 처리: 'STEP 1. 재생목록 캡쳐' 단계로 건너뜁니다.
+    const skipBtn = stepElement.querySelector('button[data-action="skip"]');
+    if (skipBtn) {
+      skipBtn.addEventListener("click", () => {
+        // 모든 표시 가능한 단계 중에서 재생목록 업로드 단계의 인덱스를 찾음
+        const targetIndex = visibleSteps.findIndex(
+          (s) => s.name === "cert_upload_playlist"
+        );
+        if (targetIndex >= 0) {
+          currentVisibleStepIndex = targetIndex;
+          gtag("event", "admission_skip_to_cert", { user_id: getUserID() });
+          renderCurrentStep();
+        }
+      });
+    }
+
     stepElement
       .querySelectorAll('button[data-action="set-device"]')
       .forEach((btn) => {
@@ -589,10 +615,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (shareXBtn) {
       const pageUrl = "https://plli-checker.app"; // 실제 주소로
       const shareText =
-        `스밍 입학 완료💙💜💗❤️🖤\n\n` +
+        `플뿌우로 입학 완료💙💜💗❤️🖤\n\n` +
         `나도 만들기 👉 ${pageUrl}\n` +
-        `11/10(월) 오후 3시까지만 열린대요!\n\n` +
-        `#숨바꼭질_스밍입학증_미케`;
+        `새로운 슴리 췤!! 스밍 라쓰고!!\n\n` +
+        `#플뿌우로_입학했뿌우`;
 
       shareXBtn.addEventListener("click", () => {
         // GA 이벤트
@@ -613,10 +639,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (copyShareBtn) {
       const pageUrl = "https://plli-checker.app";
       const shareText =
-        `스밍 입학 완료💙💜💗❤️🖤\n\n` +
+        `플뿌우로 입학 완료💙💜💗❤️🖤\n\n` +
         `나도 만들기 👉 ${pageUrl}\n` +
-        `11/10(월) 오후 3시까지만 열린대요!\n\n` +
-        `#숨바꼭질_스밍입학증_미케`;
+        `새로운 슴리 췤!! 스밍 라쓰고!!\n\n` +
+        `#플뿌우로_입학했뿌우`;
 
       copyShareBtn.addEventListener("click", () => {
         // GA 이벤트
@@ -651,7 +677,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("이미지와 닉네임 정보가 올바르지 않습니다.");
 
       // 1) 새 템플릿 불러오기
-      const template = await loadImageFromSrc("images/templete_seek.png");
+      const template = await loadImageFromSrc("images/templete_bbuu.png");
 
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
