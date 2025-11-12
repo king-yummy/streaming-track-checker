@@ -18,10 +18,12 @@ export function renderPlaylist() {
       (item, i) => `
 <li data-index="${i}" class="flex flex-col p-2 rounded-lg shadow w-full opacity-50 transition-all bg-white text-[13px]">
   <div class="flex items-center gap-2">
-    <div class="w-10 h-10 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
+    <div class="w-10 h-10 flex-shrink-0 rounded overflow-hidden">
       <img src="${item.cover}" alt="${
         item.title
-      }" class="w-full h-full object-cover" />
+      }" class="w-full h-full object-cover" 
+         style="aspect-ratio: 1 / 1; background-color: #f0f0f0;"
+         loading="lazy" decoding="async" />
     </div>
     <div class="flex-1">
       <p class="font-medium truncate">${i + 1}. ${item.title}</p>

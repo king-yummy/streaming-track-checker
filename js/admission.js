@@ -319,8 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div id="result-content" class="hidden w-full">
         <h3 class="text-xl font-bold mb-4">🎉 PLLI 스밍 입학을 축하합니다! 🎉</h3>
         <canvas id="canvas" class="hidden"></canvas>
-        <img id="result-image" alt="PLLI 스밍 입학증" class="w-full max-w-sm rounded-lg shadow-md mx-auto border" />
-
+        <img id="result-image" alt="PLLI 스밍 입학증" class="w-full max-w-sm rounded-lg shadow-md mx-auto border" 
+             style="aspect-ratio: 3 / 2; background-color: #f9f9f9;" />
         <!-- 저장 버튼 -->
         <a
           id="download-btn"
