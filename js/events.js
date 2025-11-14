@@ -311,8 +311,6 @@ export function initializeAllEventListeners() {
   );
   const detailsModalOverlay = document.getElementById("details-modal-overlay");
   const musicWaveLink = document.getElementById("music-wave-link");
-  const tweetBtn = document.getElementById("tweet-button");
-  const cheerInput = document.getElementById("cheer-message");
   // ▼▼▼ 툴팁 관련 코드 추가 ▼▼▼
   const todoTooltipButton = document.getElementById("todo-tooltip-button");
   const todoTooltipBubble = document.getElementById("todo-tooltip-bubble");
@@ -379,30 +377,6 @@ export function initializeAllEventListeners() {
   if (musicWaveLink) {
     musicWaveLink.addEventListener("click", () => {
       gtag("event", "click_music_wave", { user_id: userID });
-    });
-  }
-
-  if (tweetBtn && cheerInput) {
-    tweetBtn.addEventListener("click", () => {
-      const message = cheerInput.value.trim();
-      if (!message) return alert("응원 멘트를 입력해주세요!");
-      gtag("event", "share_event_tweet", {
-        event_category: "Event",
-        event_label: message,
-        user_id: userID,
-      });
-      const header = "🔥 PLLI 스밍/투표 독려 이벤트 🔥";
-      const eventInfo =
-        "📅 기간: 7/21(월) ~ 8/4(월) 23:59\n🎁 상품: 8/5 추첨! 덕질 자금 1만원 (1명)\n💗 많이 공유할수록 당첨 확률 UP! UP!\n\n👇 로그인 필요없이 앱 하단에서 바로 참여 가능!";
-      const tags = "#PLLI_스밍투표_이벤트 #PLLI_화력응원 #PLAVE";
-      const url = "https://www.plli-checker.app";
-      const tweetText = encodeURIComponent(
-        `${header}\n\n${message}\n\n${eventInfo}\n${tags}\n\n${url}`
-      );
-      window.open(
-        `https://twitter.com/intent/tweet?text=${tweetText}`,
-        "_blank"
-      );
     });
   }
 }

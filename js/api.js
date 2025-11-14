@@ -6,7 +6,6 @@ import {
   STREAMING_SHEET_TITLE,
   TODO_SHEET_TITLE,
   NOTICE_SHEET_TITLE,
-  SUPERFAN_SHEET_TITLE,
 } from "./config.js";
 import { setSchedule, setAllTodoData } from "./state.js";
 import {
@@ -137,28 +136,5 @@ export async function loadNoticeList() {
   } catch (error) {
     console.error("공지사항 데이터 로딩 실패:", error);
     return [];
-  }
-}
-
-/** [신규] 슈퍼팬 링크 목록: [URL] */
-export async function loadSuperfanLinks() {
-  try {
-    // 'SuperfanLink' 시트의 B열 (링크) 데이터만 가져옵니다.
-    const values = await fetchRowsByTitle(SUPERFAN_SHEET_TITLE, "B:B");
-    if (!values || values.length < 2) {
-      return []; // 데이터가 없으면 빈 배열 반환
-    }
-
-    // 0행은 헤더이므로 제외하고, 각 행의 첫 번째(B열) 값만 추출
-    const links = values
-      .slice(1)
-      .map((row) => row[0])
-      .filter(Boolean);
-
-    // 중복된 링크를 제거하고 반환
-    return [...new Set(links)];
-  } catch (error) {
-    console.error("슈퍼팬 링크 로딩 실패:", error);
-    return []; // 오류 발생 시 빈 배열 반환
   }
 }

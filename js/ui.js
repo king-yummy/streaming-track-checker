@@ -44,43 +44,6 @@ export function renderPlaylist() {
     .join("");
 }
 
-export function updateCounts(cycles, secInLoop) {
-  const now = Date.now();
-  let counts = {};
-  if (now < CUTOVER_AT_MS) {
-    counts = {
-      kakurenbo: cycles * PER_CYCLE_OLD.kakurenbo,
-      rizz: cycles * PER_CYCLE_OLD.rizz,
-      chroma: cycles * PER_CYCLE_OLD.chroma,
-    };
-    schedule.forEach((item) => {
-      if (item.startSec <= secInLoop) {
-        if (item.title === TARGETS.kakurenbo) counts.kakurenbo += 1;
-        else if (item.title === TARGETS.rizz) counts.rizz += 1;
-        else if (item.title === TARGETS.chroma) counts.chroma += 1;
-      }
-    });
-  } else {
-    counts = { ...BASE_COUNTS };
-    const diffSecNew = Math.floor((now - CUTOVER_AT_MS) / 1000);
-    const cyclesNew = Math.floor(diffSecNew / 3600);
-    const secInLoopNew = diffSecNew % 3600;
-    counts.kakurenbo += cyclesNew * PER_CYCLE_NEW.kakurenbo;
-    counts.rizz += cyclesNew * PER_CYCLE_NEW.rizz;
-    counts.chroma += cyclesNew * PER_CYCLE_NEW.chroma;
-    schedule.forEach((item) => {
-      if (item.startSec <= secInLoopNew) {
-        if (item.title === TARGETS.kakurenbo) counts.kakurenbo += 1;
-        else if (item.title === TARGETS.rizz) counts.rizz += 1;
-        else if (item.title === TARGETS.chroma) counts.chroma += 1;
-      }
-    });
-  }
-  document.getElementById("count-kakurenbo").textContent = counts.kakurenbo;
-  document.getElementById("count-rizz").textContent = counts.rizz;
-  document.getElementById("count-chroma").textContent = counts.chroma;
-}
-
 function tick() {
   const now = new Date();
   const diffSec = Math.max(0, Math.floor((Date.now() - START_AT_MS) / 1000));
