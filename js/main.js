@@ -76,13 +76,24 @@ function handleMnetLinkClick(e) {
 function resetTodoListAtMidnight() {
   const today = new Date().toLocaleDateString();
   const lastResetDate = localStorage.getItem("lastResetDate");
+
   if (lastResetDate !== today) {
     console.log("자정이 지나 투두리스트를 초기화합니다.");
+
+    // ✔ 투두 체크 초기화
     Object.keys(localStorage).forEach((key) => {
       if (key.startsWith("checklist_") || key.startsWith("group_checklist_")) {
         localStorage.removeItem(key);
       }
     });
+
+    // ✔ 그룹 참여카운트 중복방지용 reported_ 키 모두 초기화
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("reported_")) {
+        localStorage.removeItem(key);
+      }
+    });
+
     localStorage.setItem("lastResetDate", today);
   }
 }

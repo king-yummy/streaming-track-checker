@@ -234,6 +234,12 @@ export function addTodoEventListeners() {
           });
         }
       }
+      if (isChecked) {
+        const groupId = e.target
+          .closest(".accordion-item")
+          .querySelector(".group-check").dataset.groupId;
+        reportGroupActivity(groupId);
+      }
       const groupItem = e.target.closest(".accordion-item");
       const groupCheck = groupItem.querySelector(".group-check");
       const groupTitleSpan = groupCheck.nextElementSibling;
@@ -257,6 +263,9 @@ export function addTodoEventListeners() {
           group_title: e.target.dataset.groupTitle,
           user_id: userID,
         });
+      }
+      if (isChecked) {
+        reportGroupActivity(groupId);
       }
       groupItem.querySelectorAll(".item-check").forEach((itemCheckbox) => {
         if (itemCheckbox.checked !== isChecked) {
@@ -376,4 +385,19 @@ export function initializeAllEventListeners() {
       );
     });
   }
+}
+
+async function reportGroupActivity(groupId) {
+  const key = "reported_" + groupId;
+
+  // 이미 오늘 보고했으면 종료
+  if (localStorage.getItem(key)) return;
+
+  await fetch("/api/increment-group-count", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ groupId }),
+  });
+
+  localStorage.setItem(key, "1");
 }

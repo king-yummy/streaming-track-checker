@@ -236,6 +236,10 @@ export function renderTodoList(data) {
                       }
                       <span class="truncate">${group.title}</span>
                   </span>
+                  <span class="group-count ml-2" data-group-id="${
+                    group.id
+                  }">👥0</span>
+
               </div>
               <span class="accordion-arrow flex-shrink-0 ml-2 text-xl text-gray-400 transform transition-transform duration-300">▼</span>
           </div>
@@ -276,6 +280,7 @@ export function renderTodoList(data) {
   }
   container.innerHTML = html;
   addTodoEventListeners();
+  applyGroupCounts();
 }
 
 function generateChecklistItem(item, isSubItem) {
@@ -551,5 +556,18 @@ export function checkNewNotices(noticeData) {
       localStorage.setItem("lastCheckedNoticeId", latestId);
       if (noticeDot) noticeDot.classList.add("hidden");
     });
+  }
+}
+
+async function applyGroupCounts() {
+  try {
+    const counts = await fetch("/api/get-group-counts").then((r) => r.json());
+    document.querySelectorAll(".group-count").forEach((el) => {
+      const id = el.dataset.groupId;
+      const num = counts[id] || 0;
+      el.textContent = `👥${num}`;
+    });
+  } catch (err) {
+    console.error("그룹 카운트 불러오기 실패:", err);
   }
 }
