@@ -12,6 +12,9 @@ const findItemDataById = (id) => allTodoData.find((item) => item.ID === id);
 const VAPID_KEY =
   "BHKOgIoE52ImNaT3yKv_w1yJVSPL2WfUZHCp2VKUF0DvWiOVi2cNFQ-qS2XzjRt2HliwcK-U-BFrDXbxBfpI7MA";
 
+// [추가] 중복 호출 방지를 위한 '진행 중' 플래그
+const reporting = new Set();
+
 // Firebase 앱 설정
 const firebaseConfig = {
   apiKey: "AIzaSyDam42H9W_iouj0rkMZDDzSWsrmx8BlVkQ",
@@ -310,6 +313,18 @@ export function initializeAllEventListeners() {
   const musicWaveLink = document.getElementById("music-wave-link");
   const tweetBtn = document.getElementById("tweet-button");
   const cheerInput = document.getElementById("cheer-message");
+  // ▼▼▼ 툴팁 관련 코드 추가 ▼▼▼
+  const todoTooltipButton = document.getElementById("todo-tooltip-button");
+  const todoTooltipBubble = document.getElementById("todo-tooltip-bubble");
+
+  if (todoTooltipButton && todoTooltipBubble) {
+    todoTooltipButton.addEventListener("click", (e) => {
+      // 오버레이 클릭으로 바로 닫히는 것을 방지
+      e.stopPropagation();
+      todoTooltipBubble.classList.toggle("hidden");
+    });
+  }
+  // ▲▲▲ 툴팁 관련 코드 끝 ▲▲▲
 
   const openTodolist = () => {
     gtag("event", "open_todo_list", { user_id: userID });
@@ -319,6 +334,11 @@ export function initializeAllEventListeners() {
   const closeTodolist = () => {
     todolistOverlay.classList.add("hidden");
     todolistPanel.classList.add("hidden");
+    // ▼▼▼ 툴팁 닫기 코드 추가 ▼▼▼
+    if (todoTooltipBubble) {
+      todoTooltipBubble.classList.add("hidden");
+    }
+    // ▲▲▲ 툴팁 닫기 코드 끝 ▲▲▲
   };
 
   if (openTodolistButton)
@@ -390,14 +410,32 @@ export function initializeAllEventListeners() {
 async function reportGroupActivity(groupId) {
   const key = "reported_" + groupId;
 
-  // 이미 오늘 보고했으면 종료
+  // 1. 이미 오늘 보고했으면 종료
   if (localStorage.getItem(key)) return;
 
-  await fetch("/api/increment-group-count", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ groupId }),
-  });
+  // 2. [추가] 현재 이 그룹에 대한 보고가 "진행 중"이면 종료
+  if (reporting.has(groupId)) return;
 
-  localStorage.setItem(key, "1");
+  try {
+    // 3. [추가] 진행 중 플래그 설정
+    reporting.add(groupId);
+
+    await fetch("/api/increment-group-count", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ groupId }),
+    });
+
+    // 4. [수정] 성공 여부와 관계없이, "오늘 시도함" 플래그를 저장
+    // (기존 로직에서는 fetch 실패 시 저장이 안 되는 문제가 있었음)
+    localStorage.setItem(key, "1");
+  } catch (err) {
+    console.error("Group activity report failed:", err);
+    // 5. [수정] 오류가 발생해도 localStorage 에는 저장해서
+    // 오늘 다시 시도하지 않도록 함
+    localStorage.setItem(key, "1");
+  } finally {
+    // 6. [추가] 진행 중 플래그 해제
+    reporting.delete(groupId);
+  }
 }

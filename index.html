@@ -492,8 +492,29 @@
         class="bottom-sheet-container w-full max-w-lg sm:max-w-md mx-auto bg-white rounded-t-2xl shadow-xl p-6 transform transition-all max-h-[80vh] flex flex-col"
       >
         <div class="bottom-sheet-handle"></div>
-        <div class="flex-shrink-0 flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold">🗳️ 오늘의 투표 & 할일</h2>
+       <div class="flex-shrink-0 flex justify-between items-center mb-4">
+          
+          <div class="flex items-center gap-2"> 
+            <h2 class="text-xl font-bold">🗳️ 오늘의 투표 & 할일</h2>
+            
+            <div class="relative flex items-center">
+                <button id="todo-tooltip-button" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A.75.75 0 0 0 9 13.75a.75.75 0 0 0 .75.75h.5a.75.75 0 0 0 .75-.75c0-.135-.043-.26-.118-.363l-.459-2.066a.25.25 0 0 1 .244-.304H11a.75.75 0 0 0 0-1.5H9Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+
+                <div id="todo-tooltip-bubble" 
+                     class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 p-2 w-max max-w-xs
+                            bg-gray-800 text-white text-xs rounded-md shadow-lg 
+                            hidden z-10">
+                    오늘도 함께 하고있는 플리가 있어요!
+                    <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0
+                                border-x-4 border-x-transparent
+                                border-t-4 border-t-gray-800"></div>
+                </div>
+            </div>
+          </div>
           <button
             id="close-todolist-button"
             class="text-gray-400 hover:text-gray-700 text-2xl"
