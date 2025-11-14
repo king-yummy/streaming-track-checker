@@ -1,13 +1,5 @@
 import { schedule, allTodoData } from "./state.js";
 import { formatKoreanTime, formatTimeMMSS, formatBold } from "./utils.js";
-import {
-  START_AT_MS,
-  CUTOVER_AT_MS,
-  PER_CYCLE_OLD,
-  PER_CYCLE_NEW,
-  BASE_COUNTS,
-  TARGETS,
-} from "./config.js";
 import { addTodoEventListeners } from "./events.js";
 
 export function renderPlaylist() {
@@ -44,13 +36,13 @@ export function renderPlaylist() {
     .join("");
 }
 
+// [수정됨] tick 함수가 config.js 의존성 없이 현재 시간 기준으로 단순화되었습니다.
 function tick() {
   const now = new Date();
-  const diffSec = Math.max(0, Math.floor((Date.now() - START_AT_MS) / 1000));
-  const cycles = Math.floor(diffSec / 3600);
-  const secInLoop = diffSec % 3600;
+  // 'secInLoop'를 현재 시간의 분/초로 계산 (1시간 = 3600초)
+  const secInLoop = now.getMinutes() * 60 + now.getSeconds();
+
   updateHighlight(secInLoop);
-  updateCounts(cycles, secInLoop);
   updateProgress(secInLoop);
 }
 
@@ -421,10 +413,6 @@ export function closeDetailsModal() {
   document.getElementById("details-modal-overlay").classList.add("hidden");
   document.getElementById("details-modal-panel").classList.add("hidden");
 }
-
-// -----------------------------------------------------------------
-// ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼ 아래 함수들을 추가합니다 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-// -----------------------------------------------------------------
 
 /**
  * [최종 수정] 공지사항 목록을 '페이지네이션' 기능이 포함된 아코디언 방식으로 렌더링하는 함수
