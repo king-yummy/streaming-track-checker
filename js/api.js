@@ -108,27 +108,35 @@ export async function loadTodoListData() {
   }
 }
 
-/** 공지사항: 1행 헤더 기반 객체 배열 반환 */
+/** 공지사항: 백엔드 API (/api/notices) 연동 + 24시간 'New' 자동화 */
 export async function loadNoticeList() {
   try {
-    const values = await fetchRowsByTitle(NOTICE_SHEET_TITLE, "A:Z");
-    if (!values || values.length < 2) return [];
+    // 1. 우리가 만든 API 호출
+    const res = await fetch("/api/notices");
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    const rawData = await res.json(); // API가 최신순으로 정렬해서 줌
 
-    const headers = values[0].map((h) =>
-      typeof h === "string" ? h.trim() : h
-    );
-    const contentRows = values.slice(1);
+    // 24시간 'New' 배지 자동화를 위한 로직
+    const now = new Date(); // 현재 시간
+    const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 24시간(밀리초)
 
-    const noticeData = contentRows.map((row) => {
-      const obj = {};
-      headers.forEach((header, i) => {
-        let value = row[i] ?? "";
-        if (typeof value === "string") value = value.trim();
-        obj[header] = value;
-      });
-      return obj;
+    // 4. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
+    const noticeData = rawData.map((item) => {
+      // 공지 날짜와 현재 시간 비교
+      const noticeDate = new Date(item.date);
+      const timeDiff = now.getTime() - noticeDate.getTime();
+      const isNew = timeDiff < twentyFourHoursInMs && timeDiff > 0; // 24시간 이내
+
+      return {
+        Title: item.title,
+        Content: item.content,
+        Date: item.date,
+        New: isNew, // CSV 파일처럼 'New' 키에 true/false 값 전달
+        id: item.id,
+      };
     });
 
+    // 5. 화면에 그리기
     if (typeof renderNoticeList === "function") {
       renderNoticeList(noticeData);
     }
