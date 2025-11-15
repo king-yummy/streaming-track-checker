@@ -38,7 +38,6 @@
         padding: 8px;
       }
 
-      /* --- (수정) 버튼 스타일 분리 --- */
       button {
         padding: 10px 15px;
         border: none;
@@ -85,7 +84,6 @@
         font-size: 1.1em;
       }
 
-      /* --- (추가) 수정/삭제 버튼 --- */
       .item-buttons {
         white-space: nowrap;
         margin-left: 10px;
@@ -160,7 +158,6 @@
         "current-notice-message"
       );
 
-      // --- (추가) 폼 필드 DOM ---
       const noticeIdInput = document.getElementById("notice-id");
       const dateInput = document.getElementById("date");
       const titleInput = document.getElementById("title");
@@ -168,12 +165,10 @@
       const submitBtn = document.getElementById("submit-btn");
       const cancelBtn = document.getElementById("cancel-btn");
 
-      // --- (추가) 전체 공지 목록을 저장할 변수 ---
       let allNotices = [];
 
-      // --- (추가) 폼 초기화 함수 ---
       function resetForm() {
-        noticeIdInput.value = ""; // (중요) 숨겨진 ID 초기화
+        noticeIdInput.value = "";
         noticeForm.reset();
         dateInput.valueAsDate = new Date();
         submitBtn.textContent = "공지사항 저장";
@@ -188,7 +183,7 @@
         const title = titleInput.value;
         const content = contentInput.value;
         const date = dateInput.value;
-        const idToUpdate = noticeIdInput.value; // (중요) ID 값 확인
+        const idToUpdate = noticeIdInput.value;
 
         let method, url, body, successMessage;
 
@@ -196,19 +191,18 @@
           // (수정) ID가 있으면 '수정' (PUT)
           method = "PUT";
           url = "/api/notices";
+
+          // --- 🔴 여기가 에러난 부분이었습니다! 🔴 ---
+          // (X) updatedTitle, updatedContent ...
+          // (O) title, content ...
           body = JSON.stringify({
-            id: idToUpdate,
-            title: updatedTitle, // (실수) 변수명 수정
-            content: updatedContent, // (실수) 변수명 수정
-            date: updatedDate, // (실수) 변수명 수정
-          });
-          body = JSON.stringify({
-            // ◀◀◀ (수정) 올바른 변수명
             id: idToUpdate,
             title: title,
             content: content,
             date: date,
           });
+          // ------------------------------------------
+
           successMessage = "✅ 공지사항이 성공적으로 수정되었습니다!";
           noticeMessage.textContent = "수정 중...";
         } else {
@@ -230,8 +224,8 @@
           if (res.ok) {
             noticeMessage.textContent = successMessage;
             noticeMessage.style.color = "green";
-            resetForm(); // (중요) 폼 초기화
-            loadNotices(); // 목록 새로고침
+            resetForm();
+            loadNotices();
           } else {
             const errorData = await res.json();
             throw new Error(errorData.error || "작업 실패");
@@ -251,7 +245,7 @@
           const res = await fetch("/api/notices");
           if (!res.ok) throw new Error("목록 로딩 실패");
 
-          allNotices = await res.json(); // (중요) 전체 목록을 변수에 저장
+          allNotices = await res.json();
 
           if (allNotices.length === 0) {
             listContainer.innerHTML = "<p>등록된 공지사항이 없습니다.</p>";
@@ -304,7 +298,7 @@
             if (res.ok) {
               currentNoticeMessage.textContent = "✅ 삭제되었습니다.";
               currentNoticeMessage.style.color = "green";
-              loadNotices(); // 목록 새로고침
+              loadNotices();
             } else {
               throw new Error((await res.json()).error || "삭제 실패");
             }
@@ -317,22 +311,17 @@
         // --- 3B. [수정] 버튼 클릭 ---
         if (target.classList.contains("edit-btn")) {
           const idToEdit = target.dataset.id;
-
-          // (중요) allNotices 배열에서 해당 ID의 데이터 찾기
           const noticeToEdit = allNotices.find((item) => item.id === idToEdit);
           if (!noticeToEdit) return;
 
-          // 1. 폼에 데이터 채우기
           noticeIdInput.value = noticeToEdit.id;
           dateInput.value = noticeToEdit.date;
           titleInput.value = noticeToEdit.title;
           contentInput.value = noticeToEdit.content;
 
-          // 2. 폼 상태 변경
           submitBtn.textContent = "수정 완료";
           cancelBtn.style.display = "inline-block";
 
-          // 3. (편의) 페이지 상단 폼으로 스크롤
           window.scrollTo(0, 0);
         }
       });
@@ -344,8 +333,8 @@
 
       // 5. 페이지 로드 시 목록 자동 불러오기
       document.addEventListener("DOMContentLoaded", () => {
-        resetForm(); // 폼 초기화
-        loadNotices(); // 목록 로드
+        resetForm();
+        loadNotices();
       });
     </script>
   </body>
