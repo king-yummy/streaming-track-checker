@@ -108,7 +108,7 @@ export async function loadTodoListData() {
   }
 }
 
-/** 공지사항: 백엔드 API (/api/notices) 연동 + 24시간 'New' 자동화 */
+/** 공지사항: 백엔드 API (/api/notices) 연동 + 'New' 로직 수정 */
 export async function loadNoticeList() {
   try {
     // 1. 우리가 만든 API(/api/notices) 호출
@@ -116,17 +116,25 @@ export async function loadNoticeList() {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const rawData = await res.json(); // API가 최신순으로 정렬해서 줌
 
-    // 2. 24시간 'New' 배지 자동화를 위한 로직
-    const now = new Date(); // 현재 시간
-    const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 24시간(밀리초)
+    // --- 🔴 (수정) v2: 'New' 아이콘 계산 로직 🔴 ---
+    // (시차 문제, 계산 오류를 피하기 위해 문자열로 비교)
+
+    // 1. KST (한국 시간) 기준 '오늘 날짜'의 YYYY-MM-DD 문자열 생성
+    const nowKST = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+    );
+    const todayString =
+      nowKST.getFullYear() +
+      "-" +
+      String(nowKST.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(nowKST.getDate()).padStart(2, "0");
+    // --- 🔴 로직 수정 끝 🔴 ---
 
     // 3. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
     const noticeData = rawData.map((item) => {
-      const noticeDate = new Date(item.date + "T00:00:00");
-      const timeDiff = now.getTime() - noticeDate.getTime();
-
-      // 24시간 이내에 작성되었고, 미래의 날짜가 아닌 경우
-      const isNew = timeDiff < twentyFourHoursInMs && timeDiff > 0;
+      // (수정) v2: 공지 날짜(item.date)와 오늘 날짜(todayString)를 문자열로 비교
+      const isNew = item.date === todayString;
 
       return {
         Title: item.title,

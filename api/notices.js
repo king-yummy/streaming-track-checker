@@ -1,14 +1,12 @@
-// api/notices.js (v2 - 푸시 알림 기능)
+// api/notices.js (v2.2 - 삭제 버그 최종 수정)
 
 import { kv } from "@vercel/kv";
-// --- (추가) v2: 푸시 알림을 위한 모듈 ---
 import admin from "firebase-admin";
 import fs from "fs";
 import path from "path";
 import os from "os";
-// ------------------------------------
 
-// --- (추가) v2: api/push-test.js에서 가져온 헬퍼 함수 ---
+// --- api/push-test.js에서 가져온 헬퍼 함수 ---
 const TMP_DIR = path.join(os.tmpdir(), "plli-checker");
 const TOKEN_FILE = path.join(TMP_DIR, "tokens.json");
 
@@ -46,8 +44,6 @@ export default async function handler(request, response) {
 
       // 공지사항 추가 (POST)
       case "POST": {
-        // (수정) v2: case를 블록으로 감싸기
-        // (수정) v2: sendPush 값 받기
         const { title, content, date, sendPush } = request.body;
         if (!title || !content || !date) {
           return response
@@ -55,21 +51,14 @@ export default async function handler(request, response) {
             .json({ error: "Title, content, and date are required." });
         }
 
-        const newNotice = {
-          id: `noti_${Date.now()}`,
-          title,
-          content,
-          date,
-        };
+        const newNotice = { id: `noti_${Date.now()}`, title, content, date };
         await kv.hset("notices", { [newNotice.id]: newNotice });
 
         let pushResult = null;
-        // (추가) v2: 푸시 알림 전송 로직
         if (sendPush) {
           try {
             ensureAdmin();
             const tokens = readTokens();
-            // 'notice' 수신 동의한 유저만 필터링
             const targets = tokens
               .filter((t) => t.noticeOptIn)
               .map((t) => t.token);
@@ -77,10 +66,7 @@ export default async function handler(request, response) {
             if (targets.length > 0) {
               const result = await admin.messaging().sendEachForMulticast({
                 tokens: targets,
-                notification: {
-                  title: title, // 새 공지 제목
-                  body: content, // 새 공지 내용
-                },
+                notification: { title: title, body: content },
               });
               pushResult = {
                 sent: result.successCount,
@@ -91,10 +77,9 @@ export default async function handler(request, response) {
             }
           } catch (e) {
             console.error("[Notice Push Error]", e.message);
-            pushResult = { sent: 0, failed: -1, error: e.message }; // 푸시 실패 기록
+            pushResult = { sent: 0, failed: -1, error: e.message };
           }
         }
-        // (수정) v2: 푸시 결과를 포함하여 응답
         return response
           .status(200)
           .json({ success: true, notice: newNotice, push: pushResult });
@@ -102,13 +87,12 @@ export default async function handler(request, response) {
 
       // 공지사항 수정 (PUT)
       case "PUT": {
-        // (수정) v2: case를 블록으로 감싸기
         const {
           id: idToUpdate,
           title: updatedTitle,
           content: updatedContent,
           date: updatedDate,
-          sendPush, // (추가) v2: sendPush 값 받기
+          sendPush,
         } = request.body;
 
         if (!idToUpdate || !updatedTitle || !updatedContent || !updatedDate) {
@@ -128,7 +112,6 @@ export default async function handler(request, response) {
         await kv.hset("notices", { [idToUpdate]: updatedNotice });
 
         let pushResult = null;
-        // (추가) v2: 푸시 알림 전송 로직 (수정)
         if (sendPush) {
           try {
             ensureAdmin();
@@ -141,7 +124,7 @@ export default async function handler(request, response) {
               const result = await admin.messaging().sendEachForMulticast({
                 tokens: targets,
                 notification: {
-                  title: `📢 [수정] ${updatedTitle}`, // (수정) v2: 수정 알림
+                  title: `📢 [수정] ${updatedTitle}`,
                   body: updatedContent,
                 },
               });
@@ -169,8 +152,11 @@ export default async function handler(request, response) {
         if (!idToDelete) {
           return response.status(400).json({ error: "Notice ID is required." });
         }
-        await kv.hdel("notices", idToToDelete); // (실수) 변수명 수정
-        await kv.hdel("notices", idToDelete); // ◀◀◀ (수정) 올바른 변수명
+
+        // --- 🔴 500 에러 원인이었던 오타 라인을 '완전히' 삭제했습니다. 🔴 ---
+        await kv.hdel("notices", idToDelete);
+        // ------------------------------------------------------
+
         return response.status(200).json({ success: true });
       }
 
