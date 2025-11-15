@@ -37,19 +37,77 @@
       input[type="date"] {
         padding: 8px;
       }
+
+      /* --- (수정) 버튼 스타일 분리 --- */
       button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
+        padding: 10px 15px;
         border: none;
         cursor: pointer;
+        border-radius: 4px;
       }
-      button:hover {
+      .btn-submit {
+        background-color: #007bff;
+        color: white;
+      }
+      .btn-submit:hover {
         background-color: #0056b3;
       }
-      #message {
+      .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        margin-left: 10px;
+      }
+      .btn-cancel:hover {
+        background-color: #5a6268;
+      }
+
+      #notice-message,
+      #current-notice-message {
         margin-top: 15px;
         font-weight: bold;
+      }
+      .notice-list {
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+      }
+      .notice-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .notice-item div {
+        flex: 1;
+        margin: 0;
+      }
+      .notice-item strong {
+        font-size: 1.1em;
+      }
+
+      /* --- (추가) 수정/삭제 버튼 --- */
+      .item-buttons {
+        white-space: nowrap;
+        margin-left: 10px;
+      }
+      .edit-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.9em;
+        margin-right: 5px;
+      }
+      .edit-btn:hover {
+        background-color: #218838;
+      }
+      .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.9em;
+      }
+      .delete-btn:hover {
+        background-color: #c82333;
       }
     </style>
   </head>
@@ -57,6 +115,8 @@
     <div class="admin-section" id="notice-manager">
       <h1>공지사항 관리</h1>
       <form id="notice-form">
+        <input type="hidden" id="notice-id" />
+
         <div>
           <label for="date">날짜 (Date)</label>
           <input type="date" id="date" required />
@@ -69,58 +129,224 @@
           <label for="content">내용 (Content)</label>
           <textarea id="content" rows="5" required></textarea>
         </div>
-        <button type="submit">공지사항 저장</button>
+
+        <div>
+          <button type="submit" class="btn-submit" id="submit-btn">
+            공지사항 저장
+          </button>
+          <button
+            type="button"
+            class="btn-cancel"
+            id="cancel-btn"
+            style="display: none"
+          >
+            수정 취소
+          </button>
+        </div>
       </form>
       <div id="notice-message"></div>
+
+      <hr style="margin-top: 30px" />
+      <h2>현재 공지 목록</h2>
+      <div id="current-notice-message"></div>
+      <div id="notice-list-container"></div>
     </div>
 
     <script>
-      // --- 공지사항 관리 스크립트 ---
+      const noticeForm = document.getElementById("notice-form");
+      const noticeMessage = document.getElementById("notice-message");
+      const listContainer = document.getElementById("notice-list-container");
+      const currentNoticeMessage = document.getElementById(
+        "current-notice-message"
+      );
 
-      // 1. 오늘 날짜 기본 설정
-      document.getElementById("date").valueAsDate = new Date();
+      // --- (추가) 폼 필드 DOM ---
+      const noticeIdInput = document.getElementById("notice-id");
+      const dateInput = document.getElementById("date");
+      const titleInput = document.getElementById("title");
+      const contentInput = document.getElementById("content");
+      const submitBtn = document.getElementById("submit-btn");
+      const cancelBtn = document.getElementById("cancel-btn");
 
-      // 2. 폼 제출(저장) 이벤트
-      document
-        .getElementById("notice-form")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
+      // --- (추가) 전체 공지 목록을 저장할 변수 ---
+      let allNotices = [];
 
-          const title = document.getElementById("title").value;
-          const content = document.getElementById("content").value;
-          const date = document.getElementById("date").value;
+      // --- (추가) 폼 초기화 함수 ---
+      function resetForm() {
+        noticeIdInput.value = ""; // (중요) 숨겨진 ID 초기화
+        noticeForm.reset();
+        dateInput.valueAsDate = new Date();
+        submitBtn.textContent = "공지사항 저장";
+        cancelBtn.style.display = "none";
+        noticeMessage.textContent = "";
+      }
 
-          const messageDiv = document.getElementById("notice-message");
-          messageDiv.textContent = "저장 중...";
+      // 1. [저장/수정] 폼 제출(POST / PUT) 이벤트
+      noticeForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
+        const title = titleInput.value;
+        const content = contentInput.value;
+        const date = dateInput.value;
+        const idToUpdate = noticeIdInput.value; // (중요) ID 값 확인
+
+        let method, url, body, successMessage;
+
+        if (idToUpdate) {
+          // (수정) ID가 있으면 '수정' (PUT)
+          method = "PUT";
+          url = "/api/notices";
+          body = JSON.stringify({
+            id: idToUpdate,
+            title: updatedTitle, // (실수) 변수명 수정
+            content: updatedContent, // (실수) 변수명 수정
+            date: updatedDate, // (실수) 변수명 수정
+          });
+          body = JSON.stringify({
+            // ◀◀◀ (수정) 올바른 변수명
+            id: idToUpdate,
+            title: title,
+            content: content,
+            date: date,
+          });
+          successMessage = "✅ 공지사항이 성공적으로 수정되었습니다!";
+          noticeMessage.textContent = "수정 중...";
+        } else {
+          // ID가 없으면 '신규' (POST)
+          method = "POST";
+          url = "/api/notices";
+          body = JSON.stringify({ title, content, date });
+          successMessage = "✅ 공지사항이 성공적으로 저장되었습니다!";
+          noticeMessage.textContent = "저장 중...";
+        }
+
+        try {
+          const res = await fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: body,
+          });
+
+          if (res.ok) {
+            noticeMessage.textContent = successMessage;
+            noticeMessage.style.color = "green";
+            resetForm(); // (중요) 폼 초기화
+            loadNotices(); // 목록 새로고침
+          } else {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "작업 실패");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          noticeMessage.textContent = "❌ 작업 실패: " + error.message;
+          noticeMessage.style.color = "red";
+        }
+      });
+
+      // 2. [조회] 공지 목록 불러오기 (GET)
+      async function loadNotices() {
+        listContainer.innerHTML = "목록을 불러오는 중...";
+        currentNoticeMessage.textContent = "";
+        try {
+          const res = await fetch("/api/notices");
+          if (!res.ok) throw new Error("목록 로딩 실패");
+
+          allNotices = await res.json(); // (중요) 전체 목록을 변수에 저장
+
+          if (allNotices.length === 0) {
+            listContainer.innerHTML = "<p>등록된 공지사항이 없습니다.</p>";
+            return;
+          }
+
+          listContainer.innerHTML = allNotices
+            .map(
+              (item) => `
+                    <div class="notice-item" id="item-${item.id}">
+                        <div>
+                            <strong>${item.title}</strong> (${item.date})<br>
+                            <small>${item.content.substring(0, 100)}...</small>
+                        </div>
+                        <div class="item-buttons">
+                            <button class="edit-btn" data-id="${
+                              item.id
+                            }">수정</button>
+                            <button class="delete-btn" data-id="${
+                              item.id
+                            }">삭제</button>
+                        </div>
+                    </div>
+                `
+            )
+            .join("");
+        } catch (error) {
+          listContainer.innerHTML = `<p style="color: red;">${error.message}</p>`;
+        }
+      }
+
+      // 3. [삭제/수정] 목록 버튼 클릭 이벤트
+      listContainer.addEventListener("click", async function (e) {
+        const target = e.target;
+
+        // --- 3A. [삭제] 버튼 클릭 ---
+        if (target.classList.contains("delete-btn")) {
+          const idToDelete = target.dataset.id;
+          if (!confirm(`[${idToDelete}] 공지를 정말 삭제하시겠습니까?`)) {
+            return;
+          }
+
+          currentNoticeMessage.textContent = "삭제 중...";
           try {
-            // 1단계에서 만든 API(/api/notices) 호출
             const res = await fetch("/api/notices", {
-              method: "POST",
+              method: "DELETE",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                title: title,
-                content: content,
-                date: date,
-              }),
+              body: JSON.stringify({ id: idToDelete }),
             });
-
             if (res.ok) {
-              messageDiv.textContent =
-                "✅ 공지사항이 성공적으로 저장되었습니다!";
-              messageDiv.style.color = "green";
-              document.getElementById("title").value = "";
-              document.getElementById("content").value = "";
+              currentNoticeMessage.textContent = "✅ 삭제되었습니다.";
+              currentNoticeMessage.style.color = "green";
+              loadNotices(); // 목록 새로고침
             } else {
-              const errorData = await res.json();
-              throw new Error(errorData.error || "저장 실패");
+              throw new Error((await res.json()).error || "삭제 실패");
             }
           } catch (error) {
-            console.error("Error:", error);
-            messageDiv.textContent = "❌ 저장 실패: " + error.message;
-            messageDiv.style.color = "red";
+            currentNoticeMessage.textContent = `❌ ${error.message}`;
+            currentNoticeMessage.style.color = "red";
           }
-        });
+        }
+
+        // --- 3B. [수정] 버튼 클릭 ---
+        if (target.classList.contains("edit-btn")) {
+          const idToEdit = target.dataset.id;
+
+          // (중요) allNotices 배열에서 해당 ID의 데이터 찾기
+          const noticeToEdit = allNotices.find((item) => item.id === idToEdit);
+          if (!noticeToEdit) return;
+
+          // 1. 폼에 데이터 채우기
+          noticeIdInput.value = noticeToEdit.id;
+          dateInput.value = noticeToEdit.date;
+          titleInput.value = noticeToEdit.title;
+          contentInput.value = noticeToEdit.content;
+
+          // 2. 폼 상태 변경
+          submitBtn.textContent = "수정 완료";
+          cancelBtn.style.display = "inline-block";
+
+          // 3. (편의) 페이지 상단 폼으로 스크롤
+          window.scrollTo(0, 0);
+        }
+      });
+
+      // 4. [수정 취소] 버튼 클릭 이벤트
+      cancelBtn.addEventListener("click", function () {
+        resetForm();
+      });
+
+      // 5. 페이지 로드 시 목록 자동 불러오기
+      document.addEventListener("DOMContentLoaded", () => {
+        resetForm(); // 폼 초기화
+        loadNotices(); // 목록 로드
+      });
     </script>
   </body>
 </html>
