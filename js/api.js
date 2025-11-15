@@ -111,32 +111,33 @@ export async function loadTodoListData() {
 /** 공지사항: 백엔드 API (/api/notices) 연동 + 24시간 'New' 자동화 */
 export async function loadNoticeList() {
   try {
-    // 1. 우리가 만든 API 호출
+    // 1. 우리가 만든 API(/api/notices) 호출
     const res = await fetch("/api/notices");
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const rawData = await res.json(); // API가 최신순으로 정렬해서 줌
 
-    // 24시간 'New' 배지 자동화를 위한 로직
+    // 2. 24시간 'New' 배지 자동화를 위한 로직
     const now = new Date(); // 현재 시간
     const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 24시간(밀리초)
 
-    // 4. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
+    // 3. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
     const noticeData = rawData.map((item) => {
-      // 공지 날짜와 현재 시간 비교
       const noticeDate = new Date(item.date);
       const timeDiff = now.getTime() - noticeDate.getTime();
-      const isNew = timeDiff < twentyFourHoursInMs && timeDiff > 0; // 24시간 이내
+
+      // 24시간 이내에 작성되었고, 미래의 날짜가 아닌 경우
+      const isNew = timeDiff < twentyFourHoursInMs && timeDiff > 0;
 
       return {
         Title: item.title,
         Content: item.content,
         Date: item.date,
-        New: isNew, // CSV 파일처럼 'New' 키에 true/false 값 전달
+        New: isNew, // 'New' 키에 true/false 값 전달
         id: item.id,
       };
     });
 
-    // 5. 화면에 그리기
+    // 4. 화면에 그리기
     if (typeof renderNoticeList === "function") {
       renderNoticeList(noticeData);
     }
