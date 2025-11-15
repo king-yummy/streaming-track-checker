@@ -1,4 +1,4 @@
-// api/notices.js (v2.2 - 삭제 버그 최종 수정)
+// api/notices.js (v2.3 - KST 날짜 자동 생성)
 
 import { kv } from "@vercel/kv";
 import admin from "firebase-admin";
@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 
-// --- api/push-test.js에서 가져온 헬퍼 함수 ---
+// --- 푸시 알림 헬퍼 함수 (v2.2와 동일) ---
 const TMP_DIR = path.join(os.tmpdir(), "plli-checker");
 const TOKEN_FILE = path.join(TMP_DIR, "tokens.json");
 
@@ -30,39 +30,60 @@ function ensureAdmin() {
 }
 // ----------------------------------------------------
 
+// --- (추가) v2.3: KST 날짜 생성 헬퍼 함수 ---
+function getKSTDateString() {
+  const nowKST = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+  );
+  return (
+    nowKST.getFullYear() +
+    "-" +
+    String(nowKST.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(nowKST.getDate()).padStart(2, "0")
+  );
+}
+// ----------------------------------------------------
+
 export default async function handler(request, response) {
   const { method } = request;
 
   try {
     switch (method) {
-      // 공지사항 조회 (GET)
+      // (GET은 v2.2와 동일)
       case "GET":
         const noticeHash = await kv.hgetall("notices");
         let notices = noticeHash ? Object.values(noticeHash) : [];
         notices.sort((a, b) => new Date(b.date) - new Date(a.date));
         return response.status(200).json(notices);
 
-      // 공지사항 추가 (POST)
+      // (POST 수정) v2.3: 날짜 자동 생성
       case "POST": {
-        const { title, content, date, sendPush } = request.body;
-        if (!title || !content || !date) {
+        const { title, content, sendPush } = request.body; // 'date' 제거
+        if (!title || !content) {
+          // 'date' 제거
           return response
             .status(400)
-            .json({ error: "Title, content, and date are required." });
+            .json({ error: "Title and content are required." }); // 'date' 제거
         }
 
-        const newNotice = { id: `noti_${Date.now()}`, title, content, date };
+        const newNotice = {
+          id: `noti_${Date.now()}`,
+          title,
+          content,
+          date: getKSTDateString(), // 👈 (수정) v2.3: KST 날짜 자동 생성
+        };
         await kv.hset("notices", { [newNotice.id]: newNotice });
 
         let pushResult = null;
         if (sendPush) {
+          // ... (푸시 로직은 v2.2와 동일) ...
           try {
             ensureAdmin();
             const tokens = readTokens();
             const targets = tokens
               .filter((t) => t.noticeOptIn)
               .map((t) => t.token);
-
             if (targets.length > 0) {
               const result = await admin.messaging().sendEachForMulticast({
                 tokens: targets,
@@ -85,41 +106,46 @@ export default async function handler(request, response) {
           .json({ success: true, notice: newNotice, push: pushResult });
       }
 
-      // 공지사항 수정 (PUT)
+      // (PUT 수정) v2.3: 기존 날짜 유지
       case "PUT": {
         const {
           id: idToUpdate,
           title: updatedTitle,
           content: updatedContent,
-          date: updatedDate,
+          // date: updatedDate, // (삭제) v2.3
           sendPush,
         } = request.body;
 
-        if (!idToUpdate || !updatedTitle || !updatedContent || !updatedDate) {
+        if (!idToUpdate || !updatedTitle || !updatedContent) {
+          // 'date' 제거
           return response
             .status(400)
-            .json({
-              error: "ID, title, content, and date are required for update.",
-            });
+            .json({ error: "ID, title, and content are required for update." }); // 'date' 제거
+        }
+
+        // (수정) v2.3: 기존 공지사항의 날짜를 보존하기 위해 원본 조회
+        const originalNotice = await kv.hget("notices", idToUpdate);
+        if (!originalNotice) {
+          return response.status(404).json({ error: "Notice not found." });
         }
 
         const updatedNotice = {
           id: idToUpdate,
           title: updatedTitle,
           content: updatedContent,
-          date: updatedDate,
+          date: originalNotice.date, // 👈 (수정) v2.3: 원본 날짜 사용
         };
         await kv.hset("notices", { [idToUpdate]: updatedNotice });
 
         let pushResult = null;
         if (sendPush) {
+          // ... (푸시 로직은 v2.2와 동일) ...
           try {
             ensureAdmin();
             const tokens = readTokens();
             const targets = tokens
               .filter((t) => t.noticeOptIn)
               .map((t) => t.token);
-
             if (targets.length > 0) {
               const result = await admin.messaging().sendEachForMulticast({
                 tokens: targets,
@@ -146,17 +172,13 @@ export default async function handler(request, response) {
           .json({ success: true, notice: updatedNotice, push: pushResult });
       }
 
-      // 공지사항 삭제 (DELETE)
+      // (DELETE는 v2.2와 동일)
       case "DELETE": {
         const { id: idToDelete } = request.body;
         if (!idToDelete) {
           return response.status(400).json({ error: "Notice ID is required." });
         }
-
-        // --- 🔴 500 에러 원인이었던 오타 라인을 '완전히' 삭제했습니다. 🔴 ---
         await kv.hdel("notices", idToDelete);
-        // ------------------------------------------------------
-
         return response.status(200).json({ success: true });
       }
 

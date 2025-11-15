@@ -1,4 +1,4 @@
-// js/main.js (최종 배포용 - Mnetplus 외부 오픈 & Superfan 섹션 완전 복원)
+// js/main.js 
 
 import { loadStreamingList, loadTodoListData, loadNoticeList } from "./api.js";
 import {

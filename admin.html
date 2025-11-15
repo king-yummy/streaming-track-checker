@@ -34,9 +34,7 @@
         padding: 8px;
         box-sizing: border-box;
       }
-      input[type="date"] {
-        padding: 8px;
-      }
+      /* input[type="date"] { padding: 8px; } - (삭제) */
 
       button {
         padding: 10px 15px;
@@ -60,7 +58,6 @@
         background-color: #5a6268;
       }
 
-      /* --- (추가) v4: 푸시 알림 체크박스 --- */
       .form-check {
         display: flex;
         align-items: center;
@@ -73,7 +70,6 @@
         margin-bottom: 0;
         font-weight: normal;
       }
-      /* ---------------------------------- */
 
       #notice-message,
       #current-notice-message {
@@ -131,10 +127,6 @@
         <input type="hidden" id="notice-id" />
 
         <div>
-          <label for="date">날짜 (Date)</label>
-          <input type="date" id="date" required />
-        </div>
-        <div>
           <label for="title">제목 (Title)</label>
           <input type="text" id="title" required />
         </div>
@@ -147,6 +139,7 @@
           <input type="checkbox" id="send-push" />
           <label for="send-push">📢 유저에게 푸시 알림 보내기</label>
         </div>
+
         <div>
           <button type="submit" class="btn-submit" id="submit-btn">
             공지사항 저장
@@ -178,23 +171,23 @@
       );
 
       const noticeIdInput = document.getElementById("notice-id");
-      const dateInput = document.getElementById("date");
+      // const dateInput = document.getElementById('date'); // (삭제) v5
       const titleInput = document.getElementById("title");
       const contentInput = document.getElementById("content");
       const submitBtn = document.getElementById("submit-btn");
       const cancelBtn = document.getElementById("cancel-btn");
-      const sendPushInput = document.getElementById("send-push"); // (추가) v4
+      const sendPushInput = document.getElementById("send-push");
 
       let allNotices = [];
 
       function resetForm() {
         noticeIdInput.value = "";
         noticeForm.reset();
-        dateInput.valueAsDate = new Date();
+        // dateInput.valueAsDate = new Date(); // (삭제) v5
         submitBtn.textContent = "공지사항 저장";
         cancelBtn.style.display = "none";
         noticeMessage.textContent = "";
-        sendPushInput.checked = false; // (추가) v4: 체크박스 초기화
+        sendPushInput.checked = false;
       }
 
       // 1. [저장/수정] 폼 제출(POST / PUT) 이벤트
@@ -203,9 +196,9 @@
 
         const title = titleInput.value;
         const content = contentInput.value;
-        const date = dateInput.value;
+        // const date = dateInput.value; // (삭제) v5
         const idToUpdate = noticeIdInput.value;
-        const sendPush = sendPushInput.checked; // (추가) v4: 체크박스 값
+        const sendPush = sendPushInput.checked;
 
         let method, url, body, successMessage;
 
@@ -217,8 +210,8 @@
             id: idToUpdate,
             title: title,
             content: content,
-            date: date,
-            sendPush: sendPush, // (추가) v4
+            // date: date, // (삭제) v5
+            sendPush: sendPush,
           });
           successMessage = "✅ 공지사항이 성공적으로 수정되었습니다!";
           noticeMessage.textContent = "수정 중...";
@@ -229,8 +222,8 @@
           body = JSON.stringify({
             title,
             content,
-            date,
-            sendPush: sendPush, // (추가) v4
+            // date, // (삭제) v5
+            sendPush: sendPush,
           });
           successMessage = "✅ 공지사항이 성공적으로 저장되었습니다!";
           noticeMessage.textContent = "저장 중...";
@@ -243,13 +236,12 @@
             body: body,
           });
 
-          const result = await res.json(); // (수정) v4: 응답을 먼저 파싱
+          const result = await res.json();
 
           if (res.ok && result.success) {
             noticeMessage.textContent = successMessage;
             noticeMessage.style.color = "green";
 
-            // (추가) v4: 푸시 알림 결과 표시
             if (result.push) {
               noticeMessage.textContent += ` (푸시: ${result.push.sent}명 전송, ${result.push.failed}명 실패)`;
             }
@@ -281,12 +273,13 @@
             return;
           }
 
+          // (수정) v5: 목록에 날짜 표시
           listContainer.innerHTML = allNotices
             .map(
               (item) => `
                     <div class="notice-item" id="item-${item.id}">
                         <div>
-                            <strong>${item.title}</strong> (${item.date})<br>
+                            <strong>${item.title}</strong> (${item.date})<br> 
                             <small>${item.content.substring(0, 100)}...</small>
                         </div>
                         <div class="item-buttons">
@@ -306,13 +299,15 @@
         }
       }
 
-      // 3. [삭제/수정] 목록 버튼 클릭 이벤트 (이하 v3.1과 동일)
+      // 3. [삭제/수정] 목록 버튼 클릭 이벤트
       listContainer.addEventListener("click", async function (e) {
         const target = e.target;
+
+        // --- 3A. [삭제] 버튼 클릭 ---
         if (target.classList.contains("delete-btn")) {
+          // ... (v4.1과 동일) ...
           const idToDelete = target.dataset.id;
           if (!confirm(`[${idToDelete}] 공지를 정말 삭제하시겠습니까?`)) return;
-
           currentNoticeMessage.textContent = "삭제 중...";
           try {
             const res = await fetch("/api/notices", {
@@ -332,16 +327,24 @@
             currentNoticeMessage.style.color = "red";
           }
         }
+
+        // --- 3B. [수정] 버튼 클릭 ---
         if (target.classList.contains("edit-btn")) {
           const idToEdit = target.dataset.id;
           const noticeToEdit = allNotices.find((item) => item.id === idToEdit);
           if (!noticeToEdit) return;
+
+          // 1. 폼에 데이터 채우기 (날짜 제외)
           noticeIdInput.value = noticeToEdit.id;
-          dateInput.value = noticeToEdit.date;
+          // dateInput.value = noticeToEdit.date; // (삭제) v5
           titleInput.value = noticeToEdit.title;
           contentInput.value = noticeToEdit.content;
+
+          // 2. 폼 상태 변경
           submitBtn.textContent = "수정 완료";
           cancelBtn.style.display = "inline-block";
+
+          // 3. (편의) 페이지 상단 폼으로 스크롤
           window.scrollTo(0, 0);
         }
       });
