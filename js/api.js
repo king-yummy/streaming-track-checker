@@ -122,7 +122,7 @@ export async function loadNoticeList() {
 
     // 3. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
     const noticeData = rawData.map((item) => {
-      const noticeDate = new Date(item.date);
+      const noticeDate = new Date(item.date + "T00:00:00");
       const timeDiff = now.getTime() - noticeDate.getTime();
 
       // 24시간 이내에 작성되었고, 미래의 날짜가 아닌 경우
