@@ -68,8 +68,9 @@ export async function requestNotificationPermission() {
       await fetch("/api/save-token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: currentToken, alarmOptIn: true }),
+        body: JSON.stringify({ token: currentToken, noticeOptIn: true }),
       });
+
       console.log("[알림] 권한 획득 및 토큰 저장 성공:", currentToken);
       const alarmToggle = document.getElementById("alarm-toggle");
       if (alarmToggle) alarmToggle.checked = true;
@@ -149,7 +150,7 @@ export async function initializeNotificationSystem() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token: currentToken,
-          alarmOptIn: alarmToggle.checked, // 통합 값 전송
+          noticeOptIn: alarmToggle.checked,
         }),
       });
     } catch (e) {
@@ -162,12 +163,15 @@ export async function initializeNotificationSystem() {
       const token = await ensurePermissionAndToken();
       if (token) {
         currentToken = token;
-        const res = await fetch(
-          `/api/save-token?token=${encodeURIComponent(token)}`
-        );
+        const res = await fetch("/api/save-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
+
         if (res.ok) {
-          const { alarmOptIn = false } = await res.json();
-          alarmToggle.checked = !!alarmOptIn;
+          const { noticeOptIn = false } = await res.json();
+          alarmToggle.checked = !!noticeOptIn;
         }
       }
     }

@@ -1,4 +1,4 @@
-// api/notices.js (v2.3 - KST 날짜 자동 생성)
+// api/notices.js (fixed version)
 
 import { kv } from "@vercel/kv";
 import admin from "firebase-admin";
@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 
-// --- 푸시 알림 헬퍼 함수 (v2.2와 동일) ---
+// --- local/tmp token storage ---
 const TMP_DIR = path.join(os.tmpdir(), "plli-checker");
 const TOKEN_FILE = path.join(TMP_DIR, "tokens.json");
 
@@ -19,6 +19,7 @@ function readTokens() {
   }
 }
 
+// --- firebase admin ---
 function ensureAdmin() {
   if (!admin.apps.length) {
     const json = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
@@ -28,9 +29,8 @@ function ensureAdmin() {
     });
   }
 }
-// ----------------------------------------------------
 
-// --- (추가) v2.3: KST 날짜 생성 헬퍼 함수 ---
+// --- 날짜 생성 함수 (KST) ---
 function getKSTDateString() {
   const nowKST = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
@@ -43,6 +43,17 @@ function getKSTDateString() {
     String(nowKST.getDate()).padStart(2, "0")
   );
 }
+
+// --- KV + file 토큰 통합 가져오기 ---
+async function getAllTokens() {
+  const fileTokens = readTokens();
+
+  const kvTokensHash = await kv.hgetall("fcm_tokens");
+  const kvTokens = kvTokensHash ? Object.values(kvTokensHash) : [];
+
+  return [...fileTokens, ...kvTokens];
+}
+
 // ----------------------------------------------------
 
 export default async function handler(request, response) {
@@ -50,44 +61,56 @@ export default async function handler(request, response) {
 
   try {
     switch (method) {
-      // (GET은 v2.2와 동일)
-      case "GET":
+      case "GET": {
         const noticeHash = await kv.hgetall("notices");
         let notices = noticeHash ? Object.values(noticeHash) : [];
-        notices.sort((a, b) => new Date(b.date) - new Date(a.date));
-        return response.status(200).json(notices);
 
-      // (POST 수정) v2.3: 날짜 자동 생성
+        // createdAt → id timestamp fallback → date 순
+        notices.sort((a, b) => {
+          const aTime = a.createdAt || parseInt((a.id || "").split("_")[1], 10);
+          const bTime = b.createdAt || parseInt((b.id || "").split("_")[1], 10);
+          return bTime - aTime;
+        });
+
+        return response.status(200).json(notices);
+      }
+
       case "POST": {
-        const { title, content, sendPush } = request.body; // 'date' 제거
+        const { title, content, sendPush } = request.body;
+
         if (!title || !content) {
-          // 'date' 제거
           return response
             .status(400)
-            .json({ error: "Title and content are required." }); // 'date' 제거
+            .json({ error: "Title and content are required." });
         }
 
+        const timestamp = Date.now();
+
         const newNotice = {
-          id: `noti_${Date.now()}`,
+          id: `noti_${timestamp}`,
           title,
           content,
-          date: getKSTDateString(), // 👈 (수정) v2.3: KST 날짜 자동 생성
+          date: getKSTDateString(),
+          createdAt: timestamp,
         };
+
         await kv.hset("notices", { [newNotice.id]: newNotice });
 
         let pushResult = null;
+
         if (sendPush) {
-          // ... (푸시 로직은 v2.2와 동일) ...
           try {
             ensureAdmin();
-            const tokens = readTokens();
+
+            const tokens = await getAllTokens();
             const targets = tokens
               .filter((t) => t.noticeOptIn)
               .map((t) => t.token);
+
             if (targets.length > 0) {
               const result = await admin.messaging().sendEachForMulticast({
                 tokens: targets,
-                notification: { title: title, body: content },
+                notification: { title, body: content },
               });
               pushResult = {
                 sent: result.successCount,
@@ -97,63 +120,61 @@ export default async function handler(request, response) {
               pushResult = { sent: 0, failed: 0, note: "no opt-in tokens" };
             }
           } catch (e) {
-            console.error("[Notice Push Error]", e.message);
             pushResult = { sent: 0, failed: -1, error: e.message };
           }
         }
-        return response
-          .status(200)
-          .json({ success: true, notice: newNotice, push: pushResult });
+
+        return response.status(200).json({
+          success: true,
+          notice: newNotice,
+          push: pushResult,
+        });
       }
 
-      // (PUT 수정) v2.3: 기존 날짜 유지
       case "PUT": {
-        const {
-          id: idToUpdate,
-          title: updatedTitle,
-          content: updatedContent,
-          // date: updatedDate, // (삭제) v2.3
-          sendPush,
-        } = request.body;
+        const { id: noticeId, title, content, sendPush } = request.body;
 
-        if (!idToUpdate || !updatedTitle || !updatedContent) {
-          // 'date' 제거
+        if (!noticeId || !title || !content) {
           return response
             .status(400)
-            .json({ error: "ID, title, and content are required for update." }); // 'date' 제거
+            .json({ error: "ID, title, and content are required." });
         }
 
-        // (수정) v2.3: 기존 공지사항의 날짜를 보존하기 위해 원본 조회
-        const originalNotice = await kv.hget("notices", idToUpdate);
-        if (!originalNotice) {
+        const original = await kv.hget("notices", noticeId);
+        if (!original) {
           return response.status(404).json({ error: "Notice not found." });
         }
 
-        const updatedNotice = {
-          id: idToUpdate,
-          title: updatedTitle,
-          content: updatedContent,
-          date: originalNotice.date, // 👈 (수정) v2.3: 원본 날짜 사용
+        const updated = {
+          id: noticeId,
+          title,
+          content,
+          date: original.date,
+          createdAt: original.createdAt,
         };
-        await kv.hset("notices", { [idToUpdate]: updatedNotice });
+
+        await kv.hset("notices", { [noticeId]: updated });
 
         let pushResult = null;
+
         if (sendPush) {
-          // ... (푸시 로직은 v2.2와 동일) ...
           try {
             ensureAdmin();
-            const tokens = readTokens();
+
+            const tokens = await getAllTokens();
             const targets = tokens
               .filter((t) => t.noticeOptIn)
               .map((t) => t.token);
+
             if (targets.length > 0) {
               const result = await admin.messaging().sendEachForMulticast({
                 tokens: targets,
                 notification: {
-                  title: `📢 [수정] ${updatedTitle}`,
-                  body: updatedContent,
+                  title: `📢 [수정] ${title}`,
+                  body: content,
                 },
               });
+
               pushResult = {
                 sent: result.successCount,
                 failed: result.failureCount,
@@ -162,23 +183,23 @@ export default async function handler(request, response) {
               pushResult = { sent: 0, failed: 0, note: "no opt-in tokens" };
             }
           } catch (e) {
-            console.error("[Notice Push Error]", e.message);
             pushResult = { sent: 0, failed: -1, error: e.message };
           }
         }
 
-        return response
-          .status(200)
-          .json({ success: true, notice: updatedNotice, push: pushResult });
+        return response.status(200).json({
+          success: true,
+          notice: updated,
+          push: pushResult,
+        });
       }
 
-      // (DELETE는 v2.2와 동일)
       case "DELETE": {
-        const { id: idToDelete } = request.body;
-        if (!idToDelete) {
+        const { id } = request.body;
+        if (!id) {
           return response.status(400).json({ error: "Notice ID is required." });
         }
-        await kv.hdel("notices", idToDelete);
+        await kv.hdel("notices", id);
         return response.status(200).json({ success: true });
       }
 
