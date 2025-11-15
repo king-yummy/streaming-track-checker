@@ -116,31 +116,40 @@ export async function loadNoticeList() {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const rawData = await res.json(); // API가 최신순으로 정렬해서 줌
 
-    // --- 🔴 (수정) 'New' 아이콘 계산 로직 🔴 ---
-    // (시차 문제, 계산 오류를 피하기 위해 문자열로 비교)
-
-    // 1. KST (한국 시간) 기준 '오늘 날짜'의 YYYY-MM-DD 문자열 생성
+    // --- 🔴 (수정) 'New' 아이콘 계산 로직 (24시간 이내) 🔴 ---
+    // 1. KST (한국 시간) 기준 '현재 시간'의 타임스탬프
     const nowKST = new Date(
       new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
     );
-    const todayString =
-      nowKST.getFullYear() +
-      "-" +
-      String(nowKST.getMonth() + 1).padStart(2, "0") +
-      "-" +
-      String(nowKST.getDate()).padStart(2, "0");
+    const nowTimestamp = nowKST.getTime();
+    // 24시간을 밀리초로 계산
+    const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
     // --- 🔴 로직 수정 끝 🔴 ---
 
     // 3. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
     const noticeData = rawData.map((item) => {
-      // (수정) 공지 날짜(item.date)와 오늘 날짜(todayString)를 문자열로 비교
-      const isNew = item.date === todayString;
+      let isNewBoolean = false; // 기본값은 false
+      try {
+        // item.id가 "noti_1731654560000" 같은 형태라고 가정
+        const timestamp = parseInt(item.id.split("_")[1], 10);
+        if (!isNaN(timestamp)) {
+          const diffMs = nowTimestamp - timestamp;
+          // 생성된 지 0초 ~ 24시간 사이인 경우 true
+          isNewBoolean = diffMs > 0 && diffMs < TWENTY_FOUR_HOURS_MS;
+        }
+      } catch (e) {
+        // ID 형식이 다르더라도 오류 방지
+        console.warn("Could not parse timestamp from notice ID:", item.id);
+      }
+
+      // [중요!] js/ui.js가 "TRUE" 문자열을 기대하므로 변환
+      const isNewString = isNewBoolean ? "TRUE" : "FALSE";
 
       return {
         Title: item.title,
         Content: item.content,
-        Date: item.date,
-        New: isNew, // 'New' 키에 true/false 값 전달
+        Date: item.date, // 관리자가 입력한 날짜 (표시용)
+        New: isNewString, // 👈 "TRUE" 또는 "FALSE" 문자열로 전달
         id: item.id,
       };
     });
