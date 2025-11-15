@@ -12,6 +12,7 @@ import {
   renderTodoList,
   checkNewNotices,
 } from "./ui.js";
+import { renderNoticeList } from "./ui.js";
 
 // ==== Mnetplus 외부 오픈 유틸 ====
 const MNET_HOSTS = ["share.mnetplus.world", "mnetplus.world"];

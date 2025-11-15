@@ -116,7 +116,7 @@ export async function loadNoticeList() {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const rawData = await res.json(); // API가 최신순으로 정렬해서 줌
 
-    // --- 🔴 (수정) v2: 'New' 아이콘 계산 로직 🔴 ---
+    // --- 🔴 (수정) 'New' 아이콘 계산 로직 🔴 ---
     // (시차 문제, 계산 오류를 피하기 위해 문자열로 비교)
 
     // 1. KST (한국 시간) 기준 '오늘 날짜'의 YYYY-MM-DD 문자열 생성
@@ -133,7 +133,7 @@ export async function loadNoticeList() {
 
     // 3. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
     const noticeData = rawData.map((item) => {
-      // (수정) v2: 공지 날짜(item.date)와 오늘 날짜(todayString)를 문자열로 비교
+      // (수정) 공지 날짜(item.date)와 오늘 날짜(todayString)를 문자열로 비교
       const isNew = item.date === todayString;
 
       return {
@@ -145,7 +145,7 @@ export async function loadNoticeList() {
       };
     });
 
-    // 4. 화면에 그리기
+    // 4. 화면에 그리기 (js/main.js에서도 이 함수를 호출함)
     if (typeof renderNoticeList === "function") {
       renderNoticeList(noticeData);
     }
