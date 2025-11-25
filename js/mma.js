@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // UI 업데이트
+  // UI 업데이트 (✨깔끔한 파란색으로 변경✨)
   function updateUI() {
     const total = allLinks.length;
     const remaining = availableLinks.length;
@@ -92,29 +92,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (remaining > 0) {
       statusText.innerHTML = `남은 링크: <span class="text-blue-600 font-bold">${remaining}</span>개`;
-      actionBtn.textContent = "MMA 티켓 품앗이 라쓰고!";
+      actionBtn.textContent = "🚀 MMA 티켓 품앗이 라쓰고! (클릭)";
+
+      // 비활성(회색) 스타일 제거
       actionBtn.classList.remove(
-        "bg-gray-200",
-        "text-gray-500",
+        "bg-gray-100",
+        "text-gray-400",
         "cursor-not-allowed"
       );
-      actionBtn.classList.add(
-        "bg-[#FEE500]",
-        "text-black",
-        "hover:bg-yellow-400"
-      );
+
+      // ✨ 활성(파란색) 스타일 추가 (애니메이션 없이 깔끔하게)
+      actionBtn.classList.add("bg-blue-500", "text-white", "hover:bg-blue-600");
       actionBtn.disabled = false;
     } else {
       statusText.innerHTML = "모든 품앗이 완료! 🎉";
-      actionBtn.textContent = "새로운 링크 잠기돌~";
+      actionBtn.textContent = "오늘 링크 모두 클리어👍";
+
+      // 활성 스타일 제거
       actionBtn.classList.remove(
-        "bg-[#FEE500]",
-        "text-black",
-        "hover:bg-yellow-400"
+        "bg-blue-500",
+        "text-white",
+        "hover:bg-blue-600"
       );
+
+      // 비활성 스타일 추가
       actionBtn.classList.add(
-        "bg-gray-200",
-        "text-gray-500",
+        "bg-gray-100",
+        "text-gray-400",
         "cursor-not-allowed"
       );
       actionBtn.disabled = true;
