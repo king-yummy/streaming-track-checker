@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (remaining > 0) {
       statusText.innerHTML = `남은 링크: <span class="text-blue-600 font-bold">${remaining}</span>개`;
-      actionBtn.textContent = "🚀 MMA 티켓 품앗이 라쓰고! (클릭)";
+      actionBtn.textContent = "🚀 MMA 티켓 품앗이 라쓰고!";
 
       // 비활성(회색) 스타일 제거
       actionBtn.classList.remove(
