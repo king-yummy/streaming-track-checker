@@ -16,20 +16,16 @@ export default async function handler(req, res) {
 
       if (!link) return res.status(400).json({ error: "링크를 입력해주세요." });
 
-      // 공백 제거
       link = link.trim();
 
-      // [필터링 핵심] 카카오뱅크 공식 도메인으로 시작하는지 엄격하게 검사
-      if (!link.startsWith("https://go.kakaobank.io/")) {
+      // [중요] 카카오뱅크 링크인지 검사
+      if (!link.includes("go.kakaobank.io")) {
         return res
           .status(400)
-          .json({
-            error:
-              "올바른 카카오뱅크 이벤트 링크만 등록할 수 있습니다.\n(https://go.kakaobank.io/...)",
-          });
+          .json({ error: "올바른 카카오뱅크 이벤트 링크가 아닙니다." });
       }
 
-      // 중복 없이 저장 (Set)
+      // 중복 없이 저장
       await kv.sadd(KEY, link);
 
       const count = await kv.scard(KEY);
