@@ -91,8 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
       totalCountText.textContent = `현재 등록된 링크: ${total}개`;
 
     if (remaining > 0) {
-      statusText.innerHTML = `남은 품앗이: <span class="text-blue-600 font-bold">${remaining}</span>개`;
-      actionBtn.textContent = "🚀 링크 타고 응원하기 (클릭)";
+      statusText.innerHTML = `남은 링크: <span class="text-blue-600 font-bold">${remaining}</span>개`;
+      actionBtn.textContent = "MMA 티켓 품앗이 라쓰고!";
       actionBtn.classList.remove(
         "bg-gray-200",
         "text-gray-500",
@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       actionBtn.disabled = false;
     } else {
       statusText.innerHTML = "모든 품앗이 완료! 🎉";
-      actionBtn.textContent = "오늘의 미션 완료 (더 이상 없어요)";
+      actionBtn.textContent = "새로운 링크 잠기돌~";
       actionBtn.classList.remove(
         "bg-[#FEE500]",
         "text-black",
