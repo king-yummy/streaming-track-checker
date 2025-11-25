@@ -10,7 +10,18 @@ function getGAUserID() {
   return localStorage.getItem("plli_user_id") || "unknown";
 }
 
-// [중요] 링크에 https://가 없으면 자동으로 붙여주는 함수 (404 방지용)
+// [중요] 팝업 차단 우회하여 링크 열기 함수
+function robustOpen(url) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// 링크에 https://가 없으면 자동으로 붙여주는 함수 (클릭 시에만 사용)
 function ensureHttps(url) {
   if (!url) return "";
   let cleanUrl = url.trim();
@@ -92,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // UI 업데이트 (요청하신 깔끔한 파란색 버튼)
+  // UI 업데이트
   function updateUI() {
     const total = allLinks.length;
     const remaining = availableLinks.length;
@@ -104,28 +115,24 @@ document.addEventListener("DOMContentLoaded", () => {
       statusText.innerHTML = `남은 링크: <span class="text-blue-600 font-bold">${remaining}</span>개`;
       actionBtn.textContent = "🚀 MMA 티켓 품앗이 라쓰고!";
 
-      // 비활성(회색) 스타일 제거
       actionBtn.classList.remove(
         "bg-gray-100",
         "text-gray-400",
         "cursor-not-allowed"
       );
 
-      // ✨ 활성(파란색) 스타일 추가 (애니메이션 없이 깔끔하게)
       actionBtn.classList.add("bg-blue-500", "text-white", "hover:bg-blue-600");
       actionBtn.disabled = false;
     } else {
       statusText.innerHTML = "모든 품앗이 완료! 🎉";
       actionBtn.textContent = "새로운 링크 잠기돌~";
 
-      // 활성 스타일 제거
       actionBtn.classList.remove(
         "bg-blue-500",
         "text-white",
         "hover:bg-blue-600"
       );
 
-      // 비활성 스타일 추가
       actionBtn.classList.add(
         "bg-gray-100",
         "text-gray-400",
@@ -142,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const rawLink = availableLinks[0];
 
-      // [중요] 클릭할 때 https://가 없으면 붙여서 열기 (기존 오류 데이터 방지)
+      // [안전장치] 기존에 잘못 들어간 링크가 있을 수 있으니 클릭 시에는 https 보정
       const targetLink = ensureHttps(rawLink);
 
       // GA 전송
@@ -153,9 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      window.open(targetLink, "_blank");
+      robustOpen(targetLink);
 
-      // 클릭 기록 저장 (원본 링크로 저장하여 중복 방지 유지)
+      // 클릭 기록 저장
       const clickedLinks = JSON.parse(
         localStorage.getItem(STORAGE_KEY) || "[]"
       );
@@ -170,18 +177,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // [액션] 링크 등록
+  // [액션] 링크 등록 (여기가 핵심 수정 파트)
   if (registerBtn) {
     registerBtn.addEventListener("click", async () => {
-      let link = linkInput.value.trim();
+      const link = linkInput.value.trim(); // 앞뒤 공백 제거
 
+      // 1. 빈 값 체크
       if (!link) return alert("링크를 입력해주세요.");
-      if (!link.includes("go.kakaobank.io")) {
-        return alert("올바른 카카오뱅크 이벤트 링크가 아닙니다.");
+
+      // 2. 한글 포함 여부 체크 (이벤트 멘트 통째로 복사 방지)
+      if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(link)) {
+        return alert(
+          "링크에 한글이나 불필요한 텍스트가 섞여 있습니다.\n링크 주소(URL)만 깔끔하게 복사해서 붙여넣어 주세요!"
+        );
       }
 
-      // [중요] 등록할 때도 https 자동 적용
-      link = ensureHttps(link);
+      // 3. 공백 포함 여부 체크 (링크 중간에 띄어쓰기 방지)
+      if (/\s/.test(link)) {
+        return alert(
+          "링크 중간에 공백이 있습니다.\n링크 주소만 정확하게 입력해주세요."
+        );
+      }
+
+      // 4. 시작 주소 엄격 체크 (https:// 포함 필수)
+      if (!link.startsWith("https://go.kakaobank.io/")) {
+        return alert(
+          "올바른 링크 형식이 아닙니다.\n'https://go.kakaobank.io/'로 시작하는 전체 주소를 입력해주세요."
+        );
+      }
 
       registerBtn.disabled = true;
       registerBtn.textContent = "등록 중...";

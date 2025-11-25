@@ -18,11 +18,21 @@ export default async function handler(req, res) {
 
       link = link.trim();
 
-      // [중요] 카카오뱅크 링크인지 검사
-      if (!link.includes("go.kakaobank.io")) {
+      // [서버측 엄격 필터링]
+      // 1. https://go.kakaobank.io/ 로 시작하지 않거나
+      // 2. 한글이 포함되어 있거나
+      // 3. 공백이 포함되어 있으면 차단
+      if (
+        !link.startsWith("https://go.kakaobank.io/") ||
+        /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(link) ||
+        /\s/.test(link)
+      ) {
         return res
           .status(400)
-          .json({ error: "올바른 카카오뱅크 이벤트 링크가 아닙니다." });
+          .json({
+            error:
+              "유효하지 않은 링크입니다.\n불필요한 텍스트 없이 링크만 입력해주세요.",
+          });
       }
 
       // 중복 없이 저장
