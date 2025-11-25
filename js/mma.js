@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       actionBtn.disabled = false;
     } else {
       statusText.innerHTML = "모든 품앗이 완료! 🎉";
-      actionBtn.textContent = "오늘 링크 모두 클리어👍";
+      actionBtn.textContent = "새로운 링크 잠기돌~";
 
       // 활성 스타일 제거
       actionBtn.classList.remove(
