@@ -10,6 +10,16 @@ function getGAUserID() {
   return localStorage.getItem("plli_user_id") || "unknown";
 }
 
+// [중요] 링크에 https://가 없으면 자동으로 붙여주는 함수 (404 방지용)
+function ensureHttps(url) {
+  if (!url) return "";
+  let cleanUrl = url.trim();
+  if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+    return "https://" + cleanUrl;
+  }
+  return cleanUrl;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const mmaModalOverlay = document.getElementById("mma-modal-overlay");
   const mmaModalPanel = document.getElementById("mma-modal-panel");
@@ -82,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // UI 업데이트 (✨깔끔한 파란색으로 변경✨)
+  // UI 업데이트 (요청하신 깔끔한 파란색 버튼)
   function updateUI() {
     const total = allLinks.length;
     const remaining = availableLinks.length;
@@ -130,7 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
     actionBtn.addEventListener("click", () => {
       if (availableLinks.length === 0) return;
 
-      const targetLink = availableLinks[0];
+      const rawLink = availableLinks[0];
+
+      // [중요] 클릭할 때 https://가 없으면 붙여서 열기 (기존 오류 데이터 방지)
+      const targetLink = ensureHttps(rawLink);
 
       // GA 전송
       if (typeof gtag === "function") {
@@ -142,12 +155,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       window.open(targetLink, "_blank");
 
-      // 클릭 기록 저장
+      // 클릭 기록 저장 (원본 링크로 저장하여 중복 방지 유지)
       const clickedLinks = JSON.parse(
         localStorage.getItem(STORAGE_KEY) || "[]"
       );
-      if (!clickedLinks.includes(targetLink)) {
-        clickedLinks.push(targetLink);
+      if (!clickedLinks.includes(rawLink)) {
+        clickedLinks.push(rawLink);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(clickedLinks));
       }
 
@@ -160,12 +173,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // [액션] 링크 등록
   if (registerBtn) {
     registerBtn.addEventListener("click", async () => {
-      const link = linkInput.value.trim();
+      let link = linkInput.value.trim();
 
       if (!link) return alert("링크를 입력해주세요.");
       if (!link.includes("go.kakaobank.io")) {
         return alert("올바른 카카오뱅크 이벤트 링크가 아닙니다.");
       }
+
+      // [중요] 등록할 때도 https 자동 적용
+      link = ensureHttps(link);
 
       registerBtn.disabled = true;
       registerBtn.textContent = "등록 중...";
