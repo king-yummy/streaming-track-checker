@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PLLI 스밍/투표 체크</title>
+    <!-- ✅ 추가: Referrer 정책 (엠넷 리다이렉트 깨짐 방지) -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
@@ -22,8 +23,8 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("config", "G-GYGLSJRN79", {
-        transport_type: "beacon",
+      gtag('config', 'G-GYGLSJRN79', {
+        transport_type: 'beacon'
         // SPA 라우팅이면 send_page_view: false 로 두고 라우팅마다 page_view 수동 전송
       });
 
@@ -48,7 +49,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9063401338616510"
       crossorigin="anonymous"
     ></script>
-
+    
     <meta name="theme-color" content="#dbeafe" />
     <meta name="google-adsense-account" content="ca-pub-9063401338616510" />
     <link
@@ -56,7 +57,7 @@
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css" />
   </head>
   <body
     class="font-sans bg-gray-100 min-h-screen flex flex-col items-center p-4 pb-24 sm:pb-4"
@@ -111,42 +112,32 @@
         </a>
       </div>
 
-      <div class="w-full max-w-md mt-3 px-1">
-        <button
-          id="open-mma-btn"
-          class="w-full bg-[#FEE500] text-black font-bold py-3 px-4 rounded-lg shadow-md hover:opacity-90 transition flex items-center justify-center gap-2"
-        >
-          <span>🏆 MMA 티켓 품앗이 하기</span>
-          <span
-            class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full animate-pulse"
-            >HOT</span
-          >
-        </button>
-      </div>
       <div class="w-full max-w-md mt-4 px-1">
         <a
-          href="streaming-admission.html"
-          class="block w-full text-center bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition shadow-md text-lg cute-btn"
-        >
-          스밍 세팅 잘 했뿌우? 💌
-        </a>
+  href="streaming-admission.html"
+  class="block w-full text-center bg-[#FEBFCE] text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-[#f3a7c1] transition shadow-md text-lg cute-btn"
+>
+  스밍 세팅 잘 했뿌우? 💌
+</a>
+
       </div>
 
-      <section class="w-full max-w-md mt-0 mb-0">
-        <div class="edge-zone" aria-hidden="true"></div>
+<section class="w-full max-w-md mt-0 mb-0">
+  <!-- 바깥 스크롤 시작용 엣지존 (위) -->
+  <div class="edge-zone" aria-hidden="true"></div>
 
-        <div class="scroll-card rounded-2xl bg-white shadow p-2">
-          <div
-            class="scroll-inner"
-            tabindex="0"
-            aria-label="스밍리스트 스크롤 영역"
-          >
-            <ul id="playlist" class="space-y-2"></ul>
-          </div>
-        </div>
+  <div class="scroll-card rounded-2xl bg-white shadow p-2">
+    <div class="scroll-inner" tabindex="0" aria-label="스밍리스트 스크롤 영역">
+      <ul id="playlist" class="space-y-2">
+        <!-- li들 -->
+      </ul>
+    </div>
+  </div>
 
-        <div class="edge-zone" aria-hidden="true"></div>
-      </section>
+  <!-- 바깥 스크롤 시작용 엣지존 (아래) -->
+  <div class="edge-zone" aria-hidden="true"></div>
+</section>
+
 
       <section
         class="w-full max-w-md mt-2 mb-1 p-4 bg-white rounded-2xl shadow"
@@ -197,6 +188,7 @@
         </div>
       </section>
 
+
       <section
         id="ad-container-1"
         class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
@@ -228,69 +220,112 @@
       </section>
     </div>
 
-    <section
-      id="ad-container-2"
-      class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
-      style="
-        visibility: hidden;
-        min-height: 120px;
-        max-height: 160px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      "
-    >
-      <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
-        ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
-      </h3>
-      <div style="text-align: center">
-        <ins
-          class="adsbygoogle"
-          style="display: block"
-          data-ad-client="ca-pub-9063401338616510"
-          data-ad-slot="3718792037"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-    </section>
+      <section
+        id="ad-container-2"
+        class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md"
+        style="
+          visibility: hidden;
+          min-height: 120px;
+          max-height: 160px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        "
+      >
+        <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+          ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+        </h3>
+        <div style="text-align: center">
+          <ins
+            class="adsbygoogle"
+            style="display: block"
+            data-ad-client="ca-pub-9063401338616510"
+            data-ad-slot="3718792037"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+      </section>
 
-    <footer
-      class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2"
-    >
-      <p>
-        <a
-          href="https://x.com/plave_stream?s=21&t=KweQO4B2QEKZ954vZ1zJ5g"
-          target="_blank"
-          rel="noopener"
-          class="text-blue-600 hover:underline"
-          >플레이브 음원총공팀</a
-        >의 스밍 가이드에 따라 운영되는 페이지입니다.
-      </p>
-      <p>
-        앱 관련 문의 및 건의사항은 X(트위터)
-        <strong
-          ><a
-            href="https://x.com/plave_pretty?s=21&t=KweQO4B2QEKZ954vZ1zJ5"
+      <footer
+        class="w-full max-w-md text-center text-xs text-gray-500 mt-2 mb-4 space-y-2"
+      >
+        <p>
+          <a
+            href="https://x.com/plave_stream?s=21&t=KweQO4B2QEKZ954vZ1zJ5g"
             target="_blank"
             rel="noopener"
             class="text-blue-600 hover:underline"
-            >@plave_pretty</a
-          ></strong
-        >로 보내주세요.
-      </p>
-      <p class="text-[10px] text-gray-400 mt-2">
-        이 페이지는 플레이브 팬덤 <strong>PLLI</strong>만을 위해
-        제작하였습니다.<br />타 팬덤에서의 무단 복제·재가공·사용 발견 시 빠르게
-        대응합니다. 🕵️‍♀️
-      </p>
+            >플레이브 음원총공팀</a
+          >의 스밍 가이드에 따라 운영되는 페이지입니다.
+        </p>
+        <p>
+          앱 관련 문의 및 건의사항은 X(트위터)
+          <strong
+            ><a
+              href="https://x.com/plave_pretty?s=21&t=KweQO4B2QEKZ954vZ1zJ5"
+              target="_blank"
+              rel="noopener"
+              class="text-blue-600 hover:underline"
+              >@plave_pretty</a
+            ></strong
+          >로 보내주세요.
+        </p>
+        <p class="text-[10px] text-gray-400 mt-2">
+          이 페이지는 플레이브 팬덤 <strong>PLLI</strong>만을 위해
+          제작하였습니다.<br />타 팬덤에서의 무단 복제·재가공·사용 발견 시
+          빠르게 대응합니다. 🕵️‍♀️
+        </p>
 
-      <div class="border-t border-gray-200 pt-3 mt-3 space-y-2">
+        <div class="border-t border-gray-200 pt-3 mt-3 space-y-2">
+          <section
+            id="ad-container-3"
+            class="my-4 p-4 bg-white rounded-2xl shadow"
+            style="
+              visibility: hidden;
+              min-height: 120px;
+              max-height: 160px;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+            "
+          >
+            <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
+              ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
+            </h3>
+            <div style="text-align: center">
+              <ins
+                class="adsbygoogle"
+                style="display: block"
+                data-ad-client="ca-pub-9063401338616510"
+                data-ad-slot="3718792037"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              ></ins>
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+            </div>
+          </section>
+          <p>
+            <a href="/privacy.html" class="hover:underline"
+              >개인정보 처리방침</a
+            >
+          </p>
+          <p class="font-semibold">
+            Copyright © 2025 PLLI-CHECKER. All Rights Reserved.
+          </p>
+          <p>
+            본 사이트의 모든 콘텐츠(코드, 디자인, 텍스트)는 저작권법의 보호를
+            받으며, 무단 전재 및 재배포를 금지합니다.
+          </p>
+        </div>
+
         <section
-          id="ad-container-3"
+          id="ad-container-4"
           class="my-4 p-4 bg-white rounded-2xl shadow"
           style="
             visibility: hidden;
@@ -318,49 +353,10 @@
             </script>
           </div>
         </section>
-        <p>
-          <a href="/privacy.html" class="hover:underline">개인정보 처리방침</a>
-        </p>
-        <p class="font-semibold">
-          Copyright © 2025 PLLI-CHECKER. All Rights Reserved.
-        </p>
-        <p>
-          본 사이트의 모든 콘텐츠(코드, 디자인, 텍스트)는 저작권법의 보호를
-          받으며, 무단 전재 및 재배포를 금지합니다.
-        </p>
-      </div>
+      </footer>
+    </div>
 
-      <section
-        id="ad-container-4"
-        class="my-4 p-4 bg-white rounded-2xl shadow"
-        style="
-          visibility: hidden;
-          min-height: 120px;
-          max-height: 160px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        "
-      >
-        <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
-          ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
-        </h3>
-        <div style="text-align: center">
-          <ins
-            class="adsbygoogle"
-            style="display: block"
-            data-ad-client="ca-pub-9063401338616510"
-            data-ad-slot="3718792037"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
-        </div>
-      </section>
-    </footer>
-
+    
     <nav
       id="bottom-nav"
       class="fixed bottom-0 inset-x-0 z-[95] w-full max-w-md mx-auto"
@@ -387,38 +383,27 @@
         class="bottom-sheet-container w-full max-w-lg sm:max-w-md mx-auto bg-white rounded-t-2xl shadow-xl p-6 transform transition-all max-h-[80vh] flex flex-col"
       >
         <div class="bottom-sheet-handle"></div>
-        <div class="flex-shrink-0 flex justify-between items-center mb-4">
-          <div class="flex items-center gap-2">
+       <div class="flex-shrink-0 flex justify-between items-center mb-4">
+          
+          <div class="flex items-center gap-2"> 
             <h2 class="text-xl font-bold">🗳️ 오늘의 투표 & 할일</h2>
-
+            
             <div class="relative flex items-center">
-              <button
-                id="todo-tooltip-button"
-                class="text-gray-400 hover:text-gray-600"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  class="w-5 h-5"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A.75.75 0 0 0 9 13.75a.75.75 0 0 0 .75.75h.5a.75.75 0 0 0 .75-.75c0-.135-.043-.26-.118-.363l-.459-2.066a.25.25 0 0 1 .244-.304H11a.75.75 0 0 0 0-1.5H9Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
+                <button id="todo-tooltip-button" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A.75.75 0 0 0 9 13.75a.75.75 0 0 0 .75.75h.5a.75.75 0 0 0 .75-.75c0-.135-.043-.26-.118-.363l-.459-2.066a.25.25 0 0 1 .244-.304H11a.75.75 0 0 0 0-1.5H9Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
 
-              <div
-                id="todo-tooltip-bubble"
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 p-2 w-max max-w-xs bg-gray-800 text-white text-xs rounded-md shadow-lg hidden z-10"
-              >
-                오늘도 함께 하고있는 플리가 있어요!
-                <div
-                  class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800"
-                ></div>
-              </div>
+                <div id="todo-tooltip-bubble" 
+                     class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 p-2 w-max max-w-xs
+                            bg-gray-800 text-white text-xs rounded-md shadow-lg 
+                            hidden z-10">
+                    오늘도 함께 하고있는 플리가 있어요!
+                    <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0
+                                border-x-4 border-x-transparent
+                                border-t-4 border-t-gray-800"></div>
+                </div>
             </div>
           </div>
           <button
@@ -463,143 +448,32 @@
       </div>
     </div>
 
-    <div
-      id="notification-prompt-overlay"
-      class="fixed inset-0 bg-black bg-opacity-60 z-[110] hidden"
-    ></div>
-    <div
-      id="notification-prompt-panel"
-      class="fixed inset-0 z-[120] p-4 flex items-center justify-center hidden"
-    >
-      <div
-        class="w-full max-w-sm bg-white rounded-2xl shadow-xl transform transition-all"
-      >
-        <div class="p-6 text-center">
-          <div class="text-4xl mb-3">⭐</div>
-          <h3 class="text-lg font-bold mb-2">PLLI 필수 알림, 켜두셨나요?</h3>
-          <div class="text-sm text-gray-600 mb-5 leading-relaxed">
-            <p>바쁘다바빠 플리사회..</p>
-            <p>
-              투표 마감부터 여러 신청 날짜와 라방 일정까지!<br />
-              <strong class="font-semibold text-gray-700"
-                >꼭 챙겨야 할 내용들, 서로 챙겨주면 어때요?</strong
-              >
-            </p>
-          </div>
-          <div class="flex flex-row-reverse gap-3">
-            <button
-              id="allow-notifications-btn"
-              class="w-full py-2.5 px-4 rounded-lg bg-blue-500 text-white font-bold"
-            >
-              네! 좋아요 🫶🏻
-            </button>
-            <button
-              id="deny-notifications-btn"
-              class="w-full py-2 px-4 rounded-md bg-gray-200 text-gray-800 font-semibold"
-            >
-              관심없어요..
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      id="mma-modal-overlay"
-      class="fixed inset-0 bg-black bg-opacity-60 z-[150] hidden backdrop-blur-sm"
-    ></div>
-    <div
-      id="mma-modal-panel"
-      class="fixed inset-0 z-[160] flex items-center justify-center p-4 hidden"
-    >
-      <div
-        class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
-      >
-        <div class="bg-[#FEE500] p-4 flex justify-between items-center">
-          <h3 class="text-black font-bold text-lg">🏆 MMA 티켓 품앗이</h3>
-          <button
-            id="close-mma-btn"
-            class="text-black hover:bg-black/10 rounded-full p-1"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div class="p-5 overflow-y-auto">
-          <div
-            class="text-sm text-gray-600 mb-6 bg-gray-50 p-3 rounded-lg border border-gray-100"
-          >
-            <p class="mb-1">🖐️ <strong>서로 돕고 MMA 가자!</strong></p>
-            <p>
-              버튼을 누르면 랜덤한 링크로 이동합니다. <br />이미 누른
-              링크는 다시 뜨지 않아요.
-            </p>
-            <p class="mt-2 text-xs text-blue-600">
-              * 내 링크는 딱 한 번만 등록하면 돼요.
-            </p>
-          </div>
-
-          <div class="text-center mb-8">
-            <p id="mma-total-count" class="text-xs text-gray-400 mb-1">
-              현재 등록된 링크: 0개
-            </p>
-            <h4 id="mma-status-text" class="text-lg font-bold mb-4">
-              남은 품앗이: 계산 중...
-            </h4>
-
-            <button
-              id="mma-action-btn"
-              class="w-full py-4 rounded-xl font-bold text-lg shadow-md transition transform active:scale-95 flex flex-col items-center justify-center gap-1 bg-gray-100 text-gray-400"
-              disabled
-            >
-              링크 불러오는 중...
-            </button>
-          </div>
-
-          <hr class="border-gray-200 my-6" />
-
-          <div class="space-y-2">
-            <label
-              class="text-sm font-bold text-gray-800 flex items-center gap-1"
-            >
-              📢 내 링크도 등록하기 (선택)
-            </label>
-            <div class="flex gap-2">
-              <input
-                type="text"
-                id="mma-link-input"
-                placeholder="https://go.kakaobank.io/..."
-                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-              />
-              <button
-                id="mma-register-btn"
-                class="bg-black text-white text-sm font-bold px-4 rounded-lg hover:bg-gray-800 transition whitespace-nowrap"
-              >
-                등록
-              </button>
+    <div id="notification-prompt-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-[110] hidden"></div>
+    <div id="notification-prompt-panel" class="fixed inset-0 z-[120] p-4 flex items-center justify-center hidden">
+        <div class="w-full max-w-sm bg-white rounded-2xl shadow-xl transform transition-all">
+            <div class="p-6 text-center">
+                <div class="text-4xl mb-3">⭐</div>
+                <h3 class="text-lg font-bold mb-2">PLLI 필수 알림, 켜두셨나요?</h3>
+                <div class="text-sm text-gray-600 mb-5 leading-relaxed">
+                    <p>바쁘다바빠 플리사회..</p>
+                    <p>
+                        투표 마감부터 여러 신청 날짜와 라방 일정까지!<br />
+                        <strong class="font-semibold text-gray-700">꼭 챙겨야 할 내용들, 서로 챙겨주면 어때요?</strong>
+                    </p>
+                </div>
+                <div class="flex flex-row-reverse gap-3">
+                    <button id="allow-notifications-btn" class="w-full py-2.5 px-4 rounded-lg bg-blue-500 text-white font-bold">
+                        네! 좋아요 🫶🏻
+                    </button>
+                    <button id="deny-notifications-btn" class="w-full py-2 px-4 rounded-md bg-gray-200 text-gray-800 font-semibold">
+                        관심없어요..
+                    </button>
+                </div>
             </div>
-            <p class="text-[10px] text-gray-400 text-center">
-              카카오뱅크 이벤트 공유 링크만 등록 가능합니다.
-            </p>
-          </div>
         </div>
-      </div>
     </div>
-    <script type="module" src="js/main.js"></script>
-    <script src="js/mma.js"></script>
+
+<script type="module" src="js/main.js"></script>
     <script src="./js/pw.js"></script>
     <script>
       function revealAdWhenFilled(containerId) {
@@ -620,12 +494,13 @@
         revealAdWhenFilled("ad-container-2");
         revealAdWhenFilled("ad-container-3");
         revealAdWhenFilled("ad-container-4");
+        
+        const noticeModalPanel = document.getElementById('notice-modal-panel');
+        const closeNoticeModalBtn = document.getElementById('close-notice-modal-btn');
 
-        const noticeModalPanel = document.getElementById("notice-modal-panel");
-        const closeNoticeModalBtn = document.getElementById(
-          "close-notice-modal-btn"
-        );
-      });
+
+});
     </script>
+    
   </body>
 </html>

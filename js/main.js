@@ -1,4 +1,4 @@
-// js/main.js 
+// js/main.js (최종 배포용 - Mnetplus 외부 오픈 & Superfan 섹션 완전 복원)
 
 import { loadStreamingList, loadTodoListData, loadNoticeList } from "./api.js";
 import {
@@ -12,7 +12,6 @@ import {
   renderTodoList,
   checkNewNotices,
 } from "./ui.js";
-import { renderNoticeList } from "./ui.js";
 
 // ==== Mnetplus 외부 오픈 유틸 ====
 const MNET_HOSTS = ["share.mnetplus.world", "mnetplus.world"];

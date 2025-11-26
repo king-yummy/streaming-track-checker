@@ -108,53 +108,27 @@ export async function loadTodoListData() {
   }
 }
 
-/** 공지사항: 백엔드 API (/api/notices) 연동 + 'New' 로직 수정 */
+/** 공지사항: 1행 헤더 기반 객체 배열 반환 */
 export async function loadNoticeList() {
   try {
-    // 1. 우리가 만든 API(/api/notices) 호출
-    const res = await fetch("/api/notices");
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-    const rawData = await res.json(); // API가 최신순으로 정렬해서 줌
+    const values = await fetchRowsByTitle(NOTICE_SHEET_TITLE, "A:Z");
+    if (!values || values.length < 2) return [];
 
-    // --- 🔴 (수정) 'New' 아이콘 계산 로직 (24시간 이내) 🔴 ---
-    // 1. KST (한국 시간) 기준 '현재 시간'의 타임스탬프
-    const nowKST = new Date(
-      new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+    const headers = values[0].map((h) =>
+      typeof h === "string" ? h.trim() : h
     );
-    const nowTimestamp = nowKST.getTime();
-    // 24시간을 밀리초로 계산
-    const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
-    // --- 🔴 로직 수정 끝 🔴 ---
+    const contentRows = values.slice(1);
 
-    // 3. 기존 UI와 호환되도록 키 이름 변경 + 'New' 계산
-    const noticeData = rawData.map((item) => {
-      let isNewBoolean = false; // 기본값은 false
-      try {
-        // item.id가 "noti_1731654560000" 같은 형태라고 가정
-        const timestamp = parseInt(item.id.split("_")[1], 10);
-        if (!isNaN(timestamp)) {
-          const diffMs = nowTimestamp - timestamp;
-          // 생성된 지 0초 ~ 24시간 사이인 경우 true
-          isNewBoolean = diffMs > 0 && diffMs < TWENTY_FOUR_HOURS_MS;
-        }
-      } catch (e) {
-        // ID 형식이 다르더라도 오류 방지
-        console.warn("Could not parse timestamp from notice ID:", item.id);
-      }
-
-      // [중요!] js/ui.js가 "TRUE" 문자열을 기대하므로 변환
-      const isNewString = isNewBoolean ? "TRUE" : "FALSE";
-
-      return {
-        Title: item.title,
-        Content: item.content,
-        Date: item.date, // 관리자가 입력한 날짜 (표시용)
-        New: isNewString, // 👈 "TRUE" 또는 "FALSE" 문자열로 전달
-        id: item.id,
-      };
+    const noticeData = contentRows.map((row) => {
+      const obj = {};
+      headers.forEach((header, i) => {
+        let value = row[i] ?? "";
+        if (typeof value === "string") value = value.trim();
+        obj[header] = value;
+      });
+      return obj;
     });
 
-    // 4. 화면에 그리기 (js/main.js에서도 이 함수를 호출함)
     if (typeof renderNoticeList === "function") {
       renderNoticeList(noticeData);
     }
