@@ -31,10 +31,6 @@ const messaging = getMessaging(app);
 let currentToken = "";
 
 // ▼▼▼ 브라우저에 알림 권한 요청 및 토큰 저장 ▼▼▼
-/**
- * 브라우저에 알림 권한을 명시적으로 요청하고 서버에 토큰을 저장합니다.
- * @returns {Promise<string|null>} 성공 시 FCM 토큰, 실패 시 null
- */
 export async function requestNotificationPermission() {
   let swReg;
   try {
@@ -65,6 +61,7 @@ export async function requestNotificationPermission() {
     });
     if (token) {
       currentToken = token;
+      // 권한 요청 시에는 무조건 켜짐(true)으로 저장
       await fetch("/api/save-token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,34 +79,8 @@ export async function requestNotificationPermission() {
     return null;
   }
 }
-// ▲▲▲ 여기까지 ▲▲▲
 
-/**
- * 알림 설정을 서버에 저장
- */
-async function saveNotificationSettings() {
-  if (!currentToken) {
-    console.log("FCM 토큰이 없어서 설정을 저장할 수 없습니다.");
-    return;
-  }
-  const noticeOptIn = document.getElementById("notice-toggle").checked;
-  const calendarOptIn = document.getElementById("calendar-toggle").checked;
-
-  try {
-    await fetch("/api/save-token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: currentToken, noticeOptIn, calendarOptIn }),
-    });
-    console.log("알림 설정이 저장되었습니다:", { noticeOptIn, calendarOptIn });
-  } catch (error) {
-    console.error("알림 설정 저장 실패:", error);
-  }
-}
-
-/**
- * 알림 시스템 초기화 (통합)
- */
+// ▼▼▼ [수정됨] 알림 시스템 초기화 (GET 요청으로 상태 불러오기) ▼▼▼
 export async function initializeNotificationSystem() {
   const alarmToggle = document.getElementById("alarm-toggle");
   if (!alarmToggle) return;
@@ -124,8 +95,8 @@ export async function initializeNotificationSystem() {
 
   async function ensurePermissionAndToken() {
     if (Notification.permission === "default") {
-      const p = await Notification.requestPermission();
-      if (p !== "granted") return null;
+      // 초기 상태에서는 권한 요청 안 함 (사용자가 눌렀을 때만)
+      return null;
     } else if (Notification.permission === "denied") {
       return null;
     }
@@ -163,15 +134,16 @@ export async function initializeNotificationSystem() {
       const token = await ensurePermissionAndToken();
       if (token) {
         currentToken = token;
-        const res = await fetch("/api/save-token", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token }),
+
+        // [핵심 수정] POST 대신 GET으로 현재 상태를 불러옵니다.
+        const res = await fetch(`/api/save-token?token=${token}`, {
+          method: "GET",
         });
 
         if (res.ok) {
-          const { noticeOptIn = false } = await res.json();
-          alarmToggle.checked = !!noticeOptIn;
+          const data = await res.json();
+          // 서버에 저장된 값이 있으면 그 값으로, 없으면 false
+          alarmToggle.checked = !!data.noticeOptIn;
         }
       }
     }
@@ -180,14 +152,17 @@ export async function initializeNotificationSystem() {
   }
 
   async function onToggleChange() {
-    const token = await ensurePermissionAndToken();
-    if (!token) {
-      alarmToggle.checked = false;
-      alert("브라우저 알림 권한이 필요합니다.");
-      return;
+    if (alarmToggle.checked) {
+      // 켤 때는 권한이 없으면 요청해야 함
+      const token = await requestNotificationPermission();
+      if (!token) {
+        alarmToggle.checked = false;
+      }
+    } else {
+      // 끌 때는 그냥 저장
+      await saveCurrentSettings();
     }
-    await saveCurrentSettings();
-    console.log("[알림] 설정 저장됨:", { alarm: alarmToggle.checked });
+    console.log("[알림] 설정 변경됨:", { alarm: alarmToggle.checked });
   }
 
   alarmToggle.addEventListener("change", onToggleChange);
@@ -202,6 +177,7 @@ export async function initializeNotificationSystem() {
     }
   });
 }
+// ▲▲▲ 여기까지 수정됨 ▲▲▲
 
 // --------- TODO 리스너들 ---------
 export function addTodoEventListeners() {
