@@ -6,9 +6,8 @@ export default async function handler(req, res) {
 
   // [2] 퀴즈 설정 (보내주신 내용 적용 완료)
   const QUIZ_QUESTION =
-    process.env.MMA_QUIZ_QUESTION ||
-    "최근에 키우던 식물이 죽은 멤버가 11월 26일에 처음으로 버블 보낸 시간은? (정답: HH:MM 4자리 숫자)";
-  const QUIZ_ANSWER = process.env.MMA_QUIZ_ANSWER || "0203";
+    process.env.MMA_QUIZ_QUESTION || "깜고가 후진할 때 내는 소리는? ";
+  const QUIZ_ANSWER = process.env.MMA_QUIZ_ANSWER || "루리루";
 
   try {
     // 1. 링크 조회 (GET)
