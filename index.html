@@ -571,12 +571,30 @@
 
           <hr class="border-gray-200 my-6" />
 
-          <div class="space-y-2">
-            <label
-              class="text-sm font-bold text-gray-800 flex items-center gap-1"
-            >
-              📢 내 링크도 등록하기 (선택)
-            </label>
+          <div class="space-y-3">
+            <div class="flex justify-between items-end">
+              <label
+                class="text-sm font-bold text-gray-800 flex items-center gap-1"
+              >
+                📢 내 링크 등록 (퀴즈 필수)
+              </label>
+            </div>
+
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+              <p
+                id="mma-quiz-question"
+                class="text-sm text-blue-800 font-semibold mb-2"
+              >
+                질문을 불러오는 중...
+              </p>
+              <input
+                type="text"
+                id="mma-quiz-answer"
+                placeholder="정답 입력"
+                class="w-full border border-blue-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
             <div class="flex gap-2">
               <input
                 type="text"
@@ -592,7 +610,7 @@
               </button>
             </div>
             <p class="text-[10px] text-gray-400 text-center">
-              카카오뱅크 이벤트 공유 링크만 등록 가능합니다.
+              * 정답을 맞춘 플리만 링크를 등록할 수 있어요!
             </p>
           </div>
         </div>
