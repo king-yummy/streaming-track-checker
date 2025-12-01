@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   // [2] 퀴즈 설정 (보내주신 내용 적용 완료)
   const QUIZ_QUESTION =
     process.env.MMA_QUIZ_QUESTION ||
-    "최근에 키우던 식물이 죽은 멤버가 11월 26일에 처음으로 버블 보낸 시간은? HH:MM (정답: HHMM 4자리 숫자)";
+    "최근에 키우던 식물이 죽은 멤버가 11월 26일에 처음으로 버블 보낸 시간은? (정답: HH:MM 4자리 숫자)";
   const QUIZ_ANSWER = process.env.MMA_QUIZ_ANSWER || "0203";
 
   try {
