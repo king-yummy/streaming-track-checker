@@ -1,11 +1,10 @@
 import { kv } from "@vercel/kv";
 
 export default async function handler(req, res) {
-  // [1] 데이터베이스 키 변경 (이름을 바꿔서 기존 데이터를 초기화 효과)
+  // [1] DB 키 변경 -> 기존에 등록된 유저 링크들 초기화됨 (v2)
   const KEY = "mma_event_links_v2";
 
-  // [2] 퀴즈 설정 (여기서 언제든 질문과 정답을 바꾸세요)
-  // 환경변수(process.env)를 사용하거나 아래 문자열을 직접 수정하면 됩니다.
+  // [2] 퀴즈 설정 (보내주신 내용 적용 완료)
   const QUIZ_QUESTION =
     process.env.MMA_QUIZ_QUESTION ||
     "최근에 키우던 식물이 죽은 멤버가 11월 26일에 처음으로 버블 보낸 시간은? HH:MM (정답: HHMM 4자리 숫자)";
@@ -31,9 +30,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: "퀴즈 정답을 입력해주세요." });
       }
 
-      // 공백 제거 및 소문자 변환 후 비교 (대소문자 구분 없이, 띄어쓰기 무시)
-      const cleanInput = String(answer).replace(/\s+/g, "").toLowerCase();
-      const cleanAnswer = String(QUIZ_ANSWER).replace(/\s+/g, "").toLowerCase();
+      // 공백 제거, 콜론(:) 제거 후 비교 (예: "02:03" -> "0203")
+      const cleanInput = String(answer).replace(/[\s:]/g, "").toLowerCase();
+      const cleanAnswer = String(QUIZ_ANSWER)
+        .replace(/[\s:]/g, "")
+        .toLowerCase();
 
       if (cleanInput !== cleanAnswer) {
         return res.status(403).json({ error: "땡! 퀴즈 정답이 틀렸습니다." });
