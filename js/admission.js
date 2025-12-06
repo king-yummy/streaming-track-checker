@@ -619,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `#메리플리스마스_스밍시작\n` +
         `크리스마스 버전 세팅 완료☃️\n\n` +
         `나도 만들기 👉 ${pageUrl}\n` +
-        `신곡 슴리 인증하고 공유해주세요🎄❄️\n\n`;
+        `신곡 슴리 인증하고 공유해주세요🎄❄️`;
 
       shareXBtn.addEventListener("click", () => {
         // GA 이벤트
