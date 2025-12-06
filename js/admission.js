@@ -191,11 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
       </p>
 
       <div class="grid grid-cols-2 gap-3 mb-6">
-        <a href="https://tinyurl.com/yc8e2arj" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-<a href="https://tinyurl.com/cshwxxbm" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-<a href="https://tinyurl.com/4mfnxwfa" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-<a href="https://tinyurl.com/mrx5xb9z" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
-
+        <a href="https://tinyurl.com/5aennz9m" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
+        <a href="https://tinyurl.com/2s368trm" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
+        <a href="https://tinyurl.com/58jv92nz" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
+        <a href="https://tinyurl.com/4dbv4t8j" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
       </div>
 
       <!-- 설명 박스 -->
@@ -228,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   `,
     },
+
     {
       name: "final_check",
       render: () => `
