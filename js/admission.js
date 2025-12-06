@@ -614,12 +614,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // 결과 화면 공유 버튼들
     const shareXBtn = stepElement.querySelector("#share-x-btn");
     if (shareXBtn) {
-      const pageUrl = "https://plli-checker.app"; // 실제 주소로
+      const pageUrl = "plli-checker.app"; // 실제 주소로
       const shareText =
-        `플뿌우로 입학 완료💙💜💗❤️🖤\n\n` +
+        `#메리플리스마스_스밍시작\n` +
+        `크리스마스 버전 세팅 완료☃️\n\n` +
         `나도 만들기 👉 ${pageUrl}\n` +
-        `새로운 슴리 췤!! 스밍 라쓰고!!\n\n` +
-        `#플뿌우로_입학했뿌우`;
+        `신곡 슴리 인증하고 공유해주세요🎄❄️\n\n`;
 
       shareXBtn.addEventListener("click", () => {
         // GA 이벤트
