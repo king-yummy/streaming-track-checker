@@ -1,534 +1,251 @@
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>스밍 가이드 - PLLI 스밍/투표 체크</title>
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
-    <link rel="apple-touch-icon" href="icon-512.png" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-    />
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9063401338616510"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/style.css" />
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-GYGLSJRN79"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-GYGLSJRN79");
-      function getUserID() {
-        let userID = localStorage.getItem("plli_user_id");
-        if (!userID) {
-          userID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-            /[xy]/g,
-            function (c) {
-              var r = (Math.random() * 16) | 0,
-                v = c == "x" ? r : (r & 0x3) | 0x8;
-              return v.toString(16);
-            }
-          );
-          localStorage.setItem("plli_user_id", userID);
-        }
-        return userID;
-      }
-    </script>
-  </head>
-  <body class="font-sans bg-gray-100">
-    <header class="w-full bg-white shadow-sm sticky top-0 z-10">
-      <div
-        class="max-w-md mx-auto p-4 relative flex justify-center items-center"
-      >
-        <a
-          href="index.html"
-          onclick="gtag('event', 'click_back_button', { 'page': 'streaming_guide' });"
-          class="absolute left-4 text-gray-600 hover:text-gray-800"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </a>
-        <h2 class="text-xl font-bold">🎵 스밍 가이드</h2>
-      </div>
-    </header>
-
-    <main class="w-full max-w-md mx-auto p-6 bg-white min-h-screen">
-      <div class="mb-6">
-        <h3 class="text-lg font-bold mb-3">⚙️ 스트리밍 기본 설정</h3>
-        <div class="bg-blue-50 p-4 rounded-lg">
-          <p class="text-sm text-gray-700 mb-2">
-            스밍 전, 아래 설정을 꼭 확인해주세요!
-          </p>
-          <ul class="text-sm list-disc list-inside text-gray-600 space-y-1">
-            <li>전체 반복 <strong>ON</strong></li>
-            <li>랜덤 재생 <strong>OFF</strong></li>
-            <li>음질 <strong>AAC (128k) 이상</strong></li>
-            <li>음량 <strong>1 이상</strong> (음소거 ❌)</li>
-          </ul>
-        </div>
-      </div>
-
-      <section
-        id="ad-container-1"
-        class="my-4 p-4 bg-white rounded-2xl shadow"
-        style="
-          visibility: hidden;
-          min-height: 120px;
-          max-height: 160px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        "
-      >
-        <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
-          ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
-        </h3>
-        <div style="text-align: center">
-          <ins
-            class="adsbygoogle"
-            style="display: block"
-            data-ad-client="ca-pub-9063401338616510"
-            data-ad-slot="3718792037"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
-        </div>
-      </section>
-
-      <hr class="my-6 border-gray-200" />
-
-      <div>
-        <h3 class="text-lg font-bold mb-2">
-          🚀 원클릭! 플레이리스트 자동 생성
-        </h3>
-        <p class="text-sm text-gray-600 mb-4">
-          아래에서 이용하는 음원 서비스를 선택하고, 안내된 링크를
-          <strong>순서대로 클릭</strong>하면 스밍리스트가
-          <strong>자동으로 완성</strong>됩니다!<br />
-        </p>
-
-        <div class="flex border-b text-sm overflow-x-auto" id="tabs-container">
-          <button
-            data-tab="melon"
-            class="tab-button p-2 border-b-2 border-transparent active whitespace-nowrap"
-          >
-            멜론
-          </button>
-          <button
-            data-tab="genie"
-            class="tab-button p-2 border-b-2 border-transparent whitespace-nowrap"
-          >
-            지니
-          </button>
-          <button
-            data-tab="bugs"
-            class="tab-button p-2 border-b-2 border-transparent whitespace-nowrap"
-          >
-            벅스
-          </button>
-          <button
-            data-tab="vibe"
-            class="tab-button p-2 border-b-2 border-transparent whitespace-nowrap"
-          >
-            바이브
-          </button>
-          <button
-            data-tab="flo"
-            class="tab-button p-2 border-b-2 border-transparent whitespace-nowrap"
-          >
-            FLO
-          </button>
-          <button
-            data-tab="samsung"
-            class="tab-button p-2 border-b-2 border-transparent whitespace-nowrap"
-          >
-            삼성뮤직
-          </button>
-        </div>
-
-        <div class="py-4 text-sm space-y-3">
-          <div data-content="melon" class="tab-content space-y-4">
-            <div
-              class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-center"
-            >
-              <p class="text-sm font-semibold">
-                💡 아래 링크를 1️⃣, 2️⃣, 3️⃣, 4️⃣ 순서대로 모두 클릭하면<br />플레이리스트가
-                자동으로 완성됩니다!
-              </p>
-            </div>
-            <div class="border-b pb-4">
-              <a
-                id="music-wave-link"
-                href="kko.kakao.com/mXYTW4KMyS"
-                target="_blank"
-                class="block w-full bg-green-500 text-white text-center font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition"
-                >🌊 멜론 뮤직웨이브 함께하기</a
-              >
-            </div>
-            <div>
-              <p class="font-semibold">📱 Android / iOS / iPad</p>
-              <div class="grid grid-cols-2 gap-2 mt-2">
-                <a
-                  href="https://tinyurl.com/yc8e2arj"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="android_ios"
-                  >1번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/cshwxxbm"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="android_ios"
-                  >2번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/4mfnxwfa"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="android_ios"
-                  >3번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/mrx5xb9z"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="android_ios"
-                  >4번 링크</a
-                >
-              </div>
-            </div>
-
-            <div>
-              <p class="font-semibold">💻 PC - Windows</p>
-              <div class="grid grid-cols-2 gap-2 mt-2">
-                <a
-                  href="https://tinyurl.com/4xkxyw83"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_windows"
-                  >1번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/mryzhn22"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_windows"
-                  >2번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/4f4xhrdk"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_windows"
-                  >3번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/yc4bjjeb"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_windows"
-                  >4번 링크</a
-                >
-              </div>
-            </div>
-            <div>
-              <p class="font-semibold">💻 PC - MAC</p>
-              <div class="grid grid-cols-2 gap-2 mt-2">
-                <a
-                  href="https://tinyurl.com/3kzmjhwa"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_mac"
-                  >1번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/3hdtfv4m"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_mac"
-                  >2번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/f9fn98bp"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_mac"
-                  >3번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/4w8wsyph"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="melon"
-                  data-device="pc_mac"
-                  >4번 링크</a
-                >
-              </div>
-            </div>
-          </div>
-
-          <div data-content="genie" class="tab-content hidden space-y-2">
-            <a
-              href="https://tinyurl.com/23rcz7jv"
-              target="_blank"
-              class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
-              data-platform="genie"
-              data-device="android"
-              >📱 Android</a
-            >
-            <a
-              href="https://tinyurl.com/tssmueyh"
-              target="_blank"
-              class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
-              data-platform="genie"
-              data-device="ios"
-              >📱 iOS</a
-            >
-            <a
-              href="https://tinyurl.com/a5snxa47"
-              target="_blank"
-              class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
-              data-platform="genie"
-              data-device="pc_web"
-              >💻 PC (WEB)</a
-            >
-          </div>
-
-          <div data-content="bugs" class="tab-content hidden space-y-2">
-            <a
-              href="https://lrl.kr/WWrI"
-              target="_blank"
-              class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
-              data-platform="bugs"
-              data-device="android_ios"
-              >📱 Android / iOS</a
-            >
-            <a
-              href="https://lrl.kr/ciRmn"
-              target="_blank"
-              class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
-              data-platform="bugs"
-              data-device="pc_web"
-              >💻 PC (WEB)</a
-            >
-          </div>
-
-          <div data-content="vibe" class="tab-content hidden space-y-4">
-            <div
-              class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-center"
-            >
-              <p class="text-sm font-semibold">
-                💡 아래 링크를 1️⃣, 2️⃣, 3️⃣, 4️⃣ 순서대로 모두 클릭하면<br />플레이리스트가
-                자동으로 완성됩니다!
-              </p>
-            </div>
-            <div>
-              <p class="font-semibold">📱 Android / iOS</p>
-              <div class="grid grid-cols-2 gap-2 mt-2">
-                <a
-                  href="https://tinyurl.com/3p9h95hj"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="vibe"
-                  data-device="android_ios"
-                  >1번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/yycu5vzn"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="vibe"
-                  data-device="android_ios"
-                  >2번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/5n89r7x7"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="vibe"
-                  data-device="android_ios"
-                  >3번 링크</a
-                >
-                <a
-                  href="https://tinyurl.com/erumkzds"
-                  target="_blank"
-                  class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
-                  data-platform="vibe"
-                  data-device="android_ios"
-                  >4번 링크</a
-                >
-              </div>
-            </div>
-          </div>
-
-          <div data-content="flo" class="tab-content hidden">
-            <a
-              href="https://lrl.kr/fGED0"
-              target="_blank"
-              class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
-              data-platform="flo"
-              data-device="all"
-              >📱/💻 모든 기기에서 클릭</a
-            >
-          </div>
-
-          <div data-content="samsung" class="tab-content hidden">
-            <a
-              href="https://drive.google.com/drive/folders/1QOHg26EaRIw7XEuFs4k6EqTD0KRjg61t?usp=drive_link"
-              target="_blank"
-              class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
-              data-platform="samsung"
-              data-device="all"
-              >💾 플레이리스트 다운로드</a
-            >
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <section
-      id="ad-container-2"
-      class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md mx-auto"
-      style="
-        visibility: hidden;
-        min-height: 120px;
-        max-height: 160px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      "
+<!-- 멜론 -->
+<div data-content="melon" class="tab-content space-y-4">
+  <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-center">
+    <p class="text-sm font-semibold">
+      💡 아래 링크를 1️⃣, 2️⃣, 3️⃣, 4️⃣ 순서대로 모두 클릭하면<br />플레이리스트가
+      자동으로 완성됩니다!
+    </p>
+  </div>
+  <div class="border-b pb-4">
+    <a
+      id="music-wave-link"
+      href="kko.kakao.com/mXYTW4KMyS"
+      target="_blank"
+      class="block w-full bg-green-500 text-white text-center font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition"
+      >🌊 멜론 뮤직웨이브 함께하기</a
     >
-      <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
-        ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
-      </h3>
-      <div style="text-align: center">
-        <ins
-          class="adsbygoogle"
-          style="display: block"
-          data-ad-client="ca-pub-9063401338616510"
-          data-ad-slot="3718792037"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-    </section>
+  </div>
 
-    <footer
-      class="w-full bg-gray-100 max-w-md mx-auto p-4 mt-6 text-center text-sm text-gray-600"
-    >
-      <p>
-        출처:
-        <a
-          href="https://x.com/plave_stream/status/1941853722042364306"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="underline hover:text-gray-700"
-          >플레이브 음원총공팀</a
-        >
-      </p>
-    </footer>
+  <div>
+    <p class="font-semibold">📱 Android / iOS / iPad</p>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <a
+        href="https://tinyurl.com/5aennz9m"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="android_ios"
+        >1번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/2s368trm"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="android_ios"
+        >2번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/58jv92nz"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="android_ios"
+        >3번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/4dbv4t8j"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="android_ios"
+        >4번 링크</a
+      >
+    </div>
+  </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const userID = getUserID();
-        const tabButtons = document.querySelectorAll(".tab-button");
-        const tabContents = document.querySelectorAll(".tab-content");
-        tabButtons.forEach((button) => {
-          button.addEventListener("click", () => {
-            gtag("event", "click_guide_tab", {
-              platform: button.dataset.tab,
-              user_id: userID,
-            });
-            tabButtons.forEach((btn) => btn.classList.remove("active"));
-            tabContents.forEach((content) => content.classList.add("hidden"));
-            button.classList.add("active");
-            const activeContent = document.querySelector(
-              `[data-content="${button.dataset.tab}"]`
-            );
-            if (activeContent) {
-              activeContent.classList.remove("hidden");
-            }
-          });
-        });
-        document.querySelectorAll(".playlist-link").forEach((link) => {
-          link.addEventListener("click", () => {
-            gtag("event", "click_playlist_link", {
-              platform: link.dataset.platform,
-              device: link.dataset.device,
-              user_id: userID,
-            });
-          });
-        });
-        const musicWaveLink = document.getElementById("music-wave-link");
-        if (musicWaveLink) {
-          musicWaveLink.addEventListener("click", () => {
-            gtag("event", "click_music_wave", { user_id: userID });
-          });
-        }
-      });
-    </script>
+  <div>
+    <p class="font-semibold">💻 PC - Windows</p>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <a
+        href="https://tinyurl.com/yeyu5ea3"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_windows"
+        >1번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/2j43sr6s"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_windows"
+        >2번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/wtk528un"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_windows"
+        >3번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/2s4xvm8p"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_windows"
+        >4번 링크</a
+      >
+    </div>
+  </div>
 
-    <script>
-      function revealAdWhenFilled(containerId) {
-        const box = document.getElementById(containerId);
-        if (!box) return;
-        const tick = setInterval(() => {
-          const filled = box.querySelector("ins.adsbygoogle iframe");
-          if (filled) {
-            box.style.visibility = "visible";
-            clearInterval(tick);
-          }
-        }, 300);
-        setTimeout(() => clearInterval(tick), 10000);
-      }
-      document.addEventListener("DOMContentLoaded", () => {
-        revealAdWhenFilled("ad-container-1");
-        revealAdWhenFilled("ad-container-2");
-      });
-    </script>
-  </body>
-</html>
+  <div>
+    <p class="font-semibold">💻 PC - MAC</p>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <a
+        href="https://tinyurl.com/y73r5r75"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_mac"
+        >1번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/2nmfm5x6"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_mac"
+        >2번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/3pvea2ec"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_mac"
+        >3번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/45zu49he"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="melon"
+        data-device="pc_mac"
+        >4번 링크</a
+      >
+    </div>
+  </div>
+</div>
+
+<!-- 지니 -->
+<div data-content="genie" class="tab-content hidden space-y-2">
+  <a
+    href="https://tinyurl.com/mrx3hee6"
+    target="_blank"
+    class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
+    data-platform="genie"
+    data-device="android"
+    >📱 Android</a
+  >
+  <a
+    href="https://tinyurl.com/258p4bkc"
+    target="_blank"
+    class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
+    data-platform="genie"
+    data-device="ios"
+    >📱 iOS</a
+  >
+  <a
+    href="https://tinyurl.com/2d6yump6"
+    target="_blank"
+    class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
+    data-platform="genie"
+    data-device="pc_web"
+    >💻 PC (WEB)</a
+  >
+</div>
+
+<!-- 벅스 -->
+<div data-content="bugs" class="tab-content hidden space-y-2">
+  <a
+    href="https://lrl.kr/XcuT"
+    target="_blank"
+    class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
+    data-platform="bugs"
+    data-device="android_ios"
+    >📱 Android / iOS</a
+  >
+  <a
+    href="https://lrl.kr/XcuU"
+    target="_blank"
+    class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
+    data-platform="bugs"
+    data-device="pc_web"
+    >💻 PC (WEB)</a
+  >
+</div>
+
+<!-- 바이브 -->
+<div data-content="vibe" class="tab-content hidden space-y-4">
+  <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-center">
+    <p class="text-sm font-semibold">
+      💡 아래 링크를 1️⃣, 2️⃣, 3️⃣, 4️⃣ 순서대로 모두 클릭하면<br />플레이리스트가
+      자동으로 완성됩니다!
+    </p>
+  </div>
+  <div>
+    <p class="font-semibold">📱 Android / iOS</p>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <a
+        href="https://tinyurl.com/yc79bdfm"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="vibe"
+        data-device="android_ios"
+        >1번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/2u8shu56"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="vibe"
+        data-device="android_ios"
+        >2번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/437rsxsk"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="vibe"
+        data-device="android_ios"
+        >3번 링크</a
+      >
+      <a
+        href="https://tinyurl.com/y5e2ycp5"
+        target="_blank"
+        class="playlist-link p-2 bg-gray-100 text-center rounded hover:bg-gray-200"
+        data-platform="vibe"
+        data-device="android_ios"
+        >4번 링크</a
+      >
+    </div>
+  </div>
+</div>
+
+<!-- FLO -->
+<div data-content="flo" class="tab-content hidden">
+  <a
+    href="https://lrl.kr/fGUHb"
+    target="_blank"
+    class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
+    data-platform="flo"
+    data-device="all"
+    >📱/💻 모든 기기에서 클릭</a
+  >
+</div>
+
+<!-- 삼성뮤직 -->
+<div data-content="samsung" class="tab-content hidden">
+  <a
+    href="https://drive.google.com/drive/folders/1-X2DrPC3dcKPeEiYcRtKIoCLl1_KXfEU?usp=drive_link"
+    target="_blank"
+    class="block playlist-link p-3 bg-gray-100 text-center rounded hover:bg-gray-200"
+    data-platform="samsung"
+    data-device="all"
+    >💾 플레이리스트 다운로드</a
+  >
+</div>
