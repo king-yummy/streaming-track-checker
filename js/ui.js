@@ -414,7 +414,11 @@ export function closeDetailsModal() {
   document.getElementById("details-modal-panel").classList.add("hidden");
 }
 
-export function renderNoticeList(noticeData, currentPage = 1) {
+export function renderNoticeList(
+  noticeData,
+  currentPage = 1,
+  visibleStartPage = 1
+) {
   const container = document.getElementById("notice-list-container");
   const paginationContainer = document.getElementById(
     "notice-pagination-container"
@@ -423,8 +427,9 @@ export function renderNoticeList(noticeData, currentPage = 1) {
 
   const itemsPerPage = 3; // 한 페이지에 3개씩 표시
   const sortedNotices = noticeData.sort((a, b) => b.ID - a.ID);
+  const totalPages = Math.ceil(sortedNotices.length / itemsPerPage);
 
-  // 1. 현재 페이지 데이터 잘라내서 표시 (기존과 동일)
+  // 1. 내용 렌더링 (currentPage 기준)
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedNotices = sortedNotices.slice(startIndex, endIndex);
@@ -457,59 +462,80 @@ export function renderNoticeList(noticeData, currentPage = 1) {
     )
     .join("");
 
-  // 2. 페이지네이션 버튼 생성 (슬라이딩 방식)
-  const totalPages = Math.ceil(sortedNotices.length / itemsPerPage);
+  // 2. 페이지네이션 버튼 렌더링 (visibleStartPage 기준)
   paginationContainer.innerHTML = "";
 
   if (totalPages <= 1) return;
 
-  // --- [핵심 로직] 보여줄 페이지 구간 계산 ---
-  const maxButtons = 5; // 한 번에 보여줄 숫자 개수
+  const maxButtons = 5; // 한 번에 보여줄 버튼 개수
 
-  // 현재 페이지를 기준으로 시작 페이지 계산 (현재 페이지가 가운데 오도록 -2)
-  let startPage = currentPage - 2;
-
-  // 1보다 작아지지 않게 보정
-  if (startPage < 1) startPage = 1;
-
-  // 끝 페이지 계산
-  let endPage = startPage + maxButtons - 1;
-
-  // 끝 페이지가 전체 페이지보다 크면 보정
-  if (endPage > totalPages) {
-    endPage = totalPages;
-    // 끝이 줄어든 만큼 시작 페이지를 앞으로 당겨서 5개를 채움
-    startPage = Math.max(1, endPage - maxButtons + 1);
+  // visibleStartPage 유효성 검사 (범위를 벗어나지 않게 보정)
+  if (visibleStartPage < 1) visibleStartPage = 1;
+  // 시작 페이지가 (전체 - 4)보다 크면, 마지막 5개가 보이도록 고정
+  if (
+    totalPages > maxButtons &&
+    visibleStartPage > totalPages - maxButtons + 1
+  ) {
+    visibleStartPage = totalPages - maxButtons + 1;
   }
 
-  // 버튼 생성 헬퍼 함수
-  const createButton = (text, targetPage) => {
+  const visibleEndPage = Math.min(
+    visibleStartPage + maxButtons - 1,
+    totalPages
+  );
+
+  // 버튼 생성 헬퍼
+  const createButton = (text, onClick, isActive = false) => {
     const btn = document.createElement("button");
     btn.textContent = text;
-    // 스타일: 현재 페이지는 파란색, 나머지는 흰색
-    const isCurrent = targetPage === currentPage;
     btn.className = `px-3 py-2 rounded-md text-sm font-medium transition-colors border shadow-sm ${
-      isCurrent
-        ? "bg-blue-500 text-white border-blue-500 font-bold"
-        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+      isActive
+        ? "bg-blue-500 text-white border-blue-500 font-bold" // 현재 보고 있는 페이지
+        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50" // 그 외 버튼
     }`;
-    btn.onclick = () => renderNoticeList(noticeData, targetPage);
+    btn.onclick = onClick;
     return btn;
   };
 
-  // [이전] 버튼: 1페이지가 아닐 때만 표시
-  if (currentPage > 1) {
-    paginationContainer.appendChild(createButton("<", currentPage - 1));
+  // [이전] 버튼: 버튼 목록을 왼쪽으로 1칸 이동 (내용 변경 X)
+  // visibleStartPage가 1보다 클 때만 활성화 (또는 기능 동작)
+  if (totalPages > maxButtons) {
+    const prevBtn = createButton("<", () => {
+      if (visibleStartPage > 1) {
+        renderNoticeList(noticeData, currentPage, visibleStartPage - 1);
+      }
+    });
+    // 1페이지면 흐리게 처리하거나 숨김 (여기선 흐리게)
+    if (visibleStartPage === 1)
+      prevBtn.classList.add("opacity-50", "cursor-not-allowed");
+    paginationContainer.appendChild(prevBtn);
   }
 
-  // [숫자] 버튼들 (startPage ~ endPage)
-  for (let i = startPage; i <= endPage; i++) {
-    paginationContainer.appendChild(createButton(String(i), i));
+  // [숫자] 버튼들: 클릭 시 '내용(currentPage)' 변경, '목록(visibleStartPage)' 유지
+  for (let i = visibleStartPage; i <= visibleEndPage; i++) {
+    paginationContainer.appendChild(
+      createButton(
+        String(i),
+        () => {
+          renderNoticeList(noticeData, i, visibleStartPage);
+        },
+        i === currentPage
+      ) // 현재 내용 페이지와 같으면 파란색
+    );
   }
 
-  // [다음] 버튼: 마지막 페이지가 아닐 때만 표시
-  if (currentPage < totalPages) {
-    paginationContainer.appendChild(createButton(">", currentPage + 1));
+  // [다음] 버튼: 버튼 목록을 오른쪽으로 1칸 이동 (내용 변경 X)
+  if (totalPages > maxButtons) {
+    const nextBtn = createButton(">", () => {
+      if (visibleStartPage < totalPages - maxButtons + 1) {
+        renderNoticeList(noticeData, currentPage, visibleStartPage + 1);
+      }
+    });
+    // 더 넘길 곳이 없으면 흐리게
+    if (visibleStartPage >= totalPages - maxButtons + 1) {
+      nextBtn.classList.add("opacity-50", "cursor-not-allowed");
+    }
+    paginationContainer.appendChild(nextBtn);
   }
 }
 
