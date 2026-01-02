@@ -414,9 +414,6 @@ export function closeDetailsModal() {
   document.getElementById("details-modal-panel").classList.add("hidden");
 }
 
-/**
- * [수정됨] 공지사항 목록을 '스마트 페이지네이션' (중간 생략) 기능이 포함된 아코디언 방식으로 렌더링하는 함수
- */
 export function renderNoticeList(noticeData, currentPage = 1) {
   const container = document.getElementById("notice-list-container");
   const paginationContainer = document.getElementById(
@@ -427,12 +424,11 @@ export function renderNoticeList(noticeData, currentPage = 1) {
   const itemsPerPage = 3; // 한 페이지에 3개씩 표시
   const sortedNotices = noticeData.sort((a, b) => b.ID - a.ID);
 
-  // 현재 페이지에 해당하는 데이터만 잘라내기
+  // 1. 현재 페이지 데이터 잘라내서 표시 (기존과 동일)
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedNotices = sortedNotices.slice(startIndex, endIndex);
 
-  // 1. 공지사항 목록 표시 (3개)
   container.innerHTML = paginatedNotices
     .map(
       (notice) => `
@@ -461,76 +457,59 @@ export function renderNoticeList(noticeData, currentPage = 1) {
     )
     .join("");
 
-  // 2. 스마트 페이지네이션 버튼 생성
+  // 2. 페이지네이션 버튼 생성 (슬라이딩 방식)
   const totalPages = Math.ceil(sortedNotices.length / itemsPerPage);
-  paginationContainer.innerHTML = ""; // 기존 버튼 초기화
+  paginationContainer.innerHTML = "";
 
   if (totalPages <= 1) return;
 
+  // --- [핵심 로직] 보여줄 페이지 구간 계산 ---
+  const maxButtons = 5; // 한 번에 보여줄 숫자 개수
+
+  // 현재 페이지를 기준으로 시작 페이지 계산 (현재 페이지가 가운데 오도록 -2)
+  let startPage = currentPage - 2;
+
+  // 1보다 작아지지 않게 보정
+  if (startPage < 1) startPage = 1;
+
+  // 끝 페이지 계산
+  let endPage = startPage + maxButtons - 1;
+
+  // 끝 페이지가 전체 페이지보다 크면 보정
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    // 끝이 줄어든 만큼 시작 페이지를 앞으로 당겨서 5개를 채움
+    startPage = Math.max(1, endPage - maxButtons + 1);
+  }
+
   // 버튼 생성 헬퍼 함수
-  const createButton = (text, targetPage, isActive) => {
+  const createButton = (text, targetPage) => {
     const btn = document.createElement("button");
     btn.textContent = text;
-    // 스타일: 현재 페이지는 파란색, 나머지는 회색/흰색
-    btn.className = `px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-      isActive
-        ? "bg-blue-500 text-white font-bold border border-blue-500"
-        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+    // 스타일: 현재 페이지는 파란색, 나머지는 흰색
+    const isCurrent = targetPage === currentPage;
+    btn.className = `px-3 py-2 rounded-md text-sm font-medium transition-colors border shadow-sm ${
+      isCurrent
+        ? "bg-blue-500 text-white border-blue-500 font-bold"
+        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
     }`;
-
-    // "..." 같은 텍스트가 아닐 때만 클릭 이벤트 연결
-    if (typeof targetPage === "number") {
-      btn.onclick = () => renderNoticeList(noticeData, targetPage);
-    } else {
-      btn.className = "px-2 py-1 text-gray-400 cursor-default"; // 점선 스타일
-    }
+    btn.onclick = () => renderNoticeList(noticeData, targetPage);
     return btn;
   };
 
-  // [이전] 버튼
+  // [이전] 버튼: 1페이지가 아닐 때만 표시
   if (currentPage > 1) {
-    paginationContainer.appendChild(createButton("<", currentPage - 1, false));
+    paginationContainer.appendChild(createButton("<", currentPage - 1));
   }
 
-  // --- 페이지 번호 로직 (1 ... 4 5 6 ... 10) ---
-  const range = 1; // 현재 페이지 앞뒤로 보여줄 개수
-
-  // 1페이지 항상 표시
-  paginationContainer.appendChild(createButton("1", 1, currentPage === 1));
-
-  // 앞쪽 줄임표 (...)
-  if (currentPage > range + 2) {
-    paginationContainer.appendChild(createButton("...", null, false));
+  // [숫자] 버튼들 (startPage ~ endPage)
+  for (let i = startPage; i <= endPage; i++) {
+    paginationContainer.appendChild(createButton(String(i), i));
   }
 
-  // 중간 페이지들
-  let start = Math.max(2, currentPage - range);
-  let end = Math.min(totalPages - 1, currentPage + range);
-
-  // 1페이지와 겹치지 않게 조정
-  if (start <= 1) start = 2;
-
-  for (let i = start; i <= end; i++) {
-    paginationContainer.appendChild(
-      createButton(String(i), i, currentPage === i)
-    );
-  }
-
-  // 뒤쪽 줄임표 (...)
-  if (currentPage < totalPages - (range + 1)) {
-    paginationContainer.appendChild(createButton("...", null, false));
-  }
-
-  // 마지막 페이지 항상 표시 (1페이지와 같지 않을 때만)
-  if (totalPages > 1) {
-    paginationContainer.appendChild(
-      createButton(String(totalPages), totalPages, currentPage === totalPages)
-    );
-  }
-
-  // [다음] 버튼
+  // [다음] 버튼: 마지막 페이지가 아닐 때만 표시
   if (currentPage < totalPages) {
-    paginationContainer.appendChild(createButton(">", currentPage + 1, false));
+    paginationContainer.appendChild(createButton(">", currentPage + 1));
   }
 }
 
