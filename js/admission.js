@@ -363,8 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <section
           id="ad-container-result"
-          class="my-4 p-4 bg-white rounded-2xl shadow"
-        >
+class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
           <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
             ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
           </h3>
