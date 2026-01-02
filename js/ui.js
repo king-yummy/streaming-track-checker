@@ -415,7 +415,7 @@ export function closeDetailsModal() {
 }
 
 /**
- * [최종 수정] 공지사항 목록을 '페이지네이션' 기능이 포함된 아코디언 방식으로 렌더링하는 함수
+ * [수정됨] 공지사항 목록을 '스마트 페이지네이션' (중간 생략) 기능이 포함된 아코디언 방식으로 렌더링하는 함수
  */
 export function renderNoticeList(noticeData, currentPage = 1) {
   const container = document.getElementById("notice-list-container");
@@ -461,22 +461,76 @@ export function renderNoticeList(noticeData, currentPage = 1) {
     )
     .join("");
 
-  // 2. 페이지네이션 버튼 생성
+  // 2. 스마트 페이지네이션 버튼 생성
   const totalPages = Math.ceil(sortedNotices.length / itemsPerPage);
   paginationContainer.innerHTML = ""; // 기존 버튼 초기화
 
-  if (totalPages > 1) {
-    for (let i = 1; i <= totalPages; i++) {
-      const pageButton = document.createElement("button");
-      pageButton.textContent = i;
-      pageButton.className = `px-3 py-1 rounded-md text-sm font-medium ${
-        i === currentPage
-          ? "bg-blue-500 text-white"
-          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-      }`;
-      pageButton.onclick = () => renderNoticeList(noticeData, i);
-      paginationContainer.appendChild(pageButton);
+  if (totalPages <= 1) return;
+
+  // 버튼 생성 헬퍼 함수
+  const createButton = (text, targetPage, isActive) => {
+    const btn = document.createElement("button");
+    btn.textContent = text;
+    // 스타일: 현재 페이지는 파란색, 나머지는 회색/흰색
+    btn.className = `px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+      isActive
+        ? "bg-blue-500 text-white font-bold border border-blue-500"
+        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+    }`;
+
+    // "..." 같은 텍스트가 아닐 때만 클릭 이벤트 연결
+    if (typeof targetPage === "number") {
+      btn.onclick = () => renderNoticeList(noticeData, targetPage);
+    } else {
+      btn.className = "px-2 py-1 text-gray-400 cursor-default"; // 점선 스타일
     }
+    return btn;
+  };
+
+  // [이전] 버튼
+  if (currentPage > 1) {
+    paginationContainer.appendChild(createButton("<", currentPage - 1, false));
+  }
+
+  // --- 페이지 번호 로직 (1 ... 4 5 6 ... 10) ---
+  const range = 1; // 현재 페이지 앞뒤로 보여줄 개수
+
+  // 1페이지 항상 표시
+  paginationContainer.appendChild(createButton("1", 1, currentPage === 1));
+
+  // 앞쪽 줄임표 (...)
+  if (currentPage > range + 2) {
+    paginationContainer.appendChild(createButton("...", null, false));
+  }
+
+  // 중간 페이지들
+  let start = Math.max(2, currentPage - range);
+  let end = Math.min(totalPages - 1, currentPage + range);
+
+  // 1페이지와 겹치지 않게 조정
+  if (start <= 1) start = 2;
+
+  for (let i = start; i <= end; i++) {
+    paginationContainer.appendChild(
+      createButton(String(i), i, currentPage === i)
+    );
+  }
+
+  // 뒤쪽 줄임표 (...)
+  if (currentPage < totalPages - (range + 1)) {
+    paginationContainer.appendChild(createButton("...", null, false));
+  }
+
+  // 마지막 페이지 항상 표시 (1페이지와 같지 않을 때만)
+  if (totalPages > 1) {
+    paginationContainer.appendChild(
+      createButton(String(totalPages), totalPages, currentPage === totalPages)
+    );
+  }
+
+  // [다음] 버튼
+  if (currentPage < totalPages) {
+    paginationContainer.appendChild(createButton(">", currentPage + 1, false));
   }
 }
 
