@@ -1,115 +1,115 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const appGuidesContainer = document.getElementById("app-guides-container");
-  const voteGuidesContainer = document.getElementById("vote-guides-container");
+  const container = document.getElementById("voting-app-guides-container");
   const searchInput = document.getElementById("search-input");
 
-  const startBtn = document.getElementById("startMacro");
-  if (startBtn) {
-    startBtn.addEventListener("click", () => {
-      const extensionId = "elamnoganflfallmgnchjdmimanffjbd";
-      chrome.runtime.sendMessage(
-        extensionId,
-        { action: "start" },
-        (response) => {
-          console.log("확장 프로그램 응답:", response);
-        }
-      );
-    });
-  }
+  let allGuides = [];
 
-  let allData = { appGuides: [], voteGuides: [] };
-
-  fetch("guides.json")
-    .then((response) => response.json())
+  fetch("updated_voting_app_guides.json")
+    .then((res) => res.json())
     .then((data) => {
-      allData = data;
-      displayGuides(allData.appGuides, appGuidesContainer);
-      displayGuides(allData.voteGuides, voteGuidesContainer);
+      allGuides = data.votingAppGuides || [];
+
+      allGuides.sort((a, b) => a.app.localeCompare(b.app, "ko"));
+
+      renderGuides(allGuides);
     })
-    .catch((error) => {
-      console.error("Error fetching guide data:", error);
-      appGuidesContainer.innerHTML =
+    .catch((err) => {
+      console.error(err);
+      container.innerHTML =
         '<p class="text-red-500">가이드 정보를 불러오는 데 실패했습니다.</p>';
     });
 
-  function createGuideElement(guide) {
-    const element = document.createElement("div");
-    element.className =
-      "bg-white p-4 rounded-lg shadow-sm border border-gray-200";
-
-    const summaryContent = `
-            <span>${guide.title}</span>
-            <span class="text-sm font-normal text-blue-500 bg-blue-50 px-2 py-1 rounded-full">${guide.app}</span>
-        `;
-
-    const detailsContent = `
-            ${
-              guide.period
-                ? `<p class="text-sm mb-3"><strong>🗓️ 기간:</strong> ${guide.period}</p>`
-                : ""
-            }
-            <div class="prose max-w-none prose-sm">${guide.guide}</div>
-        `;
-
-    element.innerHTML = `
-            <details>
-                <summary class="font-bold text-md cursor-pointer flex justify-between items-center">
-                    ${summaryContent}
-                </summary>
-                <div class="mt-4 pt-4 border-t border-gray-200 text-gray-700">
-                    ${detailsContent}
-                </div>
-            </details>
-        `;
-
-    // GA 이벤트 추가: 투표 가이드 펼쳐보기
-    element.querySelector("details").addEventListener("toggle", (event) => {
-      if (event.target.open) {
-        gtag("event", "view_vote_guide", {
-          guide_title: guide.title,
-          guide_app: guide.app,
-        });
-      }
-    });
-    return element;
-  }
-
-  function displayGuides(guides, container) {
+  function renderGuides(guides) {
     container.innerHTML = "";
-    if (guides.length === 0) {
+
+    if (!guides.length) {
       container.innerHTML =
         '<p class="text-gray-500 text-sm">표시할 가이드가 없습니다.</p>';
       return;
     }
+
     guides.forEach((guide) => {
-      const guideElement = createGuideElement(guide);
-      container.appendChild(guideElement);
+      const card = document.createElement("div");
+
+      card.className =
+        "bg-white p-4 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition";
+
+      card.innerHTML = `
+        <details>
+          <summary class="font-semibold text-md cursor-pointer flex justify-between items-center">
+  <span>${guide.app}</span>
+
+  <svg class="arrow w-4 h-4 text-gray-500 transition-transform"
+       xmlns="http://www.w3.org/2000/svg"
+       fill="none"
+       viewBox="0 0 24 24"
+       stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+      d="M19 9l-7 7-7-7" />
+  </svg>
+</summary>
+
+          <div class="mt-4 pt-4 border-t border-gray-200 space-y-4 tips"></div>
+        </details>
+      `;
+
+      const tipsContainer = card.querySelector(".tips");
+
+      (guide.tips || []).forEach((tip) => {
+        const tipElement = document.createElement("div");
+
+        tipElement.className =
+          "bg-gray-50 border border-gray-200 rounded-lg p-3";
+
+        tipElement.innerHTML = `
+          <img 
+            src="${tip.image}" 
+            alt=""
+            class="max-w-xs w-full mx-auto rounded-md border mb-3"
+          >
+          <p class="text-sm text-gray-700 whitespace-pre-line">
+            ${(tip.text || "").replace(/\*\*/g, "")}
+          </p>
+        `;
+
+        tipsContainer.appendChild(tipElement);
+      });
+
+      // GA 이벤트 추가: 투표 가이드 펼쳐보기
+      const details = card.querySelector("details");
+      details.addEventListener("toggle", (event) => {
+        if (event.target.open && typeof gtag === "function") {
+          gtag("event", "view_vote_guide", {
+            guide_title: guide.app,
+            guide_app: guide.app,
+          });
+        }
+      });
+
+      container.appendChild(card);
     });
   }
 
   searchInput.addEventListener("input", (e) => {
-    const searchTerm = e.target.value.toLowerCase().trim();
+    const term = e.target.value.toLowerCase().trim();
 
-    // GA 이벤트 추가: 가이드 검색
-    gtag("event", "search_vote_guide", {
-      search_term: searchTerm,
+    if (typeof gtag === "function") {
+      gtag("event", "search_vote_guide", {
+        search_term: term,
+      });
+    }
+
+    const filtered = allGuides.filter((guide) => {
+      const tipText = (guide.tips || [])
+        .map((t) => t.text || "")
+        .join(" ")
+        .toLowerCase();
+
+      return (
+        (guide.app || "").toLowerCase().includes(term) || tipText.includes(term)
+      );
     });
 
-    const filterGuides = (guides) => {
-      if (!searchTerm) return guides;
-      return guides.filter((guide) => {
-        const guideText = guide.guide.replace(/<[^>]*>/g, "").toLowerCase(); // HTML 태그 제거
-        const searchInData = [
-          guide.title.toLowerCase(),
-          guide.app.toLowerCase(),
-          ...(guide.tags || []).map((tag) => tag.toLowerCase()),
-          guideText,
-        ].join(" ");
-        return searchInData.includes(searchTerm);
-      });
-    };
-
-    displayGuides(filterGuides(allData.appGuides), appGuidesContainer);
-    displayGuides(filterGuides(allData.voteGuides), voteGuidesContainer);
+    renderGuides(filtered);
   });
 });

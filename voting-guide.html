@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -15,7 +15,23 @@
     ></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* ... */
+      body {
+        font-family: "Pretendard", sans-serif;
+      }
+
+      /* 기본 details 화살표 제거 */
+      summary {
+        list-style: none;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      /* 우리가 넣은 화살표 회전 */
+      details[open] .arrow {
+        transform: rotate(180deg);
+      }
     </style>
     <script
       async
@@ -109,41 +125,12 @@
       </section>
 
       <div class="mb-8">
-        <h3 class="text-lg font-bold mb-3">💎 앱별 재화 수집 가이드</h3>
-        <div id="app-guides-container" class="space-y-3"></div>
+        <h3 class="text-lg font-bold mb-3">🗳️ 투표 앱 가이드</h3>
+        <div id="voting-app-guides-container" class="space-y-4"></div>
       </div>
 
       <section
         id="ad-container-2"
-        class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md ad-section flex flex-col"
-        style="display: none"
-      >
-        <h3 class="text-sm font-bold text-gray-400 mb-2 px-2">
-          ✨ PLLI를 위한 추천 (서버비에 한 스푼..)
-        </h3>
-        <div style="text-align: center">
-          <ins
-            class="adsbygoogle"
-            style="display: block"
-            data-ad-format="fluid"
-            data-ad-layout-key="+2k+pl+16-1y+d2"
-            data-ad-client="ca-pub-9063401338616510"
-            data-ad-slot="1251777927"
-          ></ins>
-
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
-        </div>
-      </section>
-
-      <div>
-        <h3 class="text-lg font-bold mb-3">📚 투표 가이드 아카이브</h3>
-        <div id="vote-guides-container" class="space-y-3"></div>
-      </div>
-
-      <section
-        id="ad-container-3"
         class="my-4 p-4 bg-white rounded-2xl shadow w-full max-w-md ad-section flex flex-col"
         style="display: none"
       >
@@ -173,22 +160,25 @@
       function revealAdWhenFilled(containerId) {
         const box = document.getElementById(containerId);
         if (!box) return;
+
         const tick = setInterval(() => {
           const isFilled = box.querySelector(
-            'ins.adsbygoogle[data-ad-status="filled"]'
+            'ins.adsbygoogle[data-ad-status="filled"]',
           );
           const hasIframe = box.querySelector("ins.adsbygoogle iframe");
+
           if (isFilled || hasIframe) {
             box.style.display = "flex";
             clearInterval(tick);
           }
         }, 300);
+
         setTimeout(() => clearInterval(tick), 10000);
       }
+
       document.addEventListener("DOMContentLoaded", () => {
         revealAdWhenFilled("ad-container-1");
         revealAdWhenFilled("ad-container-2");
-        revealAdWhenFilled("ad-container-3");
       });
     </script>
   </body>
