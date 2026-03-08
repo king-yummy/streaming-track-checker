@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
       name: "start",
       render: () => `
     <div class="text-center">
-      <h2 class="text-2xl font-bold mb-4 leading-tight">플뿌우 스밍 시작할 준비 됐나요?</h2>
+      <h2 class="text-2xl font-bold mb-4 leading-tight">스밍 시작할 준비 됐나요?</h2>
       <p class="text-gray-600 leading-relaxed text-center mb-10 px-4">
         
         가이드 따라서 올바른 스밍법을 익히고<br />
