@@ -191,10 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
       </p>
 
       <div class="grid grid-cols-2 gap-3 mb-6">
-        <a href="https://tinyurl.com/j58atsw7" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-        <a href="https://tinyurl.com/4r7x5sx2" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-        <a href="https://tinyurl.com/xearfrdz" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-        <a href="https://tinyurl.com/wru5an4m" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+        <a href="https://tinyurl.com/yddpdhfd" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
+<a href="https://tinyurl.com/bds9d8z2" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
+<a href="https://tinyurl.com/5ejf3y4a" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
+<a href="https://tinyurl.com/2hnknfjm" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
       </div>
 
       <!-- 설명 박스 -->
