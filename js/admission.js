@@ -613,8 +613,9 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
       const pageUrl = "plli-checker.app"; // 실제 주소로
       const shareText =
         `#플리_바로스밍해\n` +
-        `흥흥흥 세팅 완료 💙💜💗❤️🖤\n\n` +
-        `나도 만들기 👉 ${pageUrl}\n` +
+        `흥흥흥 세팅 완료 💙💜💗❤️🖤\n` +
+        `스밍 입학증 받은 플리 자랑해요~!!\n\n` +
+        `입학증 받는 곳 👉 ${pageUrl}\n` +
         `신곡 슴리 인증하고 공유해주세요 🌸`;
 
       shareXBtn.addEventListener("click", () => {
