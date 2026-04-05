@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <p class="text-gray-600 leading-relaxed text-center mb-10 px-4">
         
         가이드 따라서 올바른 스밍법을 익히고<br />
-        뿌우 버전 스밍 입학증 받아보세요~
+        흥흥흥 스밍 입학증 받아보세요~
       </p>
     </div>
     <div class="space-y-3">
@@ -191,10 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
       </p>
 
       <div class="grid grid-cols-2 gap-3 mb-6">
-        <a href="https://tinyurl.com/yddpdhfd" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-<a href="https://tinyurl.com/bds9d8z2" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-<a href="https://tinyurl.com/5ejf3y4a" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-<a href="https://tinyurl.com/2hnknfjm" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+        <a href="https://tinyurl.com/yck9hta3" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
+        <a href="https://tinyurl.com/5brdzzch" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
+        <a href="https://tinyurl.com/33utd7zu" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
+        <a href="https://tinyurl.com/5brdzzch" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
       </div>
 
       <!-- 설명 박스 -->
@@ -402,17 +402,17 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
 
   function setVisibleSteps() {
     visibleSteps = allSteps.filter(
-      (s) => !s.condition || s.condition(userDevice)
+      (s) => !s.condition || s.condition(userDevice),
     );
   }
 
   function updateProgressBar() {
     const mainStepsCount = visibleSteps.findIndex(
-      (s) => s.name === "cert_upload_playlist"
+      (s) => s.name === "cert_upload_playlist",
     );
     const currentMainStepIndex = Math.min(
       currentVisibleStepIndex,
-      mainStepsCount
+      mainStepsCount,
     );
     const progress =
       mainStepsCount > 0 ? (currentMainStepIndex / mainStepsCount) * 100 : 0;
@@ -447,14 +447,12 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
       admissionData.playlistFileName &&
       screen.querySelector("#playlist-label")
     ) {
-      screen.querySelector(
-        "#playlist-label"
-      ).textContent = `✅ ${admissionData.playlistFileName}`;
+      screen.querySelector("#playlist-label").textContent =
+        `✅ ${admissionData.playlistFileName}`;
     }
     if (admissionData.cardFileName && screen.querySelector("#card-label")) {
-      screen.querySelector(
-        "#card-label"
-      ).textContent = `✅ ${admissionData.cardFileName}`;
+      screen.querySelector("#card-label").textContent =
+        `✅ ${admissionData.cardFileName}`;
     }
     addStepEventListeners(screen);
     updateProgressBar();
@@ -498,7 +496,7 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
       skipBtn.addEventListener("click", () => {
         // 모든 표시 가능한 단계 중에서 재생목록 업로드 단계의 인덱스를 찾음
         const targetIndex = visibleSteps.findIndex(
-          (s) => s.name === "cert_upload_playlist"
+          (s) => s.name === "cert_upload_playlist",
         );
         if (targetIndex >= 0) {
           currentVisibleStepIndex = targetIndex;
@@ -534,7 +532,7 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
     }
 
     const generateBtn = stepElement.querySelector(
-      'button[data-action="generate"]'
+      'button[data-action="generate"]',
     );
     if (generateBtn) {
       generateBtn.addEventListener("click", () => {
@@ -553,9 +551,8 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
         const file = e.target.files?.[0];
         if (file) {
           admissionData.playlistFile = file;
-          stepElement.querySelector(
-            "#playlist-label"
-          ).textContent = `✅ ${file.name}`;
+          stepElement.querySelector("#playlist-label").textContent =
+            `✅ ${file.name}`;
           const btn = stepElement.querySelector("#playlist-next-btn");
           btn.disabled = false;
           btn.classList.remove("opacity-50", "cursor-not-allowed");
@@ -569,9 +566,8 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
         const file = e.target.files?.[0];
         if (file) {
           admissionData.cardFile = file;
-          stepElement.querySelector(
-            "#card-label"
-          ).textContent = `✅ ${file.name}`;
+          stepElement.querySelector("#card-label").textContent =
+            `✅ ${file.name}`;
           const btn = stepElement.querySelector("#card-next-btn");
           btn.disabled = false;
           btn.classList.remove("opacity-50", "cursor-not-allowed");
@@ -616,10 +612,10 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
     if (shareXBtn) {
       const pageUrl = "plli-checker.app"; // 실제 주소로
       const shareText =
-        `#메리플리스마스_스밍시작\n` +
-        `크리스마스 버전 세팅 완료☃️\n\n` +
+        `#플리_바로스밍해\n` +
+        `흥흥흥 세팅 완료 💙💜💗❤️🖤\n\n` +
         `나도 만들기 👉 ${pageUrl}\n` +
-        `신곡 슴리 인증하고 공유해주세요🎄❄️`;
+        `신곡 슴리 인증하고 공유해주세요 🌸`;
 
       shareXBtn.addEventListener("click", () => {
         // GA 이벤트
@@ -629,9 +625,9 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
 
         window.open(
           `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            shareText
+            shareText,
           )}`,
-          "_blank"
+          "_blank",
         );
       });
     }
@@ -640,10 +636,10 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
     if (copyShareBtn) {
       const pageUrl = "https://plli-checker.app";
       const shareText =
-        `플뿌우로 입학 완료💙💜💗❤️🖤\n\n` +
+        `#플리_바로스밍해\n` +
+        `흥흥흥 세팅 완료 💙💜💗❤️🖤\n\n` +
         `나도 만들기 👉 ${pageUrl}\n` +
-        `새로운 슴리 췤!! 스밍 라쓰고!!\n\n` +
-        `#플뿌우로_입학했뿌우`;
+        `신곡 슴리 인증하고 공유해주세요 🌸`;
 
       copyShareBtn.addEventListener("click", () => {
         // GA 이벤트
@@ -711,7 +707,7 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
         playlistBox.x,
         playlistBox.y,
         playlistBox.width,
-        playlistHeight
+        playlistHeight,
       );
 
       // 5) 닉네임(이름) 그리기 - 중심 (500, 265), 8자 넘어가면 두 줄
@@ -720,7 +716,7 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
       // 6) 날짜 찍기 - 중심 (400, 450)
       const now = new Date();
       const dateString = `${now.getFullYear()}-${String(
-        now.getMonth() + 1
+        now.getMonth() + 1,
       ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
       ctx.font =
@@ -751,7 +747,7 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
         user_id: getUserID(),
       });
       alert(
-        `오류가 발생하여 입학증을 만들 수 없습니다: ${err.message}\n\n페이지를 새로고침하고 다시 시도해주세요.`
+        `오류가 발생하여 입학증을 만들 수 없습니다: ${err.message}\n\n페이지를 새로고침하고 다시 시도해주세요.`,
       );
       window.location.reload();
     }
@@ -827,7 +823,7 @@ class="my-4 p-4 bg-white rounded-2xl shadow overflow-hidden"        >
 
     const singleTextWidth = tempCtx.measureText(text).width;
     const repeatCount = Math.ceil(
-      (tempCanvas.width + tempCanvas.height) / singleTextWidth
+      (tempCanvas.width + tempCanvas.height) / singleTextWidth,
     );
     const lineOfText = text.repeat(repeatCount * 2);
 
