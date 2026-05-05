@@ -191,11 +191,11 @@ document.addEventListener("DOMContentLoaded", () => {
       </p>
 
       <div class="grid grid-cols-2 gap-3 mb-6">
-        <a href="https://tinyurl.com/yck9hta3" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
-        <a href="https://tinyurl.com/5brdzzch" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
-        <a href="https://tinyurl.com/33utd7zu" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
-        <a href="https://tinyurl.com/5brdzzch" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
-      </div>
+  <a href="https://tinyurl.com/mj2easb5" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">1번 링크</a>
+  <a href="https://tinyurl.com/3sc43cae" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">2번 링크</a>
+  <a href="https://tinyurl.com/mrn49ta7" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">3번 링크</a>
+  <a href="https://tinyurl.com/yr2shwkd" target="_blank" class="p-3 bg-gray-100 text-center rounded hover:bg-gray-200">4번 링크</a>
+</div>
 
       <!-- 설명 박스 -->
       <div class="text-left bg-pink-50 border border-pink-100 rounded-xl p-4 space-y-3">
